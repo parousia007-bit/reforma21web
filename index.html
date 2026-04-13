@@ -15,217 +15,13 @@
   gtag('config', 'G-XXXXXXXXXX');
 </script>
 
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root {
-  --bg: #131625; --surface: #1E2132; --surface2: #2A2E45; --border: #3D3D5C;
-  --ink: #E8EAF0; --inkMid: #B0B8CC; --inkLow: #8892A8;
-  --gold: #C8922A; --goldGlow: rgba(200, 146, 42, 0.10);
-  --cobalt: #2D5FA6; --cobaltDim: #1A2E5A; --success: #1E6B3C; --wa: #25D366; --warning: #F59E0B;
-  --serif: 'Merriweather', Georgia, serif; --sans: 'Source Sans 3', system-ui, sans-serif;
-  --r: 14px; --r2: 20px; --max: 1160px;
-}
-html{scroll-behavior:smooth;font-size:16px}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;overflow-x:hidden}
-
-/* NAVEGACIÓN */
-#nav{position:fixed;top:0;left:0;right:0;z-index:90;transition:background .3s}
-#nav.scrolled{background:rgba(19, 22, 37, 0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.nav-inner{max-width:var(--max);margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.nav-logo{display:flex;align-items:center;gap:.5rem;font-family:var(--serif);font-size:1.2rem;color:var(--ink);text-decoration:none}
-.nav-logo span{color:var(--gold)}
-.nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
-.nav-links a{font-size:.85rem;color:var(--inkMid);padding:.4rem .8rem;border-radius:8px;text-decoration:none;transition:color .2s,background .2s}
-.nav-links a:hover{color:var(--ink);background:rgba(255,255,255,.04)}
-.nav-dl{background:var(--goldGlow);color:var(--gold)!important;border:1px solid rgba(200, 146, 42, 0.25);border-radius:8px}
-.nav-dl:hover{background:var(--gold)!important;color:var(--bg)!important}
-.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
-.burger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .3s}
-.mob-menu{display:none;background:rgba(19, 22, 37, 0.98);border-bottom:1px solid var(--border);padding:1rem 1.5rem;position:fixed;top:60px;left:0;right:0;z-index:89;}
-.mob-menu.open{display:block}
-.mob-menu a{display:block;padding:.75rem 0;color:var(--inkMid);text-decoration:none;border-bottom:1px solid var(--border);font-size:1rem}
-
-/* HERO Y ACCESOS RÁPIDOS */
-.hero{min-height:100svh;display:flex;align-items:center;padding:8rem 1.5rem 4rem;position:relative;z-index:1}
-.hero-inner{max-width:var(--max);margin:0 auto;width:100%}
-.hero-label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
-.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4.8rem);font-weight:300;line-height:1.1;margin-bottom:1.5rem}
-.hero h1 em{font-style:italic;color:var(--gold)}
-.hero-sub{font-size:clamp(1rem,1.8vw,1.15rem);color:var(--inkMid);max-width:600px;line-height:1.85;margin-bottom:2.5rem}
-.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1.6rem;border-radius:var(--r);font-family:var(--sans);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;border:none}
-.btn-gold{background:var(--gold);color:var(--bg)}
-.btn-gold:hover{background:#E8C060;transform:translateY(-2px);box-shadow:0 8px 24px rgba(200, 146, 42,.3)}
-.btn-outline{background:transparent;color:var(--ink);border:1px solid var(--border)}
-.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
-.btn-wa{background:var(--wa);color:#fff}
-.btn-wa:hover{background:#1ea952;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.3)}
-.btn-sm{padding:.5rem 1rem;font-size:.8rem}
-
-.qa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:4rem}
-.qa-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem;display:flex;align-items:center;gap:1rem;text-decoration:none;transition:all .3s}
-.qa-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2)}
-.qa-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;font-size:1.2rem}
-.qa-card:nth-child(1) .qa-icon{background:rgba(200,146,42,0.1);color:var(--gold)}
-.qa-card:nth-child(2) .qa-icon{background:rgba(30,107,60,0.1);color:var(--success)}
-.qa-card:nth-child(3) .qa-icon{background:rgba(45,95,166,0.1);color:var(--cobalt)}
-.qa-card:nth-child(4) .qa-icon{background:rgba(91,44,141,0.1);color:#7C3AED}
-.qa-text b{display:block;font-size:.95rem;color:var(--ink);line-height:1.2;margin-bottom:.2rem}
-.qa-text small{display:block;font-size:.75rem;color:var(--inkLow)}
-
-/* SECCIONES BASE */
-section{position:relative;z-index:1}
-.container{max-width:var(--max);margin:0 auto;padding:0 1.5rem}
-.sec-pad{padding:5rem 0}
-.sec-eyebrow{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
-.sec-title{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;line-height:1.15;margin-bottom:1.25rem}
-.sec-title em{font-style:italic;color:var(--gold)}
-.sec-desc{font-size:1rem;color:var(--inkMid);max-width:600px;line-height:1.8;margin-bottom:3rem}
-
-/* MURO DE ACTUALIDAD */
-.muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
-.muro-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s; cursor:pointer;}
-.muro-card:hover { transform: translateY(-5px); border-color: var(--gold); }
-.muro-img { height: 180px; background-size: cover; background-position: center; position: relative; }
-.muro-tag { position: absolute; top: 1rem; left: 1rem; color: #fff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-.muro-content { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
-.muro-title { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); margin-bottom: 0.75rem; line-height: 1.3; }
-.muro-excerpt { font-size: 0.9rem; color: var(--inkMid); margin-bottom: 1.5rem; line-height: 1.6; flex: 1; }
-
-/* FACETAS (ANTES ESFERAS) */
-.facetas-section{background:var(--surface); border-top:1px solid var(--border)}
-.facetas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;}
-.esf-card{background:var(--bg); border:1px solid var(--border); padding:1.5rem 1rem; border-radius:16px; text-align:center; transition:all .3s}
-.esf-card:hover{transform:translateY(-5px); border-color:var(--gold)}
-.esf-dot{width:12px;height:12px;border-radius:50%;margin:0 auto 1rem;}
-.esf-card h3{font-size:.95rem; color:var(--ink); margin-bottom:.5rem; font-weight:600}
-.esf-card p{font-size:.75rem; color:var(--inkLow); line-height:1.4}
-
-/* CONSEJERÍA */
-.consejeria-section{border-top:1px solid var(--border); background:var(--bg)}
-.fasc-layout{display:grid;grid-template-columns:1fr 380px;gap:3rem;align-items:start}
-.fasc-free-label{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--inkMid);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
-.fasc-preview{background:var(--surface);border:1px solid rgba(200,146,42,.25);border-radius:var(--r2);padding:2rem;margin-bottom:2rem}
-.fasc-header{display:flex;align-items:flex-start;gap:1.25rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
-.fasc-num{font-family:var(--serif);font-size:3.5rem;font-weight:300;color:var(--gold);opacity:.35;line-height:1;flex-shrink:0}
-.fasc-meta h3{font-family:var(--serif);font-size:1.4rem;font-weight:400;color:var(--ink);line-height:1.2;margin-bottom:.3rem}
-.fasc-sub{font-size:.8rem;color:var(--inkLow)}
-.prose{font-family:var(--serif);font-size:1.05rem;color:var(--inkMid);line-height:1.9}
-.prose p{margin-bottom:1.4rem}
-.fasc-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
-.catalog-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
-.catalog-head{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.catalog-title{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--ink)}
-.price-tag{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--gold)}
-.price-tag small{font-size:.8rem;font-family:var(--sans);color:var(--inkMid);font-weight:300}
-.fasc-row{display:flex;align-items:center;gap:.75rem;padding:.875rem 1.5rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s}
-.fasc-row:last-child{border-bottom:none}
-.fasc-row:hover{background:rgba(255,255,255,.02)}
-.fasc-row.is-free{background:rgba(200,146,42,.04)}
-.fasc-n{font-family:var(--serif);font-size:1rem;color:var(--inkLow);width:22px;text-align:center;flex-shrink:0}
-.fasc-row.is-free .fasc-n{color:var(--gold)}
-.fasc-info{flex:1;min-width:0}
-.fasc-name{font-size:.875rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fasc-hint{font-size:.75rem;color:var(--inkLow);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fasc-badge{flex-shrink:0;font-size:.65rem;font-weight:700;letter-spacing:.08em;padding:.2rem .5rem;border-radius:20px}
-.badge-free{color:var(--success);background:rgba(30,107,60,.1);border:1px solid rgba(30,107,60,.2)}
-.badge-lock{color:var(--inkLow)}
-.catalog-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border)}
-
-/* INSTITUTO */
-.demos-section{background:var(--surface2);border-top:1px solid var(--border)}
-.demos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
-.demo-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;transition:border-color .3s,transform .3s;cursor:pointer;text-decoration:none;display:block}
-.demo-card:hover{border-color:rgba(200,146,42,.3);transform:translateY(-3px)}
-.demo-icon{font-size:1.5rem;margin-bottom:1rem;display:block}
-.demo-school{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem}
-.demo-name{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--ink);margin-bottom:.5rem;line-height:1.3}
-.demo-desc{font-size:.85rem;color:var(--inkMid);line-height:1.65;margin-bottom:1rem}
-.demo-cta{font-size:.8rem;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:.4rem;transition:gap .2s}
-.demo-card:hover .demo-cta{gap:.7rem}
-
-/* BÓVEDA APP */
-.dl-section{border-top:1px solid var(--border)}
-.dl-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;padding:5rem 0}
-.dl-features{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem}
-.dl-feat{display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--inkMid);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:.5rem .85rem}
-.dl-feat-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
-.dl-visual{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:2rem;position:relative;overflow:hidden}
-.app-frame{background:var(--bg);border-radius:16px;border:1px solid var(--border);padding:1.25rem}
-.app-topbar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-.app-logo-circle{width:36px;height:36px;border-radius:50%;background:rgba(200, 146, 42,.12);border:1px solid rgba(200, 146, 42,.3);display:flex;align-items:center;justify-content:center;font-size:.85rem;color:var(--gold);flex-shrink:0}
-.app-brand{font-family:var(--serif);font-size:.95rem;color:var(--ink)}
-.app-brand small{display:block;font-size:.7rem;color:var(--inkLow);font-family:var(--sans)}
-.app-modules{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-.app-mod{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.65rem .75rem; display:flex; flex-direction:column; justify-content:center}
-.app-mod-dot{width:8px;height:8px;border-radius:50%;margin-bottom:.4rem}
-.app-mod span{font-size:.75rem;color:var(--ink);display:block;margin-bottom:.15rem;font-weight:600}
-.app-mod small{font-size:.65rem;color:var(--inkLow)}
-
-footer{border-top:1px solid var(--border);background:var(--surface);position:relative;z-index:1}
-.footer-inner{max-width:var(--max);margin:0 auto;padding:3rem 1.5rem 2rem;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem}
-.footer-brand a{font-family:var(--serif);font-size:1.1rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
-.footer-brand p{font-size:.85rem;color:var(--inkMid);line-height:1.7}
-.footer-nav h4{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--inkLow);margin-bottom:.75rem}
-.footer-nav ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
-.footer-nav a{font-size:.875rem;color:var(--inkMid);text-decoration:none;transition:color .2s}
-.footer-nav a:hover{color:var(--gold)}
-.footer-bottom{max-width:var(--max);margin:0 auto;padding:1.25rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.footer-bottom p{font-size:.8rem;color:var(--inkLow)}
-
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
-.reveal.visible{opacity:1;transform:none}
-
-/* MODAL DE LECTURA */
-.modal-overlay {position:fixed;inset:0;background:rgba(19, 22, 37, 0.95);backdrop-filter:blur(10px);z-index:100;display:none;justify-content:center;align-items:flex-start;padding:2rem;overflow-y:auto;}
-.modal-overlay.open {display:flex;}
-.modal-content {background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);width:100%;max-width:800px;margin:auto;position:relative;}
-.modal-close {position:absolute;top:1.5rem;right:1.5rem;background:var(--surface2);border:none;color:var(--ink);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
-.modal-close:hover {background:var(--border);color:var(--gold);}
-.modal-header {padding:2.5rem 2.5rem 1.5rem;border-bottom:1px solid var(--border);}
-.modal-meta {display:flex;justify-content:space-between;font-size:.8rem;color:var(--inkLow);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.1em;}
-.modal-title {font-family:var(--serif);font-size:2.2rem;color:var(--ink);line-height:1.2;margin-bottom:.5rem;}
-.modal-subtitle {font-family:var(--sans);font-size:.9rem;color:var(--gold);font-weight:bold;letter-spacing:1px;text-transform:uppercase;}
-.modal-body {padding:2.5rem;font-size:1.05rem;line-height:1.8;color:var(--inkMid);}
-.modal-body p {margin-bottom:1.5rem;}
-.modal-body h3 {font-family:var(--serif);font-size:1.4rem;color:var(--gold);margin:2.5rem 0 1rem 0;font-weight:bold;}
-.modal-body ul {margin-left:20px;margin-bottom:1.5rem;}
-.modal-body li {margin-bottom:0.5rem;}
-.modal-body blockquote {margin:2rem 0;padding:1.5rem 2rem;background:var(--surface2);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;}
-.modal-body blockquote p {font-family:var(--serif);font-style:italic;color:var(--gold);margin:0;font-size:1.15rem;}
-.modal-verse-box {background:var(--surface2);padding:1.5rem;border-left:4px solid var(--cobalt);border-radius:0 12px 12px 0;margin-bottom:2.5rem;}
-.modal-verse-box.is-devo {border-color:var(--gold);}
-.modal-verse-box p {font-family:var(--serif);font-style:italic;color:var(--ink);margin:0 0 .5rem 0;}
-.modal-verse-box cite {font-size:.85rem;color:var(--inkLow);display:block;margin-top:8px;font-style:normal;font-weight:600;}
-.modal-exercise {background:rgba(200,146,42,0.05);border:1px solid rgba(200,146,42,0.2);padding:1.5rem;border-radius:12px;margin-top:2rem;}
-.modal-exercise strong {color:var(--gold);display:block;margin-bottom:.5rem;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;}
-.modal-footer {padding:2rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:center;}
-
-@media(max-width:960px){
-  .fasc-layout,.dl-inner{grid-template-columns:1fr}
-  .dl-visual{display:none}
-  .demos-grid{grid-template-columns:1fr 1fr}
-  .footer-inner{grid-template-columns:1fr 1fr}
-}
-@media(max-width:640px){
-  .nav-links{display:none}.burger{display:flex}
-  .hero-actions{flex-direction:column}
-  .hero-actions .btn{width:100%}
-  .demos-grid{grid-template-columns:1fr}
-  .footer-inner{grid-template-columns:1fr}
-  .dl-features{grid-template-columns:1fr}
-  .fasc-actions{flex-direction:column}
-  .fasc-actions .btn{width:100%;justify-content:center}
-  .modal-overlay {padding:0;}
-  .modal-content {border-radius:0;min-height:100vh;}
-}
-</style>
+<link href="css/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <header>
 <nav id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">✦ <em style="font-style:normal">Reforma</em> <span>2.1</span></a>
+    <a href="#" class="nav-logo">✦ <em  class="extracted-style-1">Reforma</em> <span>2.1</span></a>
     <ul class="nav-links">
       <li><a href="#muro">Vida Cotidiana</a></li>
       <li><a href="#consejeria">Consejería</a></li>
@@ -240,7 +36,7 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
     <a href="#muro">Vida Cotidiana</a>
     <a href="#consejeria">Consejería</a>
     <a href="#instituto">Instituto</a>
-    <a href="#descargar" style="color:var(--gold)">↓ Descargar App</a>
+    <a href="#descargar"  class="extracted-style-2">↓ Descargar App</a>
   </div>
 </nav>
 </header>
@@ -282,8 +78,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
     
     <div class="muro-grid">
       <article class="muro-card reveal" onclick="openModal('devocional_01')">
-        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800');">
-          <span class="muro-tag" style="background: var(--esf-teologia)">Devocional</span>
+        <div class="muro-img extracted-style-3" >
+          <span class="muro-tag extracted-style-4" >Devocional</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">Lo que tus hijos van a profetizar</h3>
@@ -293,8 +89,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
       </article>
 
       <article class="muro-card reveal" onclick="openModal('article_fisica')">
-        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800');">
-          <span class="muro-tag" style="background: var(--esf-psico)">Ciencias</span>
+        <div class="muro-img extracted-style-5" >
+          <span class="muro-tag extracted-style-6" >Ciencias</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">El espejismo del tiempo</h3>
@@ -304,8 +100,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
       </article>
 
       <article class="muro-card reveal" onclick="openModal('article_nem')">
-        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800');">
-          <span class="muro-tag" style="background: var(--esf-pedagogia)">Educación</span>
+        <div class="muro-img extracted-style-7" >
+          <span class="muro-tag extracted-style-8" >Educación</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">El peligro de los nuevos sistemas</h3>
@@ -315,8 +111,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
       </article>
 
       <article class="muro-card reveal" onclick="openModal('article_homeschool')">
-        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1484807352052-23338990c6c6?w=800');">
-          <span class="muro-tag" style="background: var(--warning)">Pedagogía</span>
+        <div class="muro-img extracted-style-9" >
+          <span class="muro-tag extracted-style-10" >Pedagogía</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">Más allá de solo educar en casa</h3>
@@ -326,8 +122,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
       </article>
 
       <article class="muro-card reveal" onclick="openModal('devocional_02')">
-        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1518331647614-7a1f04cd34cf?w=500');">
-          <span class="muro-tag" style="background: var(--esf-teologia)">Devocional</span>
+        <div class="muro-img extracted-style-11" >
+          <span class="muro-tag extracted-style-4" >Devocional</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">La visión que ya traen</h3>
@@ -337,8 +133,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
       </article>
 
       <article class="muro-card reveal app-trigger" data-target="El Orden Correcto">
-        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800');">
-          <span class="muro-tag" style="background: var(--gold)">Consejería</span>
+        <div class="muro-img extracted-style-12" >
+          <span class="muro-tag extracted-style-13" >Consejería</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">Sanando la raíz en el hogar</h3>
@@ -357,28 +153,28 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
     <p class="sec-desc">No fragmentamos la realidad en "espiritual" y "secular". Formamos el corazón para reconocer el orden del Creador en todas las dimensiones de la vida cotidiana. Estas son algunas de las áreas donde buscamos restaurar la coherencia:</p>
     
     <div class="facetas-grid reveal">
-      <div class="esf-card" style="border-top: 3px solid #5B2C8D">
-        <div class="esf-dot" style="background: #5B2C8D"></div>
+      <div class="esf-card extracted-style-14" >
+        <div class="esf-dot extracted-style-15" ></div>
         <h3>Fe y Adoración</h3><p>Nuestra orientación última</p>
       </div>
-      <div class="esf-card" style="border-top: 3px solid #1E6B3C">
-        <div class="esf-dot" style="background: #1E6B3C"></div>
+      <div class="esf-card extracted-style-16" >
+        <div class="esf-dot extracted-style-17" ></div>
         <h3>Aprendizaje</h3><p>Desarrollo integral de la persona</p>
       </div>
-      <div class="esf-card" style="border-top: 3px solid #2980B9">
-        <div class="esf-dot" style="background: #2980B9"></div>
+      <div class="esf-card extracted-style-18" >
+        <div class="esf-dot extracted-style-19" ></div>
         <h3>El Hogar</h3><p>El primer núcleo formativo</p>
       </div>
-      <div class="esf-card" style="border-top: 3px solid #C0392B">
-        <div class="esf-dot" style="background: #C0392B"></div>
+      <div class="esf-card extracted-style-20" >
+        <div class="esf-dot extracted-style-21" ></div>
         <h3>Creatividad</h3><p>La belleza que refleja Su luz</p>
       </div>
-      <div class="esf-card" style="border-top: 3px solid #C8922A">
-        <div class="esf-dot" style="background: #C8922A"></div>
+      <div class="esf-card extracted-style-22" >
+        <div class="esf-dot extracted-style-23" ></div>
         <h3>Las Ciencias</h3><p>Asombro ante el orden creado</p>
       </div>
-      <div class="esf-card" style="border-top: 3px solid #16A085">
-        <div class="esf-dot" style="background: #16A085"></div>
+      <div class="esf-card extracted-style-24" >
+        <div class="esf-dot extracted-style-25" ></div>
         <h3>Comunidad</h3><p>Servicio y justicia al prójimo</p>
       </div>
     </div>
@@ -393,7 +189,7 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
     <div class="fasc-layout">
       <div>
         <div class="fasc-free-label reveal">
-          <span class="chip chip-free" style="padding:.25rem .65rem;border-radius:4px;border:1px solid;color:var(--success);background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25)">✦ Fascículo libre</span>
+          <span class="chip chip-free extracted-style-26" >✦ Fascículo libre</span>
           Lee el primero completo en la App
         </div>
         <div class="fasc-preview reveal">
@@ -432,10 +228,10 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
           <div class="fasc-row" data-locked="true"><span class="fasc-n">06</span><div class="fasc-info"><p class="fasc-name">El hijo que ya se fue</p><p class="fasc-hint">Qué hacer cuando la distancia ya ocurrió</p></div><span class="fasc-badge badge-lock">🔒</span></div>
           <div class="fasc-row" data-locked="true"><span class="fasc-n">07</span><div class="fasc-info"><p class="fasc-name">El padre que sigue</p><p class="fasc-hint">El mapa completo para el próximo lunes</p></div><span class="fasc-badge badge-lock">🔒</span></div>
           <div class="catalog-footer">
-            <a href="https://wa.me/529619702540?text=Hola,%20quiero%20adquirir%20El%20Orden%20Correcto%20Temporada%201%20completa%20por%20%243%20USD" class="btn btn-wa" style="width:100%;justify-content:center" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/529619702540?text=Hola,%20quiero%20adquirir%20El%20Orden%20Correcto%20Temporada%201%20completa%20por%20%243%20USD" class="btn btn-wa extracted-style-27"  target="_blank" rel="noopener noreferrer">
               Adquirir colección — $3 USD
             </a>
-            <p style="font-size:.75rem;color:var(--inkLow);text-align:center;margin-top:.6rem">PDF digital · Pago por WhatsApp · Licencia personal</p>
+            <p  class="extracted-style-28">PDF digital · Pago por WhatsApp · Licencia personal</p>
           </div>
         </div>
       </div>
@@ -454,7 +250,7 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
       <a href="#descargar" class="demo-card reveal app-trigger" data-target="La Fragua"><span class="demo-icon">⚒️</span><p class="demo-school">Docentes</p><h3 class="demo-name">La Fragua</h3><p class="demo-desc">Para educadores que quieren abandonar la confusión de los sistemas modernos y aplicar un enfoque claro en su práctica diaria.</p><span class="demo-cta">Ver en la App →</span></a>
       <a href="#descargar" class="demo-card reveal app-trigger" data-target="Huerto Matrimonial"><span class="demo-icon">🏡</span><p class="demo-school">Familias</p><h3 class="demo-name">Huerto Matrimonial</h3><p class="demo-desc">Módulos de herramientas prácticas para restaurar el orden en el matrimonio y criar hijos con propósito.</p><span class="demo-cta">Ver en la App →</span></a>
       <a href="#descargar" class="demo-card reveal app-trigger" data-target="Roble de la Sabiduría"><span class="demo-icon">🌳</span><p class="demo-school">Adultos Mayores</p><h3 class="demo-name">Roble de la Sabiduría</h3><p class="demo-desc">El conocimiento acumulado de una vida convertido en el mayor legado para las generaciones que vienen.</p><span class="demo-cta">Ver en la App →</span></a>
-      <a href="https://wa.me/529619702540?text=Hola,%20quiero%20información%20sobre%20las%20escuelas%20del%20CER" class="demo-card reveal" target="_blank" rel="noopener noreferrer" style="border-color:rgba(37,99,235,.25)"><span class="demo-icon">💬</span><p class="demo-school" style="color:#93C5FD">¿Necesitas orientación?</p><h3 class="demo-name">Habla con el Instituto</h3><p class="demo-desc">Si no sabes qué escuela le corresponde a tu familia o quieres información sobre inscripciones, escríbenos directamente.</p><span class="demo-cta" style="color:#93C5FD">Abrir WhatsApp →</span></a>
+      <a href="https://wa.me/529619702540?text=Hola,%20quiero%20información%20sobre%20las%20escuelas%20del%20CER" class="demo-card reveal extracted-style-29" target="_blank" rel="noopener noreferrer" ><span class="demo-icon">💬</span><p class="demo-school extracted-style-30" >¿Necesitas orientación?</p><h3 class="demo-name">Habla con el Instituto</h3><p class="demo-desc">Si no sabes qué escuela le corresponde a tu familia o quieres información sobre inscripciones, escríbenos directamente.</p><span class="demo-cta extracted-style-30" >Abrir WhatsApp →</span></a>
     </div>
   </div>
 </section>
@@ -465,7 +261,7 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
       <div class="dl-text reveal">
         <p class="sec-eyebrow">Ecosistema Nativo</p>
         <h2 class="sec-title" id="dl-title">La profundidad que buscas<br/><em>vive en la App.</em></h2>
-        <p style="font-size:1rem;color:var(--inkMid);line-height:1.8;margin-bottom:2rem">La web es el inicio del camino. Para profundizar en el estudio, tomar cursos guiados y llevar un registro de tu crecimiento, necesitas Reforma 2.1 en tu dispositivo.</p>
+        <p  class="extracted-style-31">La web es el inicio del camino. Para profundizar en el estudio, tomar cursos guiados y llevar un registro de tu crecimiento, necesitas Reforma 2.1 en tu dispositivo.</p>
         
         <div class="dl-features">
           <div class="dl-feat"><div class="dl-feat-dot"></div>Lector de Libros Integrado</div>
@@ -476,7 +272,7 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
           <div class="dl-feat"><div class="dl-feat-dot"></div>Métricas del Corazón</div>
         </div>
         
-        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <div  class="extracted-style-32">
           <a href="#" class="btn btn-gold btn-sm">↓ Descargar APK (Android)</a>
           <a href="https://wa.me/529619702540?text=Hola,%20quiero%20información%20sobre%20Reforma%202.1" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">WhatsApp — Soporte</a>
         </div>
@@ -489,16 +285,16 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
             <div class="app-brand">Reforma 2.1 <small>Panel Principal</small></div>
           </div>
           <div class="app-modules">
-            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-teologia)"></div><span>Lector</span><small>Libros y PDF</small></div>
-            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-psico)"></div><span>Audios</span><small>Podcast Nativo</small></div>
-            <div class="app-mod"><div class="app-mod-dot" style="background:var(--gold)"></div><span>Escuelas</span><small>Cursos Activos</small></div>
-            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-pedagogia)"></div><span>Progreso</span><small>Plan de Estudios</small></div>
-            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-hermeneutica)"></div><span>Consejería</span><small>Restauración Integral</small></div>
-            <div class="app-mod"><div class="app-mod-dot" style="background:var(--success)"></div><span>Hoy</span><small>Reflexión Diaria</small></div>
+            <div class="app-mod"><div class="app-mod-dot extracted-style-33" ></div><span>Lector</span><small>Libros y PDF</small></div>
+            <div class="app-mod"><div class="app-mod-dot extracted-style-34" ></div><span>Audios</span><small>Podcast Nativo</small></div>
+            <div class="app-mod"><div class="app-mod-dot extracted-style-35" ></div><span>Escuelas</span><small>Cursos Activos</small></div>
+            <div class="app-mod"><div class="app-mod-dot extracted-style-36" ></div><span>Progreso</span><small>Plan de Estudios</small></div>
+            <div class="app-mod"><div class="app-mod-dot extracted-style-37" ></div><span>Consejería</span><small>Restauración Integral</small></div>
+            <div class="app-mod"><div class="app-mod-dot extracted-style-38" ></div><span>Hoy</span><small>Reflexión Diaria</small></div>
           </div>
-          <div style="margin-top:1rem;padding:.75rem;background:rgba(200, 146, 42,.06);border:1px solid rgba(200, 146, 42,.15);border-radius:10px;display:flex;align-items:center;justify-content:space-between">
-            <div><p style="font-size:.7rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem">Estado del Corazón</p><p style="font-family:var(--serif);font-size:1.1rem;color:var(--ink);font-weight:700;line-height:1">Enfoque Claro</p></div>
-            <div style="text-align:right"><p style="font-size:.7rem;color:var(--inkLow);margin-bottom:.2rem">Última Reflexión</p><p style="font-size:.9rem;color:var(--ink);font-weight:600">Corazón receptivo</p></div>
+          <div  class="extracted-style-39">
+            <div><p  class="extracted-style-40">Estado del Corazón</p><p  class="extracted-style-41">Enfoque Claro</p></div>
+            <div  class="extracted-style-42"><p  class="extracted-style-43">Última Reflexión</p><p  class="extracted-style-44">Corazón receptivo</p></div>
           </div>
         </div>
       </div>
@@ -541,7 +337,7 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-header">
       <div class="modal-meta">
-        <span id="modal-sphere" style="color:var(--gold);font-weight:bold;">Materia</span>
+        <span id="modal-sphere"  class="extracted-style-45">Materia</span>
         <span id="modal-time">Tiempo</span>
       </div>
       <h2 class="modal-title" id="modal-title">Título</h2>
@@ -556,7 +352,7 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
         </div>
       <div class="modal-exercise" id="modal-bottombox">
         <strong>Ejercicio Práctico</strong>
-        <p id="modal-exercise" style="margin:0;font-size:.95rem;">Ejercicio...</p>
+        <p id="modal-exercise"  class="extracted-style-46">Ejercicio...</p>
       </div>
     </div>
     <div class="modal-footer">
@@ -565,225 +361,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
   </div>
 </div>
 
-<script>
-// BASE DE DATOS LOCAL
-const contenidosDB = {
-  // DEVOCIONALES
-  'devocional_01': {
-    tipo: 'devocional', esfera: 'Familia y Fe', tiempo: '2 min', serie: 'Reflexiones de Hogar',
-    titulo: 'Lo que tus hijos van a profetizar',
-    lead: '“Y vuestros hijos e hijas profetizarán…”', autor: 'Hechos 2:17',
-    texto: `<p>Cada vez que alguien cita este versículo, la conversación gira hacia lo mismo: señales y dones. Pero rara vez nos detenemos en quiénes profetizan: los hijos.</p><p>Un profeta es alguien que lleva la verdad de Dios. Y los hijos profetizan lo que recibieron. Lo que sale de sus bocas en el mundo es el eco de lo que escucharon y vivieron en casa.</p><p>Hay una cadena invisible en la familia. El padre y la madre son, en el diseño de Dios, los primeros transmisores de una manera de ver el mundo. No se la transmiten con teorías — se la transmiten con la mesa, con el conflicto resuelto o no resuelto, con lo que celebran y con lo que ignoran, con las preguntas que se hacen juntos en la noche.</p><p>Si esa transmisión está orientada hacia el Señor, si en ese hogar se habla de que Dios creó todo y lo creó bueno, de que algo se rompió y de que hay una esperanza real, los hijos construirán desde ahí una fe que les durará.</p>`,
-    ejercicio: 'Esta semana, elige una sola verdad sobre Dios que quieras que tu hijo lleve consigo toda la vida. Búscala hoy y compártela de forma natural, no como un sermón.'
-  },
-  'devocional_02': {
-    tipo: 'devocional', esfera: 'Familia y Fe', tiempo: '2 min', serie: 'Reflexiones de Hogar',
-    titulo: 'La visión que ya traen',
-    lead: '“Vuestros jóvenes verán visiones…”', autor: 'Joel 2:28',
-    texto: `<p>Nadie sale al mundo con el corazón vacío. El joven que llega a la universidad o al trabajo, lleva ya dentro una manera de leer lo que le pasa. Una manera de entender por qué las cosas son como son. Eso es una visión.</p><p>Si creció entendiendo que Dios creó el mundo con propósito, sale con algo que lo sostiene ante el caos. Cuando la cultura le diga que la identidad se construye sola o que la vida es puro azar, él tiene ya algo con qué responder. No teorías — una visión formada desde adentro.</p><p>Los jóvenes vivirán de acuerdo a la visión que llevan. La diferencia no está en cuánto creen, sino en qué creen. Y eso empezó mucho antes de que salieran por la puerta.</p>`,
-    ejercicio: 'Hazle a tu hijo joven una sola pregunta esta semana: ¿Cómo ves el mundo ahora mismo? Solo escucha, no corrijas. Su respuesta te dirá dónde está su corazón.'
-  },
 
-  // ARTÍCULOS
-  'article_fisica': {
-    tipo: 'articulo', esfera: 'Las Ciencias', tiempo: '8 min de lectura', serie: 'Entendiendo el Orden',
-    titulo: 'El Espejismo del Tiempo',
-    lead: '¿Y si el tiempo no es una dimensión que podamos recorrer, sino la partitura misma que mantiene al universo en sintonía?', autor: 'Futura Editions',
-    texto: `
-      <p>Por un momento, olvide todo lo que las películas de ciencia ficción le han enseñado sobre viajar al pasado o congelar el reloj.</p>
-      <p>La ciencia moderna sufre hoy de un deseo obsesivo por reducir el universo a materia o energía. Creemos que, si logramos entender la partícula más diminuta, entenderemos el misterio de la vida y de la sociedad. Esto es un espejismo.</p>
-      <p>El universo no es una sopa turbia donde todo es casualidad o física ciega. Es una sinfonía sumamente estructurada. En una orquesta, el violín (la física) no intenta explicar ni devorar al piano (la biología). Tocan juntos bajo la batuta de un mismo orden.</p>
-      <p>Olvida los viajes al pasado. El tiempo es el orden cósmico que sostiene todas las facetas de la existencia. Es el orden que nos permite vivir hoy con coherencia. Quizás debamos aceptar que la vida fluye en una dirección, y que este momento presente es el punto donde todas las leyes del cosmos convergen en perfecta armonía.</p>
-    `
-  },
-  'article_homeschool': {
-    tipo: 'articulo', esfera: 'Crianza y Aprendizaje', tiempo: '7 min de lectura', serie: 'Construyendo Juntos',
-    titulo: 'Más allá de solo educar en casa',
-    lead: 'Usamos nuestras casas para sobrevivir a la tormenta, pero el diseño de Dios nos llama a construir juntos para transformar la cultura.', autor: 'Futura Editions',
-    texto: `
-      <p>Imagínese la siguiente escena: un barco inmenso comienza a hundirse. Ante el pánico, las familias hacen lo sensato: suben a sus hijos a botes salvavidas y reman lejos del desastre. Ese gran barco que se hunde es gran parte del sistema educativo secular actual. Y esos botes salvavidas son la educación en casa.</p>
-      <p>Educar en el hogar es, muchas veces, una medida de supervivencia llena de amor. Sin embargo, hay un peligro cuando olvidamos la naturaleza de nuestro rescate: no se puede cruzar un océano entero en un bote salvavidas.</p>
-      <p>El aislamiento extremo no purifica el corazón. La maldad no es un virus externo que el niño contrae al jugar en el parque; la raíz del egoísmo ya habita en el corazón por naturaleza. Necesitamos una educación que entienda que toda la realidad fue ordenada por el Creador y que nos enseñe a vivir en comunidad.</p>
-      <p>Salga del aislamiento. La carga de educar no fue diseñada para llevarse a solas; en comunidad —uniendo familias e iglesia— es como levantamos verdaderos barcos para redimir y servir a la cultura que nos rodea.</p>
-    `
-  },
-  'article_nem': {
-    tipo: 'articulo', esfera: 'Justicia y Comunidad', tiempo: '9 min de lectura', serie: 'Corrigiendo la Raíz',
-    titulo: 'El peligro de los nuevos sistemas educativos',
-    lead: 'Usamos las estructuras actuales no por ser perfectas, sino para corregir sus fallas desde la raíz de nuestras escuelas.', autor: 'Futura Editions',
-    texto: `
-      <p>El debate actual sobre los nuevos modelos educativos a nivel nacional no persigue fantasmas. Refleja una profunda preocupación por la dilución de contenidos fundamentales y una fuerte carga ideológica.</p>
-      <p>Cuando el conocimiento se desvincula de un orden superior y se somete enteramente a la ideología del Estado o a los "usos y costumbres" locales sin filtro moral, se produce una crisis de identidad. Los estudiantes aprenden a fragmentar su pensamiento: la fe se vuelve algo privado, mientras que la comprensión de la realidad queda dictada por la agenda del momento.</p>
-      <p>Ante esto, no proponemos huir, sino anclarnos. Si usamos una malla curricular oficial, lo hacemos únicamente como un andamio para llevar la verdadera estructura al salón de clases. El objetivo no es solo aislar a los estudiantes, sino formarlos con coherencia para que sepan reconocer el orden de Dios en cada materia y aprendan a servir con excelencia en medio de una cultura fragmentada.</p>
-    `
-  }
-};
-
-// LÓGICA DEL MODAL
-function openModal(id) {
-  const data = contenidosDB[id];
-  if(!data) return;
-  
-  // Info de cabecera
-  document.getElementById('modal-sphere').innerText = data.esfera;
-  document.getElementById('modal-time').innerText = data.tiempo;
-  document.getElementById('modal-title').innerText = data.titulo;
-  document.getElementById('modal-series').innerText = data.serie;
-  
-  // Estilar la caja superior
-  const topBox = document.getElementById('modal-topbox');
-  if(data.tipo === 'devocional') {
-    topBox.classList.add('is-devo');
-    topBox.style.borderLeftColor = 'var(--gold)';
-    document.getElementById('modal-verse').style.color = 'var(--ink)';
-  } else {
-    topBox.classList.remove('is-devo');
-    topBox.style.borderLeftColor = 'var(--cobalt)';
-    document.getElementById('modal-verse').style.color = 'var(--inkMid)';
-  }
-  
-  document.getElementById('modal-verse').innerText = data.lead;
-  document.getElementById('modal-reference').innerText = '— ' + data.autor;
-  
-  // Cuerpo del texto
-  document.getElementById('modal-text').innerHTML = data.texto;
-  
-  // Mostrar u ocultar ejercicio
-  const bottomBox = document.getElementById('modal-bottombox');
-  if(data.ejercicio) {
-    bottomBox.style.display = 'block';
-    document.getElementById('modal-exercise').innerText = data.ejercicio;
-  } else {
-    bottomBox.style.display = 'none';
-  }
-  
-  // Abrir Modal
-  document.getElementById('articleModal').classList.add('open');
-  document.body.style.overflow = 'hidden'; 
-}
-
-function closeModal() {
-  document.getElementById('articleModal').classList.remove('open');
-  document.body.style.overflow = 'auto';
-}
-
-document.getElementById('articleModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// CONSTELACIONES Y LÓGICA GENERAL
-(function(){
-  'use strict';
-  
-  const canvas = document.createElement('canvas');
-  canvas.id = 'stars-canvas';
-  canvas.style.position = 'fixed';
-  canvas.style.inset = '0';
-  canvas.style.pointerEvents = 'none';
-  canvas.style.zIndex = '0';
-  document.body.insertBefore(canvas, document.body.firstChild);
-
-  const ctx = canvas.getContext('2d');
-  let width, height;
-
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    drawSpace();
-  }
-
-  let seed = 42;
-  function random() {
-    let x = Math.sin(seed++) * 10000;
-    return x - Math.floor(x);
-  }
-
-  function drawSpace() {
-    ctx.clearRect(0, 0, width, height);
-    seed = 42; 
-    const stars = [];
-    const gold = 'rgba(200, 146, 42, ';
-    const cobalt = 'rgba(45, 95, 166, ';
-
-    for (let i = 0; i < 150; i++) {
-      const pos = { x: random() * width, y: random() * height };
-      stars.push(pos);
-      const type = Math.floor(random() * 5);
-      let radius = random() * 1.5 + 0.8;
-
-      ctx.beginPath();
-      if (type === 0) {
-        radius *= 1.5;
-        ctx.fillStyle = gold + '0.9)';
-        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.fillStyle = gold + '0.15)';
-        ctx.arc(pos.x, pos.y, radius * 3, 0, Math.PI * 2);
-      } else if (type === 1) {
-        ctx.fillStyle = cobalt + '0.8)';
-        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
-      } else {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
-      }
-      ctx.fill();
-    }
-
-    function drawConstellation(indices) {
-      ctx.beginPath();
-      ctx.strokeStyle = gold + '0.15)';
-      ctx.lineWidth = 0.5;
-      ctx.moveTo(stars[indices[0]].x, stars[indices[0]].y);
-      for (let i = 1; i < indices.length; i++) {
-        ctx.lineTo(stars[indices[i]].x, stars[indices[i]].y);
-      }
-      ctx.stroke();
-    }
-
-    drawConstellation([10, 25, 40, 55, 10]);
-    drawConstellation([80, 85, 90, 95]);
-    drawConstellation([110, 115, 120, 110]);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-
-  // NAVEGACIÓN Y MENÚ MÓVIL
-  const nav=document.getElementById('nav');
-  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
-  
-  const burger=document.getElementById('burger'),mobMenu=document.getElementById('mob-menu');
-  let open=false;
-  const toggle=()=>{open=!open;burger.setAttribute('aria-expanded',open);mobMenu.classList.toggle('open',open);const s=burger.querySelectorAll('span');if(open){s[0].style.transform='rotate(45deg) translate(5px,5px)';s[1].style.opacity='0';s[2].style.transform='rotate(-45deg) translate(5px,-5px)'}else s.forEach(x=>{x.style.transform='';x.style.opacity='';})};
-  burger.addEventListener('click',toggle);
-  mobMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(open)toggle()}));
-  document.addEventListener('click',e=>{if(open&&!nav.contains(e.target))toggle()});
-  
-  const revealEls=document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -50px 0px'});revealEls.forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});}else revealEls.forEach(el=>el.classList.add('visible'));
-
-  // EMBUDO APP
-  document.querySelectorAll('.app-trigger').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if(!e.target.closest('.muro-card') || !e.target.closest('.muro-card').hasAttribute('onclick')) {
-        const articleName = e.target.closest('.app-trigger').getAttribute('data-target') || 'este contenido';
-        const dlSection = document.getElementById('descargar');
-        const dlTitle = dlSection.querySelector('#dl-title');
-        dlTitle.innerHTML = `Accede a <em>"${articleName}"</em><br/>desde nuestra App.`;
-        dlSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        dlSection.style.transition = "background 0.5s";
-        dlSection.style.background = "var(--surface2)";
-        setTimeout(() => dlSection.style.background = "transparent", 1500);
-      }
-    });
-  });
-
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{if(a.classList.contains('app-trigger')) return; const t=document.querySelector(a.getAttribute('href'));if(!t)return;e.preventDefault();const h=(document.querySelector('#nav')||{offsetHeight:72}).offsetHeight+16;window.scrollTo({top:t.getBoundingClientRect().top+scrollY-h,behavior:'smooth'});});});
-})();
-</script>
+<script src="js/db_articulos.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
