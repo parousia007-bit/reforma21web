@@ -1,0 +1,15 @@
+node_modules/
+.npm/
+npm-debug.log*
+.DS_Store
+.env
+.vscode/
+.idea/
+*.log
+dist/
+build/
+# También ignoramos archivos de la app si no los quieres en este repo web
+android/
+ios/
+build/
+*.docx

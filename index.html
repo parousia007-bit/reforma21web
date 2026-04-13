@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Reforma 2.1 — Artículos, devocionales y demostraciones del Modelo Educativo Trascendental. Editorial Futura Editions."/>
+<title>Reforma 2.1 · Editorial Futura Editions</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --bg: #131625; --surface: #1E2132; --surface2: #2A2E45; --border: #3D3D5C;
+  --ink: #E8EAF0; --inkMid: #B0B8CC; --inkLow: #8892A8;
+  --gold: #C8922A; --goldGlow: rgba(200, 146, 42, 0.10);
+  --cobalt: #2D5FA6; --cobaltDim: #1A2E5A; --success: #1E6B3C; --wa: #25D366; --warning: #F59E0B;
+  --esf-teologia: #5B2C8D; --esf-psicoped: #1E6B3C; --esf-psico: #2980B9;
+  --esf-hermeneutica: #C0392B; --esf-filosofia: #C8922A; --esf-pedagogia: #16A085;
+  --serif: 'Merriweather', Georgia, serif; --sans: 'Source Sans 3', system-ui, sans-serif;
+  --r: 14px; --r2: 20px; --max: 1160px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;overflow-x:hidden}
+
+/* NAVEGACIÓN */
+#nav{position:fixed;top:0;left:0;right:0;z-index:90;transition:background .3s}
+#nav.scrolled{background:rgba(19, 22, 37, 0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{display:flex;align-items:center;gap:.5rem;font-family:var(--serif);font-size:1.2rem;color:var(--ink);text-decoration:none}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
+.nav-links a{font-size:.85rem;color:var(--inkMid);padding:.4rem .8rem;border-radius:8px;text-decoration:none;transition:color .2s,background .2s}
+.nav-links a:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+.nav-dl{background:var(--goldGlow);color:var(--gold)!important;border:1px solid rgba(200, 146, 42, 0.25);border-radius:8px}
+.nav-dl:hover{background:var(--gold)!important;color:var(--bg)!important}
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.burger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .3s}
+.mob-menu{display:none;background:rgba(19, 22, 37, 0.98);border-bottom:1px solid var(--border);padding:1rem 1.5rem;position:fixed;top:60px;left:0;right:0;z-index:89;}
+.mob-menu.open{display:block}
+.mob-menu a{display:block;padding:.75rem 0;color:var(--inkMid);text-decoration:none;border-bottom:1px solid var(--border);font-size:1rem}
+
+/* COMPONENTES GENERALES */
+.hero{min-height:100svh;display:flex;align-items:center;padding:8rem 1.5rem 4rem;position:relative;z-index:1}
+.hero-inner{max-width:var(--max);margin:0 auto;width:100%}
+.hero-label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4.8rem);font-weight:300;line-height:1.1;margin-bottom:1.5rem}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-sub{font-size:clamp(1rem,1.8vw,1.15rem);color:var(--inkMid);max-width:600px;line-height:1.85;margin-bottom:2.5rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem 1.6rem;border-radius:var(--r);font-family:var(--sans);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;border:none}
+.btn-gold{background:var(--gold);color:var(--bg)}
+.btn-gold:hover{background:#E8C060;transform:translateY(-2px);box-shadow:0 8px 24px rgba(200, 146, 42,.3)}
+.btn-outline{background:transparent;color:var(--ink);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-wa:hover{background:#1ea952;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.3)}
+.btn-sm{padding:.5rem 1rem;font-size:.8rem}
+
+section{position:relative;z-index:1}
+.container{max-width:var(--max);margin:0 auto;padding:0 1.5rem}
+.sec-pad{padding:5rem 0}
+.sec-eyebrow{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+.sec-title{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;line-height:1.15;margin-bottom:1.25rem}
+.sec-title em{font-style:italic;color:var(--gold)}
+.sec-desc{font-size:1rem;color:var(--inkMid);max-width:600px;line-height:1.8;margin-bottom:3rem}
+
+/* ACCESOS RÁPIDOS */
+.qa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:4rem}
+.qa-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem;display:flex;align-items:center;gap:1rem;text-decoration:none;transition:all .3s}
+.qa-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2)}
+.qa-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;font-size:1.2rem}
+.qa-card:nth-child(1) .qa-icon{background:rgba(200,146,42,0.1);color:var(--gold)}
+.qa-card:nth-child(2) .qa-icon{background:rgba(30,107,60,0.1);color:var(--success)}
+.qa-card:nth-child(3) .qa-icon{background:rgba(45,95,166,0.1);color:var(--cobalt)}
+.qa-card:nth-child(4) .qa-icon{background:rgba(91,44,141,0.1);color:var(--esf-teologia)}
+.qa-text b{display:block;font-size:.95rem;color:var(--ink);line-height:1.2;margin-bottom:.2rem}
+.qa-text small{display:block;font-size:.75rem;color:var(--inkLow)}
+
+/* MURO DE ACTUALIDAD */
+.muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
+.muro-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s; cursor:pointer;}
+.muro-card:hover { transform: translateY(-5px); border-color: var(--gold); }
+.muro-img { height: 180px; background-size: cover; background-position: center; position: relative; }
+.muro-tag { position: absolute; top: 1rem; left: 1rem; color: #fff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.muro-content { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+.muro-title { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); margin-bottom: 0.75rem; line-height: 1.3; }
+.muro-excerpt { font-size: 0.9rem; color: var(--inkMid); margin-bottom: 1.5rem; line-height: 1.6; flex: 1; }
+
+/* ESFERAS MODALES */
+.esferas-section{background:var(--surface); border-top:1px solid var(--border)}
+.esferas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;}
+.esf-card{background:var(--bg); border:1px solid var(--border); padding:1.5rem 1rem; border-radius:16px; text-align:center; transition:all .3s}
+.esf-card:hover{transform:translateY(-5px)}
+.esf-dot{width:12px;height:12px;border-radius:50%;margin:0 auto 1rem;}
+.esf-card h3{font-size:.9rem; color:var(--ink); margin-bottom:.5rem; font-weight:600}
+.esf-card p{font-size:.75rem; color:var(--inkLow); line-height:1.4}
+
+/* APP MOCKUP SECTION */
+.dl-section{border-top:1px solid var(--border)}
+.dl-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;padding:5rem 0}
+.dl-features{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem}
+.dl-feat{display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--inkMid);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:.5rem .85rem}
+.dl-feat-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.dl-visual{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:2rem;position:relative;overflow:hidden}
+.app-frame{background:var(--bg);border-radius:16px;border:1px solid var(--border);padding:1.25rem}
+.app-topbar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.app-logo-circle{width:36px;height:36px;border-radius:50%;background:rgba(200, 146, 42,.12);border:1px solid rgba(200, 146, 42,.3);display:flex;align-items:center;justify-content:center;font-size:.85rem;color:var(--gold);flex-shrink:0}
+.app-brand{font-family:var(--serif);font-size:.95rem;color:var(--ink)}
+.app-brand small{display:block;font-size:.7rem;color:var(--inkLow);font-family:var(--sans)}
+.app-modules{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.app-mod{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.65rem .75rem; display:flex; flex-direction:column; justify-content:center}
+.app-mod-dot{width:8px;height:8px;border-radius:50%;margin-bottom:.4rem}
+.app-mod span{font-size:.75rem;color:var(--ink);display:block;margin-bottom:.15rem;font-weight:600}
+.app-mod small{font-size:.65rem;color:var(--inkLow)}
+
+footer{border-top:1px solid var(--border);background:var(--surface);position:relative;z-index:1}
+.footer-inner{max-width:var(--max);margin:0 auto;padding:3rem 1.5rem 2rem;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem}
+.footer-brand a{font-family:var(--serif);font-size:1.1rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
+.footer-brand p{font-size:.85rem;color:var(--inkMid);line-height:1.7}
+.footer-nav h4{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--inkLow);margin-bottom:.75rem}
+.footer-nav ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.footer-nav a{font-size:.875rem;color:var(--inkMid);text-decoration:none;transition:color .2s}
+.footer-nav a:hover{color:var(--gold)}
+.footer-bottom{max-width:var(--max);margin:0 auto;padding:1.25rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.footer-bottom p{font-size:.8rem;color:var(--inkLow)}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* MODAL DE LECTURA (DEVOCIONAL/ARTÍCULO) */
+.modal-overlay {position:fixed;inset:0;background:rgba(19, 22, 37, 0.95);backdrop-filter:blur(10px);z-index:100;display:none;justify-content:center;align-items:flex-start;padding:2rem;overflow-y:auto;}
+.modal-overlay.open {display:flex;}
+.modal-content {background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);width:100%;max-width:800px;margin:auto;position:relative;}
+.modal-close {position:absolute;top:1.5rem;right:1.5rem;background:var(--surface2);border:none;color:var(--ink);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover {background:var(--border);color:var(--gold);}
+.modal-header {padding:2.5rem 2.5rem 1.5rem;border-bottom:1px solid var(--border);}
+.modal-meta {display:flex;justify-content:space-between;font-size:.8rem;color:var(--inkLow);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.1em;}
+.modal-title {font-family:var(--serif);font-size:2.2rem;color:var(--ink);line-height:1.2;margin-bottom:.5rem;}
+.modal-subtitle {font-family:var(--sans);font-size:.9rem;color:var(--gold);font-weight:bold;letter-spacing:1px;text-transform:uppercase;}
+.modal-body {padding:2.5rem;font-size:1.05rem;line-height:1.8;color:var(--inkMid);}
+.modal-body p {margin-bottom:1.5rem;}
+.modal-body h3 {font-family:var(--serif);font-size:1.4rem;color:var(--gold);margin:2.5rem 0 1rem 0;font-weight:bold;}
+.modal-body ul {margin-left:20px;margin-bottom:1.5rem;}
+.modal-body li {margin-bottom:0.5rem;}
+.modal-body blockquote {margin:2rem 0;padding:1.5rem 2rem;background:var(--surface2);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;}
+.modal-body blockquote p {font-family:var(--serif);font-style:italic;color:var(--gold);margin:0;font-size:1.15rem;}
+
+.modal-verse-box {background:var(--surface2);padding:1.5rem;border-left:4px solid var(--cobalt);border-radius:0 12px 12px 0;margin-bottom:2.5rem;}
+.modal-verse-box.is-devo {border-color:var(--gold);}
+.modal-verse-box p {font-family:var(--serif);font-style:italic;color:var(--ink);margin:0 0 .5rem 0;}
+.modal-verse-box cite {font-size:.85rem;color:var(--inkLow);display:block;margin-top:8px;font-style:normal;font-weight:600;}
+
+.modal-exercise {background:rgba(200,146,42,0.05);border:1px solid rgba(200,146,42,0.2);padding:1.5rem;border-radius:12px;margin-top:2rem;}
+.modal-exercise strong {color:var(--gold);display:block;margin-bottom:.5rem;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;}
+.modal-footer {padding:2rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:center;}
+
+@media(max-width:960px){
+  .dl-inner{grid-template-columns:1fr}
+  .dl-visual{display:none}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .nav-links{display:none}.burger{display:flex}
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%}
+  .footer-inner{grid-template-columns:1fr}
+  .dl-features{grid-template-columns:1fr}
+  .modal-overlay {padding:0;}
+  .modal-content {border-radius:0;min-height:100vh;}
+}
+</style>
+</head>
+<body>
+<header>
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">✦ <em style="font-style:normal">Reforma</em> <span>2.1</span></a>
+    <ul class="nav-links">
+      <li><a href="#muro">Muro y Artículos</a></li>
+      <li><a href="#esferas">Esferas MET</a></li>
+      <li><a href="#descargar" class="nav-dl">Descargar App</a></li>
+    </ul>
+    <button class="burger" id="burger" aria-label="Menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mob-menu" id="mob-menu">
+    <a href="#muro">Muro y Artículos</a>
+    <a href="#esferas">Esferas MET</a>
+    <a href="#descargar" style="color:var(--gold)">↓ Descargar App</a>
+  </div>
+</nav>
+</header>
+<main>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Editorial Futura Editions</p>
+    <h1>Formación que parte<br/><em>del origen correcto.</em></h1>
+    <p class="hero-sub">El Modelo Educativo Trascendental (MET) no es una metodología más. Es un <em>lente cosmovisional</em> que lee la realidad desde Creación → Caída → Redención. La web es la vitrina, <strong>el ecosistema de estudio y lectura vive en la App.</strong></p>
+    
+    <div class="hero-actions">
+      <a href="#descargar" class="btn btn-gold">↓ Descargar Reforma 2.1</a>
+      <a href="#muro" class="btn btn-outline">Ver últimos análisis</a>
+    </div>
+
+    <div class="qa-grid reveal">
+      <a href="#esferas" class="qa-card">
+        <span class="qa-icon">📚</span><div class="qa-text"><b>Materias MET</b><small>Catálogo Curricular</small></div>
+      </a>
+      <a href="#muro" class="qa-card app-trigger" data-target="Instituto Vida Nueva">
+        <span class="qa-icon">⛪</span><div class="qa-text"><b>Vida Nueva</b><small>Programa Iglesias</small></div>
+      </a>
+      <a href="#muro" class="qa-card app-trigger" data-target="Servicios y Plantación">
+        <span class="qa-icon">🤝</span><div class="qa-text"><b>Servicios</b><small>Plantación y Asesoría</small></div>
+      </a>
+      <a href="#descargar" class="qa-card">
+        <span class="qa-icon">🏛️</span><div class="qa-text"><b>Futura Editions</b><small>Quiénes Somos</small></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="article-section sec-pad" id="muro">
+  <div class="container">
+    <div class="sec-eyebrow">Muro de Actualidad</div>
+    <h2 class="sec-title">Análisis desde la <em>Hermenéutica Trascendental</em></h2>
+    <p class="sec-desc">Explora nuestros artículos, devocionales y fragmentos de libros. La lectura profunda y los audiolibros los encuentras en nuestra App nativa.</p>
+    
+    <div class="muro-grid">
+      <article class="muro-card reveal" onclick="openModal('devocional_01')">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800');">
+          <span class="muro-tag" style="background: var(--esf-teologia)">Devocional</span>
+        </div>
+        <div class="muro-content">
+          <h3 class="muro-title">Lo que tus hijos van a profetizar</h3>
+          <p class="muro-excerpt">Reflexión diaria sobre el legado generacional, la instrucción bíblica y cómo el comportamiento del hogar es la verdadera profecía del futuro familiar.</p>
+          <button class="btn btn-outline btn-sm">Leer Devocional →</button>
+        </div>
+      </article>
+
+      <article class="muro-card reveal" onclick="openModal('article_fisica')">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800');">
+          <span class="muro-tag" style="background: var(--esf-psico)">Ciencias</span>
+        </div>
+        <div class="muro-content">
+          <h3 class="muro-title">El espejismo del tiempo</h3>
+          <p class="muro-excerpt">Por qué la física moderna necesita urgentemente una revolución filosófica para no reducir la realidad a simples fórmulas matemáticas.</p>
+          <button class="btn btn-outline btn-sm">Leer Artículo →</button>
+        </div>
+      </article>
+
+      <article class="muro-card reveal" onclick="openModal('article_nem')">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800');">
+          <span class="muro-tag" style="background: var(--esf-pedagogia)">Educación</span>
+        </div>
+        <div class="muro-content">
+          <h3 class="muro-title">El peligro de la Nueva Escuela Mexicana</h3>
+          <p class="muro-excerpt">Usamos el andamio de la Reforma 2016 como escenario para infundir nuestro Modelo Educativo Trascendental y corregir fallas de raíz.</p>
+          <button class="btn btn-outline btn-sm">Leer Artículo →</button>
+        </div>
+      </article>
+
+      <article class="muro-card reveal" onclick="openModal('article_homeschool')">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1484807352052-23338990c6c6?w=800');">
+          <span class="muro-tag" style="background: var(--warning)">Pedagogía</span>
+        </div>
+        <div class="muro-content">
+          <h3 class="muro-title">El espejismo del monasterio</h3>
+          <p class="muro-excerpt">Por qué la "Escuela en Casa" se convierte en solo un barco salvavidas si no se estructura sobre las esferas modales correspondientes.</p>
+          <button class="btn btn-outline btn-sm">Leer Artículo →</button>
+        </div>
+      </article>
+
+      <article class="muro-card reveal" onclick="openModal('devocional_02')">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1518331647614-7a1f04cd34cf?w=500');">
+          <span class="muro-tag" style="background: var(--esf-teologia)">Devocional</span>
+        </div>
+        <div class="muro-content">
+          <h3 class="muro-title">La visión que ya traen</h3>
+          <p class="muro-excerpt">Nadie sale al mundo con el corazón vacío. El joven que llega a la universidad lleva ya dentro una manera de leer lo que le pasa.</p>
+          <button class="btn btn-outline btn-sm">Leer Devocional →</button>
+        </div>
+      </article>
+
+      <article class="muro-card reveal app-trigger" data-target="El Orden Correcto">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800');">
+          <span class="muro-tag" style="background: var(--gold)">Consejería</span>
+        </div>
+        <div class="muro-content">
+          <h3 class="muro-title">El orden que existía antes de que nacieras</h3>
+          <p class="muro-excerpt">Extracto del Fascículo 1 de "El Orden Correcto". Por qué tu hijo se está perdiendo y la ruta de restauración.</p>
+          <button class="btn btn-outline btn-sm">Leer PDF en la App →</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="esferas-section sec-pad" id="esferas">
+  <div class="container">
+    <div class="sec-eyebrow">Modelo Educativo Trascendental</div>
+    <h2 class="sec-title">Las 6 Esferas del <em>Conocimiento</em></h2>
+    <p class="sec-desc">La currícula de Reforma 2.1 no aísla las materias. Las integra reconociendo la soberanía de cada aspecto modal. Inscríbete a los cursos en la App.</p>
+    
+    <div class="esferas-grid reveal">
+      <div class="esf-card" style="border-color: rgba(91,44,141,0.3)">
+        <div class="esf-dot" style="background: var(--esf-teologia)"></div>
+        <h3>Teología</h3><p>Corazón supratemporal y fe</p>
+      </div>
+      <div class="esf-card" style="border-color: rgba(30,107,60,0.3)">
+        <div class="esf-dot" style="background: var(--esf-psicoped)"></div>
+        <h3>Psicopedagogía</h3><p>Desarrollo y aprendizaje integral</p>
+      </div>
+      <div class="esf-card" style="border-color: rgba(41,128,185,0.3)">
+        <div class="esf-dot" style="background: var(--esf-psico)"></div>
+        <h3>Familia</h3><p>El primer aspecto formativo</p>
+      </div>
+      <div class="esf-card" style="border-color: rgba(192,57,43,0.3)">
+        <div class="esf-dot" style="background: var(--esf-hermeneutica)"></div>
+        <h3>Artes</h3><p>Estética y expresión modal</p>
+      </div>
+      <div class="esf-card" style="border-color: rgba(200,146,42,0.3)">
+        <div class="esf-dot" style="background: var(--esf-filosofia)"></div>
+        <h3>Ciencias</h3><p>Análisis pre-teórico de la realidad</p>
+      </div>
+      <div class="esf-card" style="border-color: rgba(22,160,133,0.3)">
+        <div class="esf-dot" style="background: var(--esf-pedagogia)"></div>
+        <h3>Estado</h3><p>Justicia pública y civismo</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dl-section" id="descargar">
+  <div class="container">
+    <div class="dl-inner">
+      <div class="dl-text reveal">
+        <p class="sec-eyebrow">Ecosistema Nativo</p>
+        <h2 class="sec-title" id="dl-title">El aprendizaje profundo<br/><em>vive en la App.</em></h2>
+        <p style="font-size:1rem;color:var(--inkMid);line-height:1.8;margin-bottom:2rem">La web es solo la antesala. Para disfrutar del lector ePub integrado, escuchar audiolibros sin interrupciones, tomar los cursos del CER y llevar un registro de tu desarrollo, necesitas Reforma 2.1 en tu dispositivo Android.</p>
+        
+        <div class="dl-features">
+          <div class="dl-feat"><div class="dl-feat-dot"></div>Lector ePub (Libros Futura)</div>
+          <div class="dl-feat"><div class="dl-feat-dot"></div>Reproductor de Audios</div>
+          <div class="dl-feat"><div class="dl-feat-dot"></div>Videoteca (Cursos MET)</div>
+          <div class="dl-feat"><div class="dl-feat-dot"></div>Consejería PHT Integrada</div>
+          <div class="dl-feat"><div class="dl-feat-dot"></div>Progreso en las 6 Esferas</div>
+          <div class="dl-feat"><div class="dl-feat-dot"></div>Métricas del Corazón</div>
+        </div>
+        
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <a href="#" class="btn btn-gold btn-sm">↓ Descargar APK (Android)</a>
+          <a href="https://wa.me/529619702540?text=Hola,%20quiero%20información%20sobre%20Reforma%202.1" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">WhatsApp — Soporte</a>
+        </div>
+      </div>
+      
+      <div class="dl-visual reveal">
+        <div class="app-frame">
+          <div class="app-topbar">
+            <div class="app-logo-circle">✦</div>
+            <div class="app-brand">Reforma 2.1 <small>Panel Principal</small></div>
+          </div>
+          <div class="app-modules">
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-teologia)"></div><span>Lector de Libros</span><small>Formatos ePub y PDF</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-psico)"></div><span>Audiolibros</span><small>Reproductor Nativo</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--gold)"></div><span>Cursos CER</span><small>5 Escuelas Activas</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-pedagogia)"></div><span>Ruta de Esferas</span><small>Progreso Curricular</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-hermeneutica)"></div><span>Consejería</span><small>Huerto y PHT</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--success)"></div><span>Devocional</span><small>Reflexión de Hoy</small></div>
+          </div>
+          <div style="margin-top:1rem;padding:.75rem;background:rgba(200, 146, 42,.06);border:1px solid rgba(200, 146, 42,.15);border-radius:10px;display:flex;align-items:center;justify-content:space-between">
+            <div><p style="font-size:.7rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem">Estado del Corazón</p><p style="font-family:var(--serif);font-size:1.1rem;color:var(--ink);font-weight:700;line-height:1">Enfoque Claro</p></div>
+            <div style="text-align:right"><p style="font-size:.7rem;color:var(--inkLow);margin-bottom:.2rem">Última Reflexión</p><p style="font-size:.9rem;color:var(--ink);font-weight:600">Corazón receptivo</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#"><span>✦</span> Reforma 2.1</a>
+      <p>Editorial Futura Editions · Centro de Estudio Reformado<br/>Tuxtla Gutiérrez, Chiapas, México</p>
+    </div>
+    <nav class="footer-nav">
+      <h4>Plataforma</h4>
+      <ul>
+        <li><a href="#muro">Muro y Artículos</a></li>
+        <li><a href="#esferas">Las 6 Esferas</a></li>
+        <li><a href="#descargar">Descargar App</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-nav">
+      <h4>Marco y Contacto</h4>
+      <ul>
+        <li><a href="#">Modelo Educativo Trascendental</a></li>
+        <li><a href="#">Hermenéutica Trascendental</a></li>
+        <li><a href="https://wa.me/529619702540" target="_blank" rel="noopener">WhatsApp Ventas</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Editorial Futura Editions · Todos los derechos reservados</p>
+    <p><em>«Todo pensamiento cautivo a la obediencia de Cristo»</em></p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="articleModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header">
+      <div class="modal-meta">
+        <span id="modal-sphere" style="color:var(--gold);font-weight:bold;">Materia</span>
+        <span id="modal-time">Tiempo</span>
+      </div>
+      <h2 class="modal-title" id="modal-title">Título</h2>
+      <p class="modal-subtitle" id="modal-series">Serie</p>
+    </div>
+    <div class="modal-body">
+      <div class="modal-verse-box" id="modal-topbox">
+        <p id="modal-verse">"Frase destacada o versículo..."</p>
+        <cite id="modal-reference">— Referencia</cite>
+      </div>
+      <div id="modal-text">
+        </div>
+      <div class="modal-exercise" id="modal-bottombox">
+        <strong>Ejercicio Práctico</strong>
+        <p id="modal-exercise" style="margin:0;font-size:.95rem;">Ejercicio...</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-gold" onclick="closeModal()">Cerrar Lectura</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// BASE DE DATOS LOCAL
+const contenidosDB = {
+  // DEVOCIONALES
+  'devocional_01': {
+    tipo: 'devocional', esfera: 'Teología', tiempo: '2 min', serie: 'La Profecía del Hogar (1/3)',
+    titulo: 'Lo que tus hijos van a profetizar',
+    lead: '“Y vuestros hijos e hijas profetizarán…”', autor: 'Hechos 2:17 (Joel 2:28)',
+    texto: `<p>Cada vez que alguien cita este versículo, la conversación gira hacia lo mismo: los dones del Espíritu, el avivamiento, las señales del fin.</p><p>Rara vez alguien se detiene en la primera palabra después de la promesa. No se detienen en quiénes son los que profetizan. El profeta Joel, y Pedro citándolo en Pentecostés, mencionan a los hijos primero. Antes que los jóvenes, antes que los ancianos: los hijos. ¿Por qué?</p><p>Profetizar no es solo predecir el futuro. Un profeta es alguien que lleva la verdad de Dios a otros — alguien cuyo corazón está tan formado en la Palabra que lo que sale de su boca es consecuencia de lo que entró en su vida.</p><p>Y eso nos dice algo muy preciso sobre los hijos: profetizan lo que recibieron. Lo que sale de sus bocas en el mundo es el eco de lo que escucharon en casa.</p><p>Hay una cadena invisible en la familia. El padre y la madre son, en el diseño de Dios, los primeros transmisores de una manera de ver el mundo. No se la transmiten con teorías — se la transmiten con la mesa, con el conflicto resuelto o no resuelto, con lo que celebran y con lo que ignoran, con las preguntas que se hacen juntos en la noche.</p><p>Si esa transmisión está orientada hacia el Señor, si en ese hogar se habla de que Dios creó todo y lo creó bueno, de que algo se rompió y de que hay una esperanza real, los hijos construirán desde ahí una fe que les durará. Una fe que no se sacude fácilmente cuando el mundo les pregunta por qué creen lo que creen.</p><p>La profecía de un pueblo comienza mucho antes del Pentecostés. Comienza en el desayuno de un martes.</p>`,
+    ejercicio: 'Esta semana, elige una sola verdad sobre Dios que quieras que tu hijo o hija lleve consigo toda la vida. No un sermón — una frase, una historia, una conversación. Busca hoy el momento para decírsela y para que la escuchen de tu boca, en tus palabras. Eso que dices hoy es lo que van a profetizar mañana.'
+  },
+  'devocional_02': {
+    tipo: 'devocional', esfera: 'Teología', tiempo: '2 min', serie: 'La Profecía del Hogar (2/3)',
+    titulo: 'La visión que ya traen',
+    lead: '“Vuestros jóvenes verán visiones…”', autor: 'Hechos 2:17 (Joel 2:28)',
+    texto: `<p>Cuando un joven sale al mundo, todos estamos pendientes de si “mantiene la fe”. La conversación familiar gira en torno a si sobrevivirá la universidad, los amigos, la cultura. Pero el texto de Joel y Pedro dice algo distinto. No dice que los jóvenes puedan perder la visión. Dice que ya la tienen. Que los jóvenes verán visiones. El verbo es activo, no condicional. La pregunta no es si verán — es qué ya están viendo.</p><p>Nadie sale al mundo con el corazón vacío. El joven que llega a la universidad, al trabajo, a la vida independiente, lleva ya dentro una manera de leer lo que le pasa. Una manera de entender por qué las cosas son como son, qué vale la pena perseguir, qué explica el sufrimiento y dónde está la esperanza. Eso es una visión. Y todos los jóvenes la tienen, no solo los creyentes.</p><p>El joven que creció escuchando que Dios creó el mundo con propósito, que algo se rompió pero que hay redención, sale al mundo con una visión que puede sostenerlo. Cuando la biología le diga que es producto del azar, cuando la economía le diga que su valor depende de su producción, cuando la cultura le diga que la identidad se construye sola, él tiene ya algo con qué responder. No teorías — una visión formada desde adentro.</p><p>Los dos verán visiones y vivirán de acuerdo a ellas. La diferencia no está en cuánto creen, sino en qué creen. Y eso empezó mucho antes de que salieran por la puerta.</p>`,
+    ejercicio: 'Si tienes un hijo o hija joven, hazle esta semana una sola pregunta y escucha sin interrumpir: ¿Cómo ves el mundo ahora mismo? No para corregir — para conocer la visión que ya está en su corazón. Lo que escuches te dirá dónde está parado y qué conversación necesitan tener juntos.'
+  },
+  'devocional_03': {
+    tipo: 'devocional', esfera: 'Teología', tiempo: '2 min', serie: 'La Profecía del Hogar (3/3)',
+    titulo: 'El sueño que solo se tiene después',
+    lead: '“…Y vuestros ancianos soñarán sueños.”', autor: 'Hechos 2:17 (Joel 2:28)',
+    texto: `<p>Hay algo curioso en el orden que elige el profeta. Primero los hijos que profetizan, luego los jóvenes que ven visiones, y al final los ancianos que sueñan sueños.</p><p>Estamos acostumbrados a pensar que los sueños son de los jóvenes — que los viejos ya vivieron y los nuevos son quienes imaginan el futuro. Pero el texto invierte eso. Los jóvenes ven visiones; los ancianos sueñan. ¿Por qué Joel no lo pone al revés?</p><p>Una visión es lo que ves frente a ti cuando estás de pie en el mundo, mirando hacia adelante. Un sueño es otra cosa. Viene de adentro, de lo que la vida fue depositando en capas.</p><p>El anciano que ha caminado décadas con Dios no tiene menos imaginación que el joven — tiene más memoria. Y su sueño está hecho de esa memoria: de las veces que Dios cumplió, de las pérdidas que se convirtieron en bien, de los hijos que ya salieron y de lo que vio en ellos. El sueño del anciano tiene peso. Ha sido probado.</p><p>Pero eso solo es cierto si el anciano caminó de verdad. Si orientó su vida hacia el Señor, si no cerró los ojos frente a sus propias idolatrías, si fue honesto con lo que depositó en sus hijos y lo que no depositó.</p><p>El profeta completa el ciclo. Los hijos profetizaron lo que recibieron. Los jóvenes vieron con los ojos que les formaron. Los ancianos sueñan con la vida que vivieron. Las tres cosas están conectadas. Lo que uno sueña al final depende de lo que decidió dar al principio.</p>`,
+    ejercicio: 'Dedica quince minutos esta semana a escribir — o a decirle a alguien en voz alta — una cosa concreta que hiciste en tu vida que sigue andando en otro. Puede ser algo que enseñaste, algo que sembraste, una conversación que cambió a alguien. Reconocerlo no es vanidad — es gratitud. Y la gratitud es el primer paso del sueño.'
+  },
+
+  // ARTÍCULOS
+  'article_fisica': {
+    tipo: 'articulo', esfera: 'Ciencias', tiempo: '8 min de lectura', serie: 'Filosofía Cosmonómica',
+    titulo: 'El Espejismo del Tiempo: Por qué la Física Moderna Necesita una Revolución Filosófica',
+    lead: '¿Y si el tiempo no es una dimensión que podamos recorrer, sino la partitura misma que mantiene al universo en sintonía?', autor: 'Futura Editions',
+    texto: `
+      <p>Por un momento, olvide todo lo que las películas de ciencia ficción le han enseñado sobre viajar al pasado, alterar la historia o congelar el reloj.</p>
+      <p>Imagínese a bordo de una máquina extraordinaria. Luces parpadean, engranajes giran y, con tirar de una palanca, usted se encuentra en la sala de su casa, pero diez años en el pasado. Desde La Máquina del Tiempo de H.G. Wells hasta Volver al Futuro, la idea de viajar por el tiempo nos ha cautivado. La física moderna, apoyada en las asombrosas ecuaciones de Albert Einstein, parece guiñarnos el ojo: el espacio y el tiempo son un tejido flexible. Si viajamos lo suficientemente rápido, el tiempo se estira. Entonces, ¿es solo cuestión de ingeniería para que podamos visitar a nuestros antepasados?</p>
+      <p>La respuesta corta es no. Pero la razón no es una falla técnica, sino un profundo malentendido sobre qué es exactamente la realidad.</p>
+      <p>Para entender este enigma, debemos alejar nuestra mirada de los aceleradores de partículas por un instante y dirigirla hacia un genio holandés del siglo XX: el filósofo Herman Dooyeweerd. A través de su audaz Filosofía de la Idea Cosmonómica, nos ofrece unos lentes completamente nuevos para mirar el cosmos. Lo que revela no solo desmorona la fantasía de viajar al pasado, sino que rescata a la ciencia de sus propias contradicciones.</p>
+      
+      <h3>El Gran Malentendido del Reloj</h3>
+      <p>Cuando un físico contemporáneo habla del tiempo, generalmente se refiere a una variable en una ecuación matemática (representada por la letra t). Para la ciencia actual, el tiempo es aquello que miden los relojes. Está íntimamente ligado a la gravedad, la masa y la velocidad. Es lo que llamamos el "espacio-tiempo".</p>
+      <p>Pero Dooyeweerd levantó la mano para hacer una observación brillante: eso que mide el reloj no es el "Tiempo" en su totalidad; es solo su aspecto físico.</p>
+      <p>Para entender esto, pensemos en el océano. Un biólogo marino estudia los peces, un químico analiza la salinidad y un físico mide la fuerza de las olas. Todos estudian el mismo océano, pero desde "modalidades" o aspectos diferentes. Dooyeweerd propuso que la realidad está estructurada en 15 de estas modalidades o esferas (desde lo numérico y espacial, hasta lo biótico, lo lógico y lo histórico).</p>
+      
+      <blockquote><p>El tiempo no es un contenedor donde ocurren las cosas, ni una carretera por la que viajamos. Es el orden cósmico que atraviesa y sostiene todas las facetas de la existencia.</p></blockquote>
+      
+      <p>En este marco conceptual, el tiempo se manifiesta de manera distinta en cada nivel:</p>
+      <ul>
+        <li><strong>En el aspecto cuantitativo,</strong> el tiempo es secuencia (1, 2, 3...).</li>
+        <li><strong>En el aspecto espacial,</strong> es simultaneidad.</li>
+        <li><strong>En el aspecto cinemático,</strong> es movimiento continuo.</li>
+        <li><strong>En el aspecto físico,</strong> es causalidad (causa y efecto) y entropía (el desgaste de la energía).</li>
+      </ul>
+      <p>El error de la física reduccionista ha sido tomar una sola rebanada del pastel —el tiempo físico— y convencerse de que es el pastel entero.</p>
+
+      <h3>Desarmando la Máquina del Tiempo</h3>
+      <p>Si aceptamos que el tiempo es un orden cósmico y no solo una dimensión física, la idea de "viajar al pasado" choca contra un muro infranqueable.</p>
+      <p>Pensemos en la famosa "dilatación del tiempo" de Einstein. Sabemos que si un astronauta viaja a la velocidad de la luz, envejecerá más lento que su hermano gemelo en la Tierra. Los titulares amarillistas dirían: "¡El astronauta viajó al futuro!".</p>
+      <p>Bajo la lupa de la idea cosmonómica, esto es un espejismo semántico. El astronauta no saltó la línea del tiempo cósmico. Simplemente, debido a la inmensa velocidad, la función física y biótica dentro de su nave espacial se ralentizó. Sus átomos se movieron a un ritmo diferente, sus células envejecieron más despacio.</p>
+      <p>Pero ambos hermanos, el de la Tierra y el de la nave, siguen estando en el mismo e irremplazable presente. Ninguno abandonó el orden de la creación.</p>
+      <p>Para que usted viaje al pasado a cambiar un evento, no solo tendría que revertir el movimiento de sus átomos (física), sino que tendría que "des-vivir" (biología), "des-pensar" (lógica) y borrar los actos que ya tienen un significado ante el orden cósmico. El ser humano es una unidad íntegra. No podemos separar nuestra masa física de nuestra consciencia histórica para mandarla por un túnel cuántico.</p>
+
+      <h3>El Universo no es una Sopa, es una Sinfonía</h3>
+      <p>La ciencia moderna sufre hoy de un deseo obsesivo: la búsqueda de la "Teoría del Todo". Existe la creencia generalizada de que, si logramos entender la partícula más diminuta y la ecuación más fundamental de la energía, finalmente comprenderemos el misterio de la vida, la mente humana y la sociedad. A esto se le llama reduccionismo.</p>
+      <p>Pensadores contemporáneos de la filosofía reformacional, como el destacado Daniël F.M. Strauss, argumentan que este enfoque está llevando a la física a un callejón sin salida.</p>
+      <p>Strauss señala que la física confunde constantemente sus propios términos. Por ejemplo, tendemos a mezclar el Espacio (que es simplemente extensión dimensional) con la Cinemática (el movimiento) y lo Físico (la energía y la materia).</p>
+      <p>Cuando los astrónomos nos dicen que "el espacio se está expandiendo", un científico dooyeweerdiano haría una precisión vital: el espacio, por definición como modalidad estática, no se expande. Lo que se expande, o más bien se desplaza, es la materia física a través de un flujo cinemático.</p>
+      <p>Parece un simple juego de palabras, pero cambia el mundo. Nos libera de la extraña idea de que "la nada" o "el vacío" es una sustancia mágica que se estira. Nos devuelve la cordura. Nos recuerda que el universo no es una sopa turbia donde todo es energía ciega o matemáticas frías, sino una sinfonía sumamente estructurada.</p>
+
+      <h3>La Nueva Frontera Científica</h3>
+      <p>¿Significa esto que debemos tirar nuestros libros de física a la basura? En lo absoluto. Las matemáticas que nos llevaron a la Luna y que hacen funcionar nuestros teléfonos inteligentes son correctas. Lo que debe cambiar es la narrativa, la interpretación de lo que esos números significan.</p>
+
+      <h3>Conclusión: La Humildad ante el Orden</h3>
+      <p>Mirar la física a través de los ojos de Herman Dooyeweerd es, en última instancia, un ejercicio de profunda humildad.</p>
+      <p>Nos rescata del orgullo intelectual de creer que una sola disciplina científica tiene la llave maestra de los secretos de la vida. Nos invita a maravillarnos ante un universo multifacético, donde la gravedad es tan real como la justicia social, y donde la matemática de un agujero negro es tan válida como la belleza estética de un atardecer.</p>
+      <p>Quizás no podamos construir un DeLorean para viajar a 1955. Quizás debamos aceptar que el flujo del tiempo avanza en una sola dirección. Pero a cambio de esa fantasía cinematográfica, esta filosofía nos entrega una realidad mucho más hermosa: la certeza de que este momento presente, exactamente donde usted se encuentra leyendo estas líneas, es el único punto de contacto donde todas las leyes del cosmos convergen en perfecta armonía. Y eso, sin duda, es mucho más fascinante que cualquier viaje en el tiempo.</p>
+    `
+  },
+  'article_homeschool': {
+    tipo: 'articulo', esfera: 'Pedagogía', tiempo: '7 min de lectura', serie: 'Educación en Casa',
+    titulo: 'El espejismo del monasterio: Por qué la "Escuela en Casa" es solo un barco salvavidas',
+    lead: 'Usamos el andamio de nuestras casas para sobrevivir a la tormenta, pero el diseño original de Dios nos llama a construir barcos comunitarios para transformar la cultura.', autor: 'Futura Editions',
+    texto: `
+      <p>Imagínese la siguiente escena: un barco inmenso, que alguna vez representó el progreso y la seguridad de toda una sociedad, comienza a hundirse. Las aguas heladas que entran a borbotones por las grietas llevan nombres como "humanismo", "ideología" y "educación sin Dios". Ante el pánico y viendo que la embarcación se va a pique, las familias hacen lo único sensato: suben a sus hijos a los pequeños botes salvavidas y reman lejos del desastre con todas sus fuerzas.</p>
+      <p>Ese gran barco que se hunde es el sistema educativo secular de nuestros días. Y esos botes salvavidas son la escuela en casa o homeschooling.</p>
+      <p>Desde hace unas décadas, educar en el hogar surgió entre las familias cristianas como un refugio de emergencia. Fue, y sigue siendo, una medida de supervivencia heroica y llena de amor. Sin embargo, hay un peligro sutil pero devastador cuando olvidamos la naturaleza de nuestro rescate: no se puede cruzar un océano en un bote salvavidas, y mucho menos transportar carga pesada en él.</p>
+      <p>Hoy, necesitamos mirar la escuela en casa a la luz de los principios bíblicos y preguntarnos con honestidad pastoral: ¿Nos hemos enamorado del refugio?</p>
+      
+      <h3>El falso consuelo del "niño genio"</h3>
+      <p>Hagamos de abogado del diablo por un momento. Supongamos que la educación en casa funciona a la perfección. Muchos padres argumentan: "Prefiero tener a mi hijo aislado en casa, pero que termine con un nivel académico altísimo y una visión cristiana de la vida".</p>
+      <p>A simple vista, suena como un éxito rotundo. Pero pensar que tener un joven "bien formado" equivale únicamente a tener un joven con una inteligencia brillante o un nivel académico superior es, en sí mismo, una trampa. Es creer que lo único que importa del ser humano es su capacidad intelectual.</p>
+      <p>El conocimiento genuino no es solo acumular datos, ni siquiera si esos datos son historia bíblica. Dios nos creó con muchas facetas: somos seres sociales, creativos, emocionales, de cuidado moral y de fe. Aislar a un joven para potenciar su cerebro, arrancándolo de la convivencia y los retos que solo se viven en comunidad, no produce un cristiano maduro; produce un adulto orgulloso de lo que sabe, pero muchas veces incapaz de conectar con su prójimo.</p>
+      
+      <h3>La amnesia teológica y el encierro</h3>
+      <p>El movimiento de educar en casa a menudo empuja a las familias a una separación drástica del mundo. En la práctica, esto ha llevado a muchos padres a construir monasterios invisibles, prohibiendo a sus hijos convivir bajo el temor de que "absorban la maldad" del exterior.</p>
+      <p>Si usted lee su Biblia, esta actitud revela un olvido garrafal. Olvida que la maldad no es un virus externo que el niño contrae al jugar en el parque. La raíz del pecado, la rebeldía y el egoísmo ya habitan en el corazón de su hijo por naturaleza, incluso si usted lo encierra en su habitación bajo siete llaves. El aislamiento físico no purifica el corazón.</p>
+
+      <h3>El engaño de los libros "cristianizados"</h3>
+      <p>"Pero nosotros estamos seguros", argumentarán algunos padres, "porque compramos materiales cien por ciento cristianos para usar en la mesa de la cocina".</p>
+      <p>Hagamos una pausa aquí. ¿Ha revisado a fondo cómo enseñan editoriales famosas en el mundo del homeschooling? Suelen ser sistemas educativos seculares y humanistas, pero con un barniz bíblico.</p>
+      <p>Se sostienen sobre modelos rígidos de repetición mecánica, donde el niño es visto casi como un disco duro que debe memorizar información. Poner un texto de Proverbios en la parte superior de un libro de matemáticas que ha sido diseñado bajo una pedagogía del mundo no "cristianiza" la materia. Simplemente le enseña al niño a separar su fe dominical de su forma de pensar el lunes.</p>
+      
+      <div style="padding: 20px; background: var(--surface2); border: 1px solid var(--warning); border-radius: 12px; margin: 2rem 0;">
+        <strong style="color: var(--warning); font-size: 0.85rem; letter-spacing: 1px;">EL VERDADERO PARADIGMA</strong>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: var(--inkMid);">Frente a los currículos de repetición mecánica y humanista disfrazada, nuestra editorial <strong style="color: var(--gold);">Futura Editions</strong> ha desarrollado los libros y guías de clase <strong style="color: var(--cobalt);">Reforma 2.1</strong>. Herramientas diseñadas genuinamente para restaurar el orden estructural en el hogar y las escuelas sin fragmentación cosmovisional.</p>
+      </div>
+
+      <h3>El diseño de Dios es un barco comunitario</h3>
+      <p>La Escritura nos muestra una y otra vez que Dios no trabaja con ladrillos aislados; Él edifica casas. Cuando Nehemías reconstruyó los muros de Jerusalén, no mandó a cada hombre a esconderse en su carpa; los organizó en familias y grupos para trabajar hombro a hombro.</p>
+      <p>Educar en casa a solas desgasta enormemente a los padres. Obliga a un solo papá o mamá a intentar ser el experto absoluto. En un colegio cristiano formado por una comunidad de padres, la carga se distribuye. Como un cuerpo vivo, se sostienen.</p>
+
+      <h3>El callejón sin salida: ¿Con quién se casarán?</h3>
+      <p>Finalmente, el "monasterio" de la educación en casa aísla a las familias y crea una crisis dolorosa a largo plazo. Si usted cría a ese hijo maravillosamente educado en total aislamiento... ¿A quién se lo vamos a entregar cuando crezca?</p>
+      <p>¿Con quién se casará esa joven si no hay una comunidad de hombres formados bajo los mismos principios? Esa excelencia académica lograda en soledad solo le generará dolor, frustración y matrimonios fracturados por visiones de vida incompatibles.</p>
+
+      <h3>El mapa para construir el gran barco: ¿Qué podemos hacer hoy?</h3>
+      <p>El bote salvavidas de la escuela en casa fue una bendición para escapar del naufragio. Pero el diseño original de Dios es que transformemos la cultura, llevando luz a las ciudades, a las artes, a los negocios y a las ciencias. Y eso no se hace remando solos.</p>
+      <ul>
+        <li><strong>Salga del aislamiento:</strong> Busque a otras familias con la misma visión. La carga de educar no fue diseñada para llevarse a solas.</li>
+        <li><strong>Abandone los materiales "disfrazados":</strong> Deje de usar currículos humanistas que solo tienen versículos pegados en los márgenes.</li>
+        <li><strong>Equípese con las herramientas correctas:</strong> Aquí es donde queremos ayudarle a través de nuestros principios pedagógicos integrales en Reforma 2.1.</li>
+      </ul>
+      <p>Es hora de abandonar el espejismo del monasterio. Unamos nuestras vocaciones y volvamos a construir juntos el gran barco que la próxima generación necesita para navegar y redimir la cultura.</p>
+    `
+  },
+  'article_nem': {
+    tipo: 'articulo', esfera: 'Educación', tiempo: '9 min de lectura', serie: 'Análisis Cosmovisional',
+    titulo: 'El verdadero costo de la Nueva Escuela Mexicana: Ideología, fragmentación y la pérdida del orden estructural',
+    lead: 'Usamos el andamio de la Reforma de 2016, no por ser perfecta, sino como el escenario más apto para infundir nuestro modelo y corregir las fallas del sistema desde la raíz.', autor: 'Futura Editions',
+    texto: `
+      <h3>El debate es real y fundamentado</h3>
+      <p>Desde la implementación de la Nueva Escuela Mexicana (NEM) y sus nuevos libros de texto, la crisis educativa ha escalado a nivel nacional. Las familias, docentes y especialistas que protestan no están persiguiendo fantasmas; las controversias constitucionales presentadas en diversos estados reflejan un rechazo profundo a una reestructuración curricular impuesta.</p>
+      <p>Analistas y académicos han señalado reiteradamente la fuerte carga ideológica, advirtiendo sobre una retórica de corte marxista que subordina la educación a un proyecto político específico.</p>
+      <p>El problema metodológico más visible de la NEM es la fusión forzada de disciplinas. Bajo la intención de crear un aprendizaje "holístico" e integral, materias estructurales como matemáticas, física y biología fueron aglutinadas en "campos de conocimiento" (como Saberes y Pensamiento Científico), lo cual ha diluido su rigor y reducido drásticamente los contenidos fundamentales.</p>
+
+      <h3>La romantización de los saberes y el riesgo de la chamanería</h3>
+      <p>Uno de los pilares de la NEM es la validación y centralidad de los "saberes comunitarios". Si bien conocer el contexto local es un esfuerzo pedagógico válido, el modelo eleva las representaciones, tradiciones y usos y costumbres de cada comunidad al nivel de verdades formativas incuestionables. Esto tiene un efecto devastador en dos frentes:</p>
+      <ul>
+        <li><strong>Para el ciudadano en general (el no cristiano):</strong> Significa la atomización y el retroceso del sistema educativo. Al depender de los usos y costumbres locales para dictar el rumbo del aprendizaje, se renuncia a la búsqueda de la calidad universal y a la evaluación objetiva. Se deja la formación a merced de prácticas que carecen de sustento analítico o científico.</li>
+        <li><strong>Para el cristiano:</strong> El peligro es de carácter ontológico y espiritual. Al validar cualquier práctica comunitaria —lo cual en México incluye frecuentemente rituales ancestrales, sincretismo religioso o "chamanería"— como un saber equivalente a la ciencia o a la ley moral, se normaliza la idolatría. Se le enseña al alumno que la verdad es un constructo social que depende de su entorno, ignorando por completo la Palabra Estructural (el orden impreso por Dios en la creación).</li>
+      </ul>
+
+      <h3>El diagnóstico: El Estado como ídolo</h3>
+      <p>Desde la perspectiva de la Hermenéutica Trascendental, la NEM no es un sistema neutral. Opera bajo un humanismo que absolutiza el aspecto histórico-formativo (el poder y control del Estado) y el aspecto social (la comunidad). Le dice al estudiante que su identidad y la verdad provienen del colectivo social y de las directrices del gobierno.</p>
+      <p>Cuando el conocimiento se desvincula del Creador y se somete a la ideología del Estado, se produce una profunda crisis cosmovisional. Los estudiantes aprenden a fragmentar su pensamiento: la fe queda relegada a un compartimento privado irrelevante, mientras que la comprensión de la realidad, la ciencia y la moral quedan bajo el dictado de la agenda estatal.</p>
+
+      <h3>Por qué usamos la Reforma de 2016 como andamio</h3>
+      <p>Es ante este panorama de fragmentación que el Modelo Educativo Trascendental (MET) toma una postura estratégica diferenciada. Nosotros no utilizamos la estructura de la Nueva Escuela Mexicana; nuestra base operativa se alinea a la malla curricular de la SEP de 2016.</p>
+      <p>No elegimos la Reforma de 2016 porque esté libre de fallas seculares, sino porque su arquitectura curricular aún respetaba la delimitación y naturaleza de las diferentes áreas de conocimiento. Ese andamio estructural nos permite abordar ordenadamente los quince aspectos modales de la creación sin la confusión epistemológica que provocan los nuevos "campos formativos" de la NEM.</p>
+      <p>Usamos esa estructura de 2016 exclusivamente como un punto de contacto. Desde ahí, a través de nuestras propias herramientas —como los planes de clase tridimensionales, la formulación de la "pregunta de profundidad" y los procesos de consejería que van directamente a la raíz del corazón—, corregimos el humanismo subyacente y reorientamos la enseñanza.</p>
+      <p>El objetivo final de este esfuerzo no es simplemente aislar a los estudiantes de la carga ideológica de turno, sino formarlos con Coherencia Vocacional: instruir a jóvenes y adultos capaces de ejercer el Mandato Cultural, reconociendo el diseño de Dios en cada aspecto de la realidad, y preparándolos para gobernar sirviendo en medio de una cultura profundamente fragmentada.</p>
+    `
+  }
+};
+
+// LÓGICA DEL MODAL
+function openModal(id) {
+  const data = contenidosDB[id];
+  if(!data) return;
+  
+  // Info de cabecera
+  document.getElementById('modal-sphere').innerText = data.esfera;
+  document.getElementById('modal-time').innerText = data.tiempo;
+  document.getElementById('modal-title').innerText = data.titulo;
+  document.getElementById('modal-series').innerText = data.serie;
+  
+  // Estilar la caja superior dependiendo de si es artículo o devocional
+  const topBox = document.getElementById('modal-topbox');
+  if(data.tipo === 'devocional') {
+    topBox.classList.add('is-devo');
+    topBox.style.borderLeftColor = 'var(--gold)';
+    document.getElementById('modal-verse').style.color = 'var(--ink)';
+  } else {
+    topBox.classList.remove('is-devo');
+    topBox.style.borderLeftColor = 'var(--cobalt)';
+    document.getElementById('modal-verse').style.color = 'var(--inkMid)';
+  }
+  
+  document.getElementById('modal-verse').innerText = data.lead;
+  document.getElementById('modal-reference').innerText = '— ' + data.autor;
+  
+  // Cuerpo del texto
+  document.getElementById('modal-text').innerHTML = data.texto;
+  
+  // Mostrar u ocultar ejercicio
+  const bottomBox = document.getElementById('modal-bottombox');
+  if(data.ejercicio) {
+    bottomBox.style.display = 'block';
+    document.getElementById('modal-exercise').innerText = data.ejercicio;
+  } else {
+    bottomBox.style.display = 'none';
+  }
+  
+  // Abrir Modal
+  document.getElementById('articleModal').classList.add('open');
+  document.body.style.overflow = 'hidden'; 
+}
+
+function closeModal() {
+  document.getElementById('articleModal').classList.remove('open');
+  document.body.style.overflow = 'auto';
+}
+
+document.getElementById('articleModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// INICIALIZACIÓN
+(function(){
+  'use strict';
+  
+  // CUSTOM PAINTER DE FLUTTER (CONSTELACIONES)
+  const canvas = document.createElement('canvas');
+  canvas.id = 'stars-canvas';
+  canvas.style.position = 'fixed';
+  canvas.style.inset = '0';
+  canvas.style.pointerEvents = 'none';
+  canvas.style.zIndex = '0';
+  document.body.insertBefore(canvas, document.body.firstChild);
+
+  const ctx = canvas.getContext('2d');
+  let width, height;
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    drawSpace();
+  }
+
+  let seed = 42;
+  function random() {
+    let x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+  }
+
+  function drawSpace() {
+    ctx.clearRect(0, 0, width, height);
+    seed = 42; 
+    const stars = [];
+    const gold = 'rgba(200, 146, 42, ';
+    const cobalt = 'rgba(45, 95, 166, ';
+
+    for (let i = 0; i < 150; i++) {
+      const pos = { x: random() * width, y: random() * height };
+      stars.push(pos);
+      const type = Math.floor(random() * 5);
+      let radius = random() * 1.5 + 0.8;
+
+      ctx.beginPath();
+      if (type === 0) {
+        radius *= 1.5;
+        ctx.fillStyle = gold + '0.9)';
+        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.fillStyle = gold + '0.15)';
+        ctx.arc(pos.x, pos.y, radius * 3, 0, Math.PI * 2);
+      } else if (type === 1) {
+        ctx.fillStyle = cobalt + '0.8)';
+        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+      } else {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+      }
+      ctx.fill();
+    }
+
+    function drawConstellation(indices) {
+      ctx.beginPath();
+      ctx.strokeStyle = gold + '0.15)';
+      ctx.lineWidth = 0.5;
+      ctx.moveTo(stars[indices[0]].x, stars[indices[0]].y);
+      for (let i = 1; i < indices.length; i++) {
+        ctx.lineTo(stars[indices[i]].x, stars[indices[i]].y);
+      }
+      ctx.stroke();
+    }
+
+    drawConstellation([10, 25, 40, 55, 10]);
+    drawConstellation([80, 85, 90, 95]);
+    drawConstellation([110, 115, 120, 110]);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  // NAVEGACIÓN Y MENÚ MÓVIL
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
+  
+  const burger=document.getElementById('burger'),mobMenu=document.getElementById('mob-menu');
+  let open=false;
+  const toggle=()=>{open=!open;burger.setAttribute('aria-expanded',open);mobMenu.classList.toggle('open',open);const s=burger.querySelectorAll('span');if(open){s[0].style.transform='rotate(45deg) translate(5px,5px)';s[1].style.opacity='0';s[2].style.transform='rotate(-45deg) translate(5px,-5px)'}else s.forEach(x=>{x.style.transform='';x.style.opacity='';})};
+  burger.addEventListener('click',toggle);
+  mobMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(open)toggle()}));
+  document.addEventListener('click',e=>{if(open&&!nav.contains(e.target))toggle()});
+  
+  const revealEls=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -50px 0px'});revealEls.forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});}else revealEls.forEach(el=>el.classList.add('visible'));
+
+  // EMBUDO APP
+  document.querySelectorAll('.app-trigger').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if(!e.target.closest('.muro-card') || !e.target.closest('.muro-card').hasAttribute('onclick')) {
+        const articleName = e.target.closest('.app-trigger').getAttribute('data-target') || 'este contenido';
+        const dlSection = document.getElementById('descargar');
+        const dlTitle = dlSection.querySelector('#dl-title');
+        dlTitle.innerHTML = `Accede a <em>"${articleName}"</em><br/>desde nuestra App.`;
+        dlSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        dlSection.style.transition = "background 0.5s";
+        dlSection.style.background = "var(--surface2)";
+        setTimeout(() => dlSection.style.background = "transparent", 1500);
+      }
+    });
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{if(a.classList.contains('app-trigger')) return; const t=document.querySelector(a.getAttribute('href'));if(!t)return;e.preventDefault();const h=(document.querySelector('#nav')||{offsetHeight:72}).offsetHeight+16;window.scrollTo({top:t.getBoundingClientRect().top+scrollY-h,behavior:'smooth'});});});
+})();
+</script>
+</body>
+</html>
