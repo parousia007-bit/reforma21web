@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Serie: La Profecía del Hogar · Reforma 2.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  /* Estilos específicos copiados de devocional_list_screen.dart */
+  body { background: #E8EBF4; } /* ReformaColors.lightGray */
+  .list-header {
+    background: linear-gradient(to right, #1A2E5A, #3A6FC4);
+    padding: 6rem 1.5rem 3rem;
+    color: white;
+  }
+  .list-title { font-family: var(--serif); font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .list-subtitle { font-size: 1rem; opacity: 0.8; font-family: var(--sans); }
+  
+  .devo-list { max-width: 800px; margin: -2rem auto 4rem; padding: 0 1.5rem; position: relative; z-index: 10; }
+  .devo-tile {
+    background: white; border-radius: 18px; padding: 1.5rem; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1.5rem; text-decoration: none; color: inherit;
+    box-shadow: 0 4px 20px rgba(45, 95, 166, 0.08); transition: transform 0.2s;
+  }
+  .devo-tile:hover { transform: translateY(-3px); }
+  .devo-tile.is-today { border: 2px solid var(--gold); }
+  
+  .devo-icon {
+    width: 56px; height: 56px; border-radius: 14px; background: rgba(91, 44, 141, 0.1);
+    color: #5B2C8D; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+  }
+  .devo-info { flex: 1; }
+  .devo-tag-today {
+    background: var(--gold); color: white; font-size: 0.65rem; font-weight: bold; letter-spacing: 1.5px;
+    padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 5px;
+  }
+  .devo-tile h3 { font-size: 1.1rem; color: #1A2E5A; margin-bottom: 5px; font-weight: 700; }
+  .devo-tile p.verse { font-size: 0.85rem; font-style: italic; color: #8892A8; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .devo-tile span.ref { font-size: 0.75rem; color: var(--gold); font-weight: 600; }
+  .nav-back { color: white; text-decoration: none; position: absolute; top: 1.5rem; left: 1.5rem; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="list-header">
+  <a href="../index.html" class="nav-back">← Volver al Muro</a>
+  <div class="container" style="max-width: 800px; padding:0;">
+    <h1 class="list-title">La Profecía del Hogar</h1>
+    <p class="list-subtitle">Reflexiones diarias del Modelo Educativo Trascendental</p>
+  </div>
+</div>
+
+<div class="devo-list" id="lista-render">
+  </div>
+
+<script src="../js/db/devocionales.js"></script>
+<script>
+  const container = document.getElementById('lista-render');
+  let index = 0;
+  for (const id in dbDevocionales) {
+    const d = dbDevocionales[id];
+    const isToday = index === 0; // El primero es "HOY"
+    const html = `
+      <a href="detalle_devocional.html?id=${id}" class="devo-tile ${isToday ? 'is-today' : ''}">
+        <div class="devo-icon">✝</div>
+        <div class="devo-info">
+          ${isToday ? '<div class="devo-tag-today">HOY</div>' : ''}
+          <h3>${d.titulo}</h3>
+          <p class="verse">"${d.lead}"</p>
+          <span class="ref">— ${d.autor.split('—')[0].trim()}</span>
+        </div>
+        <div style="color: #8892A8; font-size:1.2rem;">›</div>
+      </a>
+    `;
+    container.innerHTML += html;
+    index++;
+  }
+</script>
+</body>
+</html>

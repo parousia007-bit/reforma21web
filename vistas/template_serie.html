@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Cargando Serie... · Reforma 2.1 Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  /* ESTILOS PREMIUM ESTILO MASTERCLASS (Image 7/9) */
+  body { background: #131625; color: white; margin: 0; }
+  
+  /* FIXED HEADER (Glassmorphism) */
+  .fixed-header {
+    position: fixed; top: 0; left: 0; right: 0; height: 72px;
+    background: rgba(19, 22, 37, 0.85); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem; z-index: 100; transition: transform 0.3s;
+  }
+  .fixed-header h1 { font-family: var(--serif); font-size: 1.25rem; color: var(--gold); margin: 0; }
+  .fixed-header .btn-dl-nav { background: var(--cobalt); color: white; padding: 6px 16px; border-radius: 6px; text-decoration: none; font-size: 0.8rem;}
+
+  /* SERIES HERO (Large Title that shrinks) */
+  .series-hero {
+    height: 70svh; display: flex; align-items: flex-end; justify-content: center;
+    padding: 0 1.5rem 6rem; position: relative; overflow: hidden;
+  }
+  .series-hero::before {
+    content:''; position: absolute; inset:0; background-size: cover; background-position: center;
+    background-image: url('https://images.unsplash.com/photo-1518331647614-7a1f04cd34cf?w=1600');
+    opacity: 0.15; filter: blur(4px);
+  }
+  .series-hero .container { max-width: 800px; width: 100%; position: relative; z-index: 2; text-align: center; }
+  .series-title { font-family: var(--serif); font-size: 3.5rem; line-height: 1.1; margin-bottom: 1rem; color: white; }
+  .series-subtitle { font-size: 1.1rem; color: #B0B8CC; max-width: 600px; margin: 0 auto; line-height: 1.7;}
+
+  /* LESSONS LIST (Stacking Cards mechanism) */
+  .lessons-list {
+    max-width: 800px; margin: -5rem auto 5rem; padding: 0 1.5rem;
+    position: relative; z-index: 10;
+  }
+  .lesson-card {
+    background: #1E2132; border: 1px solid #3D3D5C; border-radius: 16px;
+    padding: 2rem; margin-bottom: 2rem; display: flex; gap: 1.5rem; align-items: center;
+    text-decoration: none; color: inherit; transition: all 0.2s;
+    /* CSS Sticky para el efecto de apilado al subir */
+    position: sticky; top: 100px;
+  }
+  .lesson-card:hover { border-color: var(--gold); transform: translateY(-3px); background: #2A2E45; }
+  
+  .lesson-number {
+    font-family: var(--serif); font-size: 4rem; font-weight: 300;
+    color: var(--gold); opacity: 0.35; line-height: 1; flex-shrink: 0;
+  }
+  .lesson-info { flex: 1; }
+  .lesson-info h3 { font-family: var(--sans); font-size: 1.25rem; color: white; margin-bottom: 5px; font-weight: 700; }
+  .lesson-info p.lead { font-size: 0.95rem; font-style: italic; color: #B0B8CC; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  
+  .btn-read-blue { background: #2563EB; color: white!important; font-weight: bold; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; border: none;}
+  
+  .nav-back { color: white; text-decoration: none; position: absolute; top: 1.5rem; left: 1.5rem; font-weight: 600; z-index: 101;}
+</style>
+</head>
+<body>
+
+<a href="../index.html" class="nav-back">← Muro MET</a>
+
+<div class="fixed-header" id="collapsed-header">
+  <h1 id="fixed-title">Serie...</h1>
+  <a href="#descargar" class="btn-dl-nav">Descargar App omega 3</a>
+</div>
+
+<div class="series-hero">
+  <div class="container">
+    <h1 class="series-title" id="series-title-main">Cargando Serie...</h1>
+    <p class="series-subtitle">Análisis profundos y reflexiones para restaurar el diseño original en esta área.</p>
+  </div>
+</div>
+
+<div class="lessons-list" id="lista-render">
+  </div>
+
+<script src="../js/db/devocionales.js"></script>
+<script src="../js/db/articulos.js"></script>
+
+<script>
+  // UNIFICAR LAS BASES DE DATOS PARA BUSCAR
+  const dbCompleta = {...dbDevocionales, ...dbArticulos};
+
+  // OBTENER LA SERIE DE LA URL (Ej: template_serie.html?serie=La Profecía del Hogar)
+  const urlParams = new URLSearchParams(window.location.search);
+  const nombreSerie = urlParams.get('serie');
+
+  if(nombreSerie) {
+    document.getElementById('series-title-main').innerText = nombreSerie;
+    document.getElementById('fixed-title').innerText = nombreSerie;
+    document.title = `${nombreSerie} · Reforma 2.1 Web`;
+
+    // FILTRAR TODOS LOS CONTENIDOS QUE PERTENECEN A ESTA SERIE
+    const listaSerie = Object.values(dbCompleta)
+      .filter(item => item.serie === nombreSerie)
+      .sort((a,b) => (a.numero_parte || 0) - (b.numero_parte || 0)); // Sort por número de parte
+
+    // RENDERIZAR LAS TARJETAS (ESTILO LECCIONES APILADAS)
+    const container = document.getElementById('lista-render');
+    let index = 1;
+    listaSerie.forEach(item => {
+      // Determinar la URL correcta (lectura.html para artículos o detalle_devocional.html para devos)
+      const vistaPath = item.tipo === 'devocional' ? 'detalle_devocional.html' : 'detalle_articulo.html';
+      
+      const cardHtml = `
+        <a href="${vistaPath}?id=${item.id}" class="lesson-card reveal">
+          <div class="lesson-number">${index < 10 ? '0'+index : index}</div>
+          <div class="lesson-info">
+            <h3>${item.titulo}</h3>
+            <p class="lead">"${item.lead || item.contenido.substring(0, 100)+'...'}"</p>
+            <button class="btn-read-blue">Leer Parte ${index}</button>
+          </div>
+          <div style="color: rgba(255,255,255,0.2); font-size:1.5rem;">›</div>
+        </a>
+      `;
+      container.innerHTML += cardHtml;
+      index++;
+    });
+  }
+
+  // LÓGICA DE SHRINKING HEADER (Copiado de Image 7 vs 9)
+  (function() {
+    'use strict';
+    const mainTitleHero = document.getElementById('series-title-main');
+    const collapsedHeader = document.getElementById('collapsed-header');
+    
+    // Al principio, el header colapsado está oculto
+    collapsedHeader.style.transform = 'translateY(-100%)';
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(!entry.isIntersecting) {
+          // El título principal salió de la pantalla -> mostrar el header colapsado
+          collapsedHeader.style.transform = 'translateY(0)';
+        } else {
+          // El título principal está visible -> ocultar el colapsado
+          collapsedHeader.style.transform = 'translateY(-100%)';
+        }
+      });
+    }, {threshold: 0.1}); // Detecta cuando el 10% del título principal está visible
+
+    io.observe(mainTitleHero);
+  })();
+</script>
+</body>
+</html>

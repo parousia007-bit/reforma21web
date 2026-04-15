@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="Reforma 2.1 — Redescubriendo el diseño original y el camino de restauración en todas las facetas de la vida. Editorial Futura Editions."/>
 <title>Reforma 2.1 · Recuperando el Diseño Original</title>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/styles.css">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>
@@ -14,14 +14,12 @@
   gtag('js', new Date());
   gtag('config', 'G-XXXXXXXXXX');
 </script>
-
-<link href="css/styles.css" rel="stylesheet"/>
 </head>
 <body>
 <header>
 <nav id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">✦ <em  class="extracted-style-1">Reforma</em> <span>2.1</span></a>
+    <a href="#" class="nav-logo">✦ <em style="font-style:normal">Reforma</em> <span>2.1</span></a>
     <ul class="nav-links">
       <li><a href="#muro">Vida Cotidiana</a></li>
       <li><a href="#consejeria">Consejería</a></li>
@@ -36,7 +34,7 @@
     <a href="#muro">Vida Cotidiana</a>
     <a href="#consejeria">Consejería</a>
     <a href="#instituto">Instituto</a>
-    <a href="#descargar"  class="extracted-style-2">↓ Descargar App</a>
+    <a href="#descargar" style="color:var(--gold)">↓ Descargar App</a>
   </div>
 </nav>
 </header>
@@ -77,20 +75,24 @@
     <p class="sec-desc">Explora reflexiones sencillas para corazones que buscan coherencia. Descubre cómo devolver el orden a tu hogar, la ciencia y la educación.</p>
     
     <div class="muro-grid">
-      <article class="muro-card reveal" onclick="openModal('devocional_01')">
-        <div class="muro-img extracted-style-3" >
-          <span class="muro-tag extracted-style-4" >Devocional</span>
+      <article class="muro-card reveal" style="position:relative;">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800');">
+          <span class="muro-tag" style="background: var(--esf-teologia)">Devocional</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">Lo que tus hijos van a profetizar</h3>
           <p class="muro-excerpt">¿Cómo el comportamiento del hogar hoy es la verdadera profecía del futuro de tu familia? Una mirada a lo que sembramos en la mesa.</p>
-          <button class="btn btn-outline btn-sm">Leer Reflexión →</button>
+          <div style="display:flex; gap:0.5rem; position:relative; z-index:2;">
+            <button class="btn btn-gold btn-sm" onclick="window.location.href='vistas/detalle_devocional.html?id=ht_prophecy_01'; event.stopPropagation();">Leer Parte 1</button>
+            <a href="vistas/serie_devocional.html" class="btn btn-outline btn-sm" style="text-decoration:none; display:flex; align-items:center;" onclick="event.stopPropagation();">Ver Serie Completa</a>
+          </div>
         </div>
+        <a href="vistas/detalle_devocional.html?id=ht_prophecy_01" style="position:absolute; inset:0; z-index:1;"></a>
       </article>
 
       <article class="muro-card reveal" onclick="openModal('article_fisica')">
-        <div class="muro-img extracted-style-5" >
-          <span class="muro-tag extracted-style-6" >Ciencias</span>
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800');">
+          <span class="muro-tag" style="background: var(--esf-psico)">Ciencias</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">El espejismo del tiempo</h3>
@@ -100,8 +102,8 @@
       </article>
 
       <article class="muro-card reveal" onclick="openModal('article_nem')">
-        <div class="muro-img extracted-style-7" >
-          <span class="muro-tag extracted-style-8" >Educación</span>
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800');">
+          <span class="muro-tag" style="background: var(--esf-pedagogia)">Educación</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">El peligro de los nuevos sistemas</h3>
@@ -111,8 +113,8 @@
       </article>
 
       <article class="muro-card reveal" onclick="openModal('article_homeschool')">
-        <div class="muro-img extracted-style-9" >
-          <span class="muro-tag extracted-style-10" >Pedagogía</span>
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1484807352052-23338990c6c6?w=800');">
+          <span class="muro-tag" style="background: var(--warning)">Pedagogía</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">Más allá de solo educar en casa</h3>
@@ -121,9 +123,9 @@
         </div>
       </article>
 
-      <article class="muro-card reveal" onclick="openModal('devocional_02')">
-        <div class="muro-img extracted-style-11" >
-          <span class="muro-tag extracted-style-4" >Devocional</span>
+      <article class="muro-card reveal" onclick="openModal('ht_prophecy_02')">
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1518331647614-7a1f04cd34cf?w=500');">
+          <span class="muro-tag" style="background: var(--esf-teologia)">Devocional</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">La visión que ya traen</h3>
@@ -133,8 +135,8 @@
       </article>
 
       <article class="muro-card reveal app-trigger" data-target="El Orden Correcto">
-        <div class="muro-img extracted-style-12" >
-          <span class="muro-tag extracted-style-13" >Consejería</span>
+        <div class="muro-img" style="background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800');">
+          <span class="muro-tag" style="background: var(--gold)">Consejería</span>
         </div>
         <div class="muro-content">
           <h3 class="muro-title">Sanando la raíz en el hogar</h3>
@@ -153,30 +155,12 @@
     <p class="sec-desc">No fragmentamos la realidad en "espiritual" y "secular". Formamos el corazón para reconocer el orden del Creador en todas las dimensiones de la vida cotidiana. Estas son algunas de las áreas donde buscamos restaurar la coherencia:</p>
     
     <div class="facetas-grid reveal">
-      <div class="esf-card extracted-style-14" >
-        <div class="esf-dot extracted-style-15" ></div>
-        <h3>Fe y Adoración</h3><p>Nuestra orientación última</p>
-      </div>
-      <div class="esf-card extracted-style-16" >
-        <div class="esf-dot extracted-style-17" ></div>
-        <h3>Aprendizaje</h3><p>Desarrollo integral de la persona</p>
-      </div>
-      <div class="esf-card extracted-style-18" >
-        <div class="esf-dot extracted-style-19" ></div>
-        <h3>El Hogar</h3><p>El primer núcleo formativo</p>
-      </div>
-      <div class="esf-card extracted-style-20" >
-        <div class="esf-dot extracted-style-21" ></div>
-        <h3>Creatividad</h3><p>La belleza que refleja Su luz</p>
-      </div>
-      <div class="esf-card extracted-style-22" >
-        <div class="esf-dot extracted-style-23" ></div>
-        <h3>Las Ciencias</h3><p>Asombro ante el orden creado</p>
-      </div>
-      <div class="esf-card extracted-style-24" >
-        <div class="esf-dot extracted-style-25" ></div>
-        <h3>Comunidad</h3><p>Servicio y justicia al prójimo</p>
-      </div>
+      <div class="esf-card" style="border-top: 3px solid #5B2C8D"><div class="esf-dot" style="background: #5B2C8D"></div><h3>Fe y Adoración</h3><p>Nuestra orientación última</p></div>
+      <div class="esf-card" style="border-top: 3px solid #1E6B3C"><div class="esf-dot" style="background: #1E6B3C"></div><h3>Aprendizaje</h3><p>Desarrollo integral de la persona</p></div>
+      <div class="esf-card" style="border-top: 3px solid #2980B9"><div class="esf-dot" style="background: #2980B9"></div><h3>El Hogar</h3><p>El primer núcleo formativo</p></div>
+      <div class="esf-card" style="border-top: 3px solid #C0392B"><div class="esf-dot" style="background: #C0392B"></div><h3>Creatividad</h3><p>La belleza que refleja Su luz</p></div>
+      <div class="esf-card" style="border-top: 3px solid #C8922A"><div class="esf-dot" style="background: #C8922A"></div><h3>Las Ciencias</h3><p>Asombro ante el orden creado</p></div>
+      <div class="esf-card" style="border-top: 3px solid #16A085"><div class="esf-dot" style="background: #16A085"></div><h3>Comunidad</h3><p>Servicio y justicia al prójimo</p></div>
     </div>
   </div>
 </section>
@@ -189,7 +173,7 @@
     <div class="fasc-layout">
       <div>
         <div class="fasc-free-label reveal">
-          <span class="chip chip-free extracted-style-26" >✦ Fascículo libre</span>
+          <span class="chip chip-free" style="padding:.25rem .65rem;border-radius:4px;border:1px solid;color:var(--success);background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25)">✦ Fascículo libre</span>
           Lee el primero completo en la App
         </div>
         <div class="fasc-preview reveal">
@@ -228,10 +212,10 @@
           <div class="fasc-row" data-locked="true"><span class="fasc-n">06</span><div class="fasc-info"><p class="fasc-name">El hijo que ya se fue</p><p class="fasc-hint">Qué hacer cuando la distancia ya ocurrió</p></div><span class="fasc-badge badge-lock">🔒</span></div>
           <div class="fasc-row" data-locked="true"><span class="fasc-n">07</span><div class="fasc-info"><p class="fasc-name">El padre que sigue</p><p class="fasc-hint">El mapa completo para el próximo lunes</p></div><span class="fasc-badge badge-lock">🔒</span></div>
           <div class="catalog-footer">
-            <a href="https://wa.me/529619702540?text=Hola,%20quiero%20adquirir%20El%20Orden%20Correcto%20Temporada%201%20completa%20por%20%243%20USD" class="btn btn-wa extracted-style-27"  target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/529619702540?text=Hola,%20quiero%20adquirir%20El%20Orden%20Correcto%20Temporada%201%20completa%20por%20%243%20USD" class="btn btn-wa" style="width:100%;justify-content:center" target="_blank" rel="noopener noreferrer">
               Adquirir colección — $3 USD
             </a>
-            <p  class="extracted-style-28">PDF digital · Pago por WhatsApp · Licencia personal</p>
+            <p style="font-size:.75rem;color:var(--inkLow);text-align:center;margin-top:.6rem">PDF digital · Pago por WhatsApp · Licencia personal</p>
           </div>
         </div>
       </div>
@@ -250,7 +234,7 @@
       <a href="#descargar" class="demo-card reveal app-trigger" data-target="La Fragua"><span class="demo-icon">⚒️</span><p class="demo-school">Docentes</p><h3 class="demo-name">La Fragua</h3><p class="demo-desc">Para educadores que quieren abandonar la confusión de los sistemas modernos y aplicar un enfoque claro en su práctica diaria.</p><span class="demo-cta">Ver en la App →</span></a>
       <a href="#descargar" class="demo-card reveal app-trigger" data-target="Huerto Matrimonial"><span class="demo-icon">🏡</span><p class="demo-school">Familias</p><h3 class="demo-name">Huerto Matrimonial</h3><p class="demo-desc">Módulos de herramientas prácticas para restaurar el orden en el matrimonio y criar hijos con propósito.</p><span class="demo-cta">Ver en la App →</span></a>
       <a href="#descargar" class="demo-card reveal app-trigger" data-target="Roble de la Sabiduría"><span class="demo-icon">🌳</span><p class="demo-school">Adultos Mayores</p><h3 class="demo-name">Roble de la Sabiduría</h3><p class="demo-desc">El conocimiento acumulado de una vida convertido en el mayor legado para las generaciones que vienen.</p><span class="demo-cta">Ver en la App →</span></a>
-      <a href="https://wa.me/529619702540?text=Hola,%20quiero%20información%20sobre%20las%20escuelas%20del%20CER" class="demo-card reveal extracted-style-29" target="_blank" rel="noopener noreferrer" ><span class="demo-icon">💬</span><p class="demo-school extracted-style-30" >¿Necesitas orientación?</p><h3 class="demo-name">Habla con el Instituto</h3><p class="demo-desc">Si no sabes qué escuela le corresponde a tu familia o quieres información sobre inscripciones, escríbenos directamente.</p><span class="demo-cta extracted-style-30" >Abrir WhatsApp →</span></a>
+      <a href="https://wa.me/529619702540?text=Hola,%20quiero%20información%20sobre%20las%20escuelas%20del%20CER" class="demo-card reveal" target="_blank" rel="noopener noreferrer" style="border-color:rgba(37,99,235,.25)"><span class="demo-icon">💬</span><p class="demo-school" style="color:#93C5FD">¿Necesitas orientación?</p><h3 class="demo-name">Habla con el Instituto</h3><p class="demo-desc">Si no sabes qué escuela le corresponde a tu familia o quieres información sobre inscripciones, escríbenos directamente.</p><span class="demo-cta" style="color:#93C5FD">Abrir WhatsApp →</span></a>
     </div>
   </div>
 </section>
@@ -261,7 +245,7 @@
       <div class="dl-text reveal">
         <p class="sec-eyebrow">Ecosistema Nativo</p>
         <h2 class="sec-title" id="dl-title">La profundidad que buscas<br/><em>vive en la App.</em></h2>
-        <p  class="extracted-style-31">La web es el inicio del camino. Para profundizar en el estudio, tomar cursos guiados y llevar un registro de tu crecimiento, necesitas Reforma 2.1 en tu dispositivo.</p>
+        <p style="font-size:1rem;color:var(--inkMid);line-height:1.8;margin-bottom:2rem">La web es el inicio del camino. Para profundizar en el estudio, tomar cursos guiados y llevar un registro de tu crecimiento, necesitas Reforma 2.1 en tu dispositivo.</p>
         
         <div class="dl-features">
           <div class="dl-feat"><div class="dl-feat-dot"></div>Lector de Libros Integrado</div>
@@ -272,7 +256,7 @@
           <div class="dl-feat"><div class="dl-feat-dot"></div>Métricas del Corazón</div>
         </div>
         
-        <div  class="extracted-style-32">
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
           <a href="#" class="btn btn-gold btn-sm">↓ Descargar APK (Android)</a>
           <a href="https://wa.me/529619702540?text=Hola,%20quiero%20información%20sobre%20Reforma%202.1" class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">WhatsApp — Soporte</a>
         </div>
@@ -285,16 +269,16 @@
             <div class="app-brand">Reforma 2.1 <small>Panel Principal</small></div>
           </div>
           <div class="app-modules">
-            <div class="app-mod"><div class="app-mod-dot extracted-style-33" ></div><span>Lector</span><small>Libros y PDF</small></div>
-            <div class="app-mod"><div class="app-mod-dot extracted-style-34" ></div><span>Audios</span><small>Podcast Nativo</small></div>
-            <div class="app-mod"><div class="app-mod-dot extracted-style-35" ></div><span>Escuelas</span><small>Cursos Activos</small></div>
-            <div class="app-mod"><div class="app-mod-dot extracted-style-36" ></div><span>Progreso</span><small>Plan de Estudios</small></div>
-            <div class="app-mod"><div class="app-mod-dot extracted-style-37" ></div><span>Consejería</span><small>Restauración Integral</small></div>
-            <div class="app-mod"><div class="app-mod-dot extracted-style-38" ></div><span>Hoy</span><small>Reflexión Diaria</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-teologia)"></div><span>Lector</span><small>Libros y PDF</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-psico)"></div><span>Audios</span><small>Podcast Nativo</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--gold)"></div><span>Escuelas</span><small>Cursos Activos</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-pedagogia)"></div><span>Progreso</span><small>Plan de Estudios</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--esf-hermeneutica)"></div><span>Consejería</span><small>Restauración Integral</small></div>
+            <div class="app-mod"><div class="app-mod-dot" style="background:var(--success)"></div><span>Hoy</span><small>Reflexión Diaria</small></div>
           </div>
-          <div  class="extracted-style-39">
-            <div><p  class="extracted-style-40">Estado del Corazón</p><p  class="extracted-style-41">Enfoque Claro</p></div>
-            <div  class="extracted-style-42"><p  class="extracted-style-43">Última Reflexión</p><p  class="extracted-style-44">Corazón receptivo</p></div>
+          <div style="margin-top:1rem;padding:.75rem;background:rgba(200, 146, 42,.06);border:1px solid rgba(200, 146, 42,.15);border-radius:10px;display:flex;align-items:center;justify-content:space-between">
+            <div><p style="font-size:.7rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem">Estado del Corazón</p><p style="font-family:var(--serif);font-size:1.1rem;color:var(--ink);font-weight:700;line-height:1">Enfoque Claro</p></div>
+            <div style="text-align:right"><p style="font-size:.7rem;color:var(--inkLow);margin-bottom:.2rem">Última Reflexión</p><p style="font-size:.9rem;color:var(--ink);font-weight:600">Corazón receptivo</p></div>
           </div>
         </div>
       </div>
@@ -337,7 +321,7 @@
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-header">
       <div class="modal-meta">
-        <span id="modal-sphere"  class="extracted-style-45">Materia</span>
+        <span id="modal-sphere" style="color:var(--gold);font-weight:bold;">Materia</span>
         <span id="modal-time">Tiempo</span>
       </div>
       <h2 class="modal-title" id="modal-title">Título</h2>
@@ -352,7 +336,7 @@
         </div>
       <div class="modal-exercise" id="modal-bottombox">
         <strong>Ejercicio Práctico</strong>
-        <p id="modal-exercise"  class="extracted-style-46">Ejercicio...</p>
+        <p id="modal-exercise" style="margin:0;font-size:.95rem;">Ejercicio...</p>
       </div>
     </div>
     <div class="modal-footer">
@@ -361,8 +345,9 @@
   </div>
 </div>
 
-
-<script src="js/db_articulos.js"></script>
+<script src="js/db/devocionales.js"></script>
+<script src="js/db/articulos.js"></script>
 <script src="js/app.js"></script>
+
 </body>
 </html>

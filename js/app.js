@@ -1,44 +1,9 @@
-// LÓGICA DEL MODAL
+// LÓGICA DE CARGA Y NAVEGACIÓN
 function openModal(id) {
-  const data = contenidosDB[id];
-  if(!data) return;
-
-  // Info de cabecera
-  document.getElementById('modal-sphere').innerText = data.esfera;
-  document.getElementById('modal-time').innerText = data.tiempo;
-  document.getElementById('modal-title').innerText = data.titulo;
-  document.getElementById('modal-series').innerText = data.serie;
-
-  // Estilar la caja superior
-  const topBox = document.getElementById('modal-topbox');
-  if(data.tipo === 'devocional') {
-    topBox.classList.add('is-devo');
-    topBox.style.borderLeftColor = 'var(--gold)';
-    document.getElementById('modal-verse').style.color = 'var(--ink)';
-  } else {
-    topBox.classList.remove('is-devo');
-    topBox.style.borderLeftColor = 'var(--cobalt)';
-    document.getElementById('modal-verse').style.color = 'var(--inkMid)';
-  }
-
-  document.getElementById('modal-verse').innerText = data.lead;
-  document.getElementById('modal-reference').innerText = '— ' + data.autor;
-
-  // Cuerpo del texto
-  document.getElementById('modal-text').innerHTML = data.texto;
-
-  // Mostrar u ocultar ejercicio
-  const bottomBox = document.getElementById('modal-bottombox');
-  if(data.ejercicio) {
-    bottomBox.style.display = 'block';
-    document.getElementById('modal-exercise').innerText = data.ejercicio;
-  } else {
-    bottomBox.style.display = 'none';
-  }
-
-  // Abrir Modal
-  document.getElementById('articleModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  // Ahora redirigimos a la subpágina dinámica
+  const esDevo = dbDevocionales && dbDevocionales[id];
+  const vistaPath = esDevo ? 'vistas/detalle_devocional.html' : 'vistas/detalle_articulo.html';
+  window.location.href = vistaPath + '?id=' + id;
 }
 
 function closeModal() {
@@ -50,10 +15,11 @@ document.getElementById('articleModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
-// CONSTELACIONES Y LÓGICA GENERAL
+// CONSTELACIONES Y EFECTOS DE SCROLL (Aquí estaba el fallo de la invisibilidad)
 (function(){
   'use strict';
-
+  
+  // 1. CONSTELACIONES EN EL FONDO
   const canvas = document.createElement('canvas');
   canvas.id = 'stars-canvas';
   canvas.style.position = 'fixed';
@@ -81,7 +47,7 @@ document.getElementById('articleModal').addEventListener('click', function(e) {
 
   function drawSpace() {
     ctx.clearRect(0, 0, width, height);
-    seed = 42;
+    seed = 42; 
     const stars = [];
     const gold = 'rgba(200, 146, 42, ';
     const cobalt = 'rgba(45, 95, 166, ';
@@ -130,29 +96,64 @@ document.getElementById('articleModal').addEventListener('click', function(e) {
   window.addEventListener('resize', resize);
   resize();
 
-  // NAVEGACIÓN Y MENÚ MÓVIL
+  // 2. NAVEGACIÓN Y MENÚ MÓVIL
   const nav=document.getElementById('nav');
-  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
-
-  const burger=document.getElementById('burger'),mobMenu=document.getElementById('mob-menu');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60),{passive:true});
+  
+  const burger=document.getElementById('burger'), mobMenu=document.getElementById('mob-menu');
   let open=false;
-  const toggle=()=>{open=!open;burger.setAttribute('aria-expanded',open);mobMenu.classList.toggle('open',open);const s=burger.querySelectorAll('span');if(open){s[0].style.transform='rotate(45deg) translate(5px,5px)';s[1].style.opacity='0';s[2].style.transform='rotate(-45deg) translate(5px,-5px)'}else s.forEach(x=>{x.style.transform='';x.style.opacity='';})};
+  const toggle=()=>{
+    open=!open;
+    burger.setAttribute('aria-expanded',open);
+    mobMenu.classList.toggle('open',open);
+    const s=burger.querySelectorAll('span');
+    if(open){
+      s[0].style.transform='rotate(45deg) translate(5px,5px)';
+      s[1].style.opacity='0';
+      s[2].style.transform='rotate(-45deg) translate(5px,-5px)';
+    } else {
+      s.forEach(x=>{x.style.transform='';x.style.opacity='';});
+    }
+  };
   burger.addEventListener('click',toggle);
   mobMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(open)toggle()}));
   document.addEventListener('click',e=>{if(open&&!nav.contains(e.target))toggle()});
+  
+  // 3. EFECTO REVEAL (ESTO ENCENDERÁ TUS TARJETAS INVISIBLES)
+  const revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
+    
+    revealEls.forEach((el, i) => {
+      el.style.transitionDelay = (i % 4) * 0.08 + 's';
+      io.observe(el);
+    });
+  } else {
+    // Fallback si el navegador es antiguo
+    revealEls.forEach(el => el.classList.add('visible'));
+  }
 
-  const revealEls=document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -50px 0px'});revealEls.forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});}else revealEls.forEach(el=>el.classList.add('visible'));
-
-  // EMBUDO APP
+  // 4. EMBUDO APP (Smooth Scroll)
   document.querySelectorAll('.app-trigger').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      if(!e.target.closest('.muro-card') || !e.target.closest('.muro-card').hasAttribute('onclick')) {
-        const articleName = e.target.closest('.app-trigger').getAttribute('data-target') || 'este contenido';
-        const dlSection = document.getElementById('descargar');
+      // Si el botón está dentro de un muro-card, no ejecutar el link de la tarjeta
+      e.stopPropagation();
+      
+      const articleName = e.currentTarget.getAttribute('data-target') || 'este contenido';
+      const dlSection = document.getElementById('descargar');
+      if (dlSection) {
         const dlTitle = dlSection.querySelector('#dl-title');
-        dlTitle.innerHTML = `Accede a <em>"${articleName}"</em><br/>desde nuestra App.`;
+        if (dlTitle) {
+          dlTitle.innerHTML = `Accede a <em>"${articleName}"</em><br/>desde nuestra App.`;
+        }
         dlSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         dlSection.style.transition = "background 0.5s";
         dlSection.style.background = "var(--surface2)";
@@ -161,5 +162,15 @@ document.getElementById('articleModal').addEventListener('click', function(e) {
     });
   });
 
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{if(a.classList.contains('app-trigger')) return; const t=document.querySelector(a.getAttribute('href'));if(!t)return;e.preventDefault();const h=(document.querySelector('#nav')||{offsetHeight:72}).offsetHeight+16;window.scrollTo({top:t.getBoundingClientRect().top+scrollY-h,behavior:'smooth'});});});
+  // Smooth scroll global para anclas
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      if(a.classList.contains('app-trigger')) return; 
+      const t=document.querySelector(a.getAttribute('href'));
+      if(!t)return;
+      e.preventDefault();
+      const h=(document.querySelector('#nav')||{offsetHeight:72}).offsetHeight+16;
+      window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-h,behavior:'smooth'});
+    });
+  });
 })();

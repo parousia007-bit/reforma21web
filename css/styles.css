@@ -4,13 +4,13 @@
   --ink: #E8EAF0; --inkMid: #B0B8CC; --inkLow: #8892A8;
   --gold: #C8922A; --goldGlow: rgba(200, 146, 42, 0.10);
   --cobalt: #2D5FA6; --cobaltDim: #1A2E5A; --success: #1E6B3C; --wa: #25D366; --warning: #F59E0B;
+  --esf-teologia: #5B2C8D; --esf-psicoped: #1E6B3C; --esf-psico: #2980B9;
+  --esf-hermeneutica: #C0392B; --esf-filosofia: #C8922A; --esf-pedagogia: #16A085;
   --serif: 'Merriweather', Georgia, serif; --sans: 'Source Sans 3', system-ui, sans-serif;
   --r: 14px; --r2: 20px; --max: 1160px;
 }
 html{scroll-behavior:smooth;font-size:16px}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;overflow-x:hidden}
-
-/* NAVEGACIÓN */
 #nav{position:fixed;top:0;left:0;right:0;z-index:90;transition:background .3s}
 #nav.scrolled{background:rgba(19, 22, 37, 0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
 .nav-inner{max-width:var(--max);margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
@@ -26,8 +26,6 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:3
 .mob-menu{display:none;background:rgba(19, 22, 37, 0.98);border-bottom:1px solid var(--border);padding:1rem 1.5rem;position:fixed;top:60px;left:0;right:0;z-index:89;}
 .mob-menu.open{display:block}
 .mob-menu a{display:block;padding:.75rem 0;color:var(--inkMid);text-decoration:none;border-bottom:1px solid var(--border);font-size:1rem}
-
-/* HERO Y ACCESOS RÁPIDOS */
 .hero{min-height:100svh;display:flex;align-items:center;padding:8rem 1.5rem 4rem;position:relative;z-index:1}
 .hero-inner{max-width:var(--max);margin:0 auto;width:100%}
 .hero-label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
@@ -43,7 +41,6 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:3
 .btn-wa{background:var(--wa);color:#fff}
 .btn-wa:hover{background:#1ea952;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.3)}
 .btn-sm{padding:.5rem 1rem;font-size:.8rem}
-
 .qa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:4rem}
 .qa-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem;display:flex;align-items:center;gap:1rem;text-decoration:none;transition:all .3s}
 .qa-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2)}
@@ -51,11 +48,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:3
 .qa-card:nth-child(1) .qa-icon{background:rgba(200,146,42,0.1);color:var(--gold)}
 .qa-card:nth-child(2) .qa-icon{background:rgba(30,107,60,0.1);color:var(--success)}
 .qa-card:nth-child(3) .qa-icon{background:rgba(45,95,166,0.1);color:var(--cobalt)}
-.qa-card:nth-child(4) .qa-icon{background:rgba(91,44,141,0.1);color:#7C3AED}
+.qa-card:nth-child(4) .qa-icon{background:rgba(91,44,141,0.1);color:var(--esf-teologia)}
 .qa-text b{display:block;font-size:.95rem;color:var(--ink);line-height:1.2;margin-bottom:.2rem}
 .qa-text small{display:block;font-size:.75rem;color:var(--inkLow)}
-
-/* SECCIONES BASE */
 section{position:relative;z-index:1}
 .container{max-width:var(--max);margin:0 auto;padding:0 1.5rem}
 .sec-pad{padding:5rem 0}
@@ -63,8 +58,6 @@ section{position:relative;z-index:1}
 .sec-title{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;line-height:1.15;margin-bottom:1.25rem}
 .sec-title em{font-style:italic;color:var(--gold)}
 .sec-desc{font-size:1rem;color:var(--inkMid);max-width:600px;line-height:1.8;margin-bottom:3rem}
-
-/* MURO DE ACTUALIDAD */
 .muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
 .muro-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r2); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s; cursor:pointer;}
 .muro-card:hover { transform: translateY(-5px); border-color: var(--gold); }
@@ -73,8 +66,6 @@ section{position:relative;z-index:1}
 .muro-content { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
 .muro-title { font-family: var(--serif); font-size: 1.2rem; color: var(--ink); margin-bottom: 0.75rem; line-height: 1.3; }
 .muro-excerpt { font-size: 0.9rem; color: var(--inkMid); margin-bottom: 1.5rem; line-height: 1.6; flex: 1; }
-
-/* FACETAS (ANTES ESFERAS) */
 .facetas-section{background:var(--surface); border-top:1px solid var(--border)}
 .facetas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;}
 .esf-card{background:var(--bg); border:1px solid var(--border); padding:1.5rem 1rem; border-radius:16px; text-align:center; transition:all .3s}
@@ -82,8 +73,6 @@ section{position:relative;z-index:1}
 .esf-dot{width:12px;height:12px;border-radius:50%;margin:0 auto 1rem;}
 .esf-card h3{font-size:.95rem; color:var(--ink); margin-bottom:.5rem; font-weight:600}
 .esf-card p{font-size:.75rem; color:var(--inkLow); line-height:1.4}
-
-/* CONSEJERÍA */
 .consejeria-section{border-top:1px solid var(--border); background:var(--bg)}
 .fasc-layout{display:grid;grid-template-columns:1fr 380px;gap:3rem;align-items:start}
 .fasc-free-label{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--inkMid);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
@@ -91,7 +80,6 @@ section{position:relative;z-index:1}
 .fasc-header{display:flex;align-items:flex-start;gap:1.25rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
 .fasc-num{font-family:var(--serif);font-size:3.5rem;font-weight:300;color:var(--gold);opacity:.35;line-height:1;flex-shrink:0}
 .fasc-meta h3{font-family:var(--serif);font-size:1.4rem;font-weight:400;color:var(--ink);line-height:1.2;margin-bottom:.3rem}
-.fasc-sub{font-size:.8rem;color:var(--inkLow)}
 .prose{font-family:var(--serif);font-size:1.05rem;color:var(--inkMid);line-height:1.9}
 .prose p{margin-bottom:1.4rem}
 .fasc-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
@@ -113,8 +101,6 @@ section{position:relative;z-index:1}
 .badge-free{color:var(--success);background:rgba(30,107,60,.1);border:1px solid rgba(30,107,60,.2)}
 .badge-lock{color:var(--inkLow)}
 .catalog-footer{padding:1.25rem 1.5rem;border-top:1px solid var(--border)}
-
-/* INSTITUTO */
 .demos-section{background:var(--surface2);border-top:1px solid var(--border)}
 .demos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
 .demo-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;transition:border-color .3s,transform .3s;cursor:pointer;text-decoration:none;display:block}
@@ -125,8 +111,6 @@ section{position:relative;z-index:1}
 .demo-desc{font-size:.85rem;color:var(--inkMid);line-height:1.65;margin-bottom:1rem}
 .demo-cta{font-size:.8rem;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:.4rem;transition:gap .2s}
 .demo-card:hover .demo-cta{gap:.7rem}
-
-/* BÓVEDA APP */
 .dl-section{border-top:1px solid var(--border)}
 .dl-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;padding:5rem 0}
 .dl-features{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem}
@@ -143,7 +127,6 @@ section{position:relative;z-index:1}
 .app-mod-dot{width:8px;height:8px;border-radius:50%;margin-bottom:.4rem}
 .app-mod span{font-size:.75rem;color:var(--ink);display:block;margin-bottom:.15rem;font-weight:600}
 .app-mod small{font-size:.65rem;color:var(--inkLow)}
-
 footer{border-top:1px solid var(--border);background:var(--surface);position:relative;z-index:1}
 .footer-inner{max-width:var(--max);margin:0 auto;padding:3rem 1.5rem 2rem;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem}
 .footer-brand a{font-family:var(--serif);font-size:1.1rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
@@ -154,11 +137,8 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
 .footer-nav a:hover{color:var(--gold)}
 .footer-bottom{max-width:var(--max);margin:0 auto;padding:1.25rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .footer-bottom p{font-size:.8rem;color:var(--inkLow)}
-
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .reveal.visible{opacity:1;transform:none}
-
-/* MODAL DE LECTURA */
 .modal-overlay {position:fixed;inset:0;background:rgba(19, 22, 37, 0.95);backdrop-filter:blur(10px);z-index:100;display:none;justify-content:center;align-items:flex-start;padding:2rem;overflow-y:auto;}
 .modal-overlay.open {display:flex;}
 .modal-content {background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);width:100%;max-width:800px;margin:auto;position:relative;}
@@ -182,7 +162,6 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
 .modal-exercise {background:rgba(200,146,42,0.05);border:1px solid rgba(200,146,42,0.2);padding:1.5rem;border-radius:12px;margin-top:2rem;}
 .modal-exercise strong {color:var(--gold);display:block;margin-bottom:.5rem;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em;}
 .modal-footer {padding:2rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:center;}
-
 @media(max-width:960px){
   .fasc-layout,.dl-inner{grid-template-columns:1fr}
   .dl-visual{display:none}
@@ -201,51 +180,3 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
   .modal-overlay {padding:0;}
   .modal-content {border-radius:0;min-height:100vh;}
 }
-
-/* EXTRACTED INLINE STYLES */
-.extracted-style-1 { font-style:normal }
-.extracted-style-2 { color:var(--gold) }
-.extracted-style-3 { background-image: url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800'); }
-.extracted-style-4 { background: var(--esf-teologia) }
-.extracted-style-5 { background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800'); }
-.extracted-style-6 { background: var(--esf-psico) }
-.extracted-style-7 { background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800'); }
-.extracted-style-8 { background: var(--esf-pedagogia) }
-.extracted-style-9 { background-image: url('https://images.unsplash.com/photo-1484807352052-23338990c6c6?w=800'); }
-.extracted-style-10 { background: var(--warning) }
-.extracted-style-11 { background-image: url('https://images.unsplash.com/photo-1518331647614-7a1f04cd34cf?w=500'); }
-.extracted-style-12 { background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800'); }
-.extracted-style-13 { background: var(--gold) }
-.extracted-style-14 { border-top: 3px solid #5B2C8D }
-.extracted-style-15 { background: #5B2C8D }
-.extracted-style-16 { border-top: 3px solid #1E6B3C }
-.extracted-style-17 { background: #1E6B3C }
-.extracted-style-18 { border-top: 3px solid #2980B9 }
-.extracted-style-19 { background: #2980B9 }
-.extracted-style-20 { border-top: 3px solid #C0392B }
-.extracted-style-21 { background: #C0392B }
-.extracted-style-22 { border-top: 3px solid #C8922A }
-.extracted-style-23 { background: #C8922A }
-.extracted-style-24 { border-top: 3px solid #16A085 }
-.extracted-style-25 { background: #16A085 }
-.extracted-style-26 { padding:.25rem .65rem;border-radius:4px;border:1px solid;color:var(--success);background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25) }
-.extracted-style-27 { width:100%;justify-content:center }
-.extracted-style-28 { font-size:.75rem;color:var(--inkLow);text-align:center;margin-top:.6rem }
-.extracted-style-29 { border-color:rgba(37,99,235,.25) }
-.extracted-style-30 { color:#93C5FD }
-.extracted-style-31 { font-size:1rem;color:var(--inkMid);line-height:1.8;margin-bottom:2rem }
-.extracted-style-32 { display:flex;gap:1rem;flex-wrap:wrap }
-.extracted-style-33 { background:var(--esf-teologia) }
-.extracted-style-34 { background:var(--esf-psico) }
-.extracted-style-35 { background:var(--gold) }
-.extracted-style-36 { background:var(--esf-pedagogia) }
-.extracted-style-37 { background:var(--esf-hermeneutica) }
-.extracted-style-38 { background:var(--success) }
-.extracted-style-39 { margin-top:1rem;padding:.75rem;background:rgba(200, 146, 42,.06);border:1px solid rgba(200, 146, 42,.15);border-radius:10px;display:flex;align-items:center;justify-content:space-between }
-.extracted-style-40 { font-size:.7rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem }
-.extracted-style-41 { font-family:var(--serif);font-size:1.1rem;color:var(--ink);font-weight:700;line-height:1 }
-.extracted-style-42 { text-align:right }
-.extracted-style-43 { font-size:.7rem;color:var(--inkLow);margin-bottom:.2rem }
-.extracted-style-44 { font-size:.9rem;color:var(--ink);font-weight:600 }
-.extracted-style-45 { color:var(--gold);font-weight:bold; }
-.extracted-style-46 { margin:0;font-size:.95rem; }

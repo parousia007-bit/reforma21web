@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Reflexión Diaria · Reforma 2.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  body { background: #E8EBF4; }
+  .detail-header {
+    background: linear-gradient(135deg, #1A2E5A, #2563EB);
+    padding: 6rem 1.5rem 3rem; color: white;
+  }
+  .tag-esfera {
+    background: rgba(200, 146, 42, 0.25); border: 1px solid rgba(200, 146, 42, 0.5);
+    color: #D4A843; font-size: 0.65rem; font-weight: bold; letter-spacing: 1.5px;
+    padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 1rem; text-transform: uppercase;
+  }
+  .detail-title { font-family: var(--serif); font-size: 2rem; line-height: 1.2; }
+  
+  .content-wrapper { max-width: 800px; margin: -2rem auto 4rem; padding: 0 1.5rem; position: relative; z-index: 10; }
+  
+  /* _VersiculoCard */
+  .verse-card {
+    background: #FDF9F1; border: 1px solid rgba(200, 146, 42, 0.4);
+    border-radius: 16px; padding: 2rem; text-align: center; margin-bottom: 1.5rem;
+  }
+  .verse-card p { font-size: 1.1rem; font-style: italic; color: #1A2E5A; line-height: 1.6; }
+  .verse-card cite { display: block; margin-top: 1rem; color: #D4A843; font-weight: bold; font-size: 0.85rem; font-style: normal;}
+  
+  /* _ContentCard */
+  .reflexion-card {
+    background: white; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(45, 95, 166, 0.07);
+  }
+  .reflexion-card h3 { font-size: 1.1rem; color: #1A2E5A; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .reflexion-card .prose p { font-size: 1rem; color: #4A5568; margin-bottom: 1.2rem; line-height: 1.8; }
+  
+  /* _ExpandableSection (Ejercicio) */
+  .ejercicio-card {
+    background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(91, 44, 141, 0.25);
+    box-shadow: 0 2px 10px rgba(45, 95, 166, 0.05); margin-bottom: 2rem;
+  }
+  .ejercicio-card h4 { color: #5B2C8D; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;}
+  .ejercicio-card p { font-size: 0.95rem; color: #4A5568; line-height: 1.7; }
+  
+  .btn-completar {
+    display: block; width: 100%; background: #2563EB; color: white; text-align: center;
+    padding: 1rem; border-radius: 12px; font-weight: bold; text-decoration: none; transition: 0.2s;
+  }
+  .btn-completar:hover { background: #1A2E5A; transform: translateY(-2px); }
+  .nav-back { color: white; text-decoration: none; position: absolute; top: 1.5rem; left: 1.5rem; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="detail-header">
+  <a href="serie_devocional.html" class="nav-back">← Volver a la Serie</a>
+  <div class="container" style="max-width: 800px; padding:0;">
+    <div class="tag-esfera" id="render-esfera">Cargando...</div>
+    <h1 class="detail-title" id="render-title">Cargando Título...</h1>
+  </div>
+</div>
+
+<div class="content-wrapper">
+  <div class="verse-card">
+    <div style="font-size:3rem; color:var(--gold); line-height:0.5; margin-bottom:1rem;">"</div>
+    <p id="render-verse">Cargando versículo...</p>
+    <cite id="render-ref">Cargando referencia...</cite>
+  </div>
+
+  <div class="reflexion-card">
+    <h3>Reflexión del Autor</h3>
+    <div class="prose" id="render-content"></div>
+  </div>
+
+  <div class="ejercicio-card">
+    <h4><span>🤔</span> Para Tu Reflexión</h4>
+    <p id="render-exercise">Cargando ejercicio...</p>
+  </div>
+
+  <a href="../index.html" class="btn-completar" onclick="alert('+20 puntos ganados — ¡Reflexión completada!')">✓ Completar reflexión (+20 pts)</a>
+</div>
+
+<script src="../js/db/devocionales.js"></script>
+<script>
+  // Obtener ID de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id') || 'ht_prophecy_01'; // Default si no hay ID
+  const data = dbDevocionales[id];
+
+  if(data) {
+    document.getElementById('render-esfera').innerText = data.esfera;
+    document.getElementById('render-title').innerText = data.titulo;
+    document.getElementById('render-verse').innerText = data.lead;
+    document.getElementById('render-ref').innerText = data.autor.split('—')[0].trim();
+    document.getElementById('render-content').innerHTML = data.texto;
+    document.getElementById('render-exercise').innerText = data.ejercicio.replace('EJERCICIO PRÁCTICO: ', '');
+  }
+</script>
+</body>
+</html>
