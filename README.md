@@ -1,59 +1,27 @@
 # Documentación Técnica - Arquitectura Modular Reforma 2.1
 
-## Resumen
-La plataforma web de Reforma 2.1 ha sido refactorizada migrando de un archivo `index.html` monolítico a una Arquitectura por Dominios (SoC - Separation of Concerns). Esto mejora la mantenibilidad, escalabilidad y claridad del código.
+## Filosofía del Proyecto
+En Reforma 2.1, nuestro orden técnico busca reflejar el orden creacional que buscamos restaurar. Hemos migrado de un `index.html` monolítico a una estructura modular limpia y organizada. Cada parte de nuestro código ahora tiene un propósito y lugar específico, eliminando el desorden y permitiendo que la plataforma crezca de manera sostenible.
 
-## Estructura de Directorios
+## Arquitectura Modular (Separation of Concerns)
+Hemos adoptado el principio de **Separación de Responsabilidades (SoC)** para dividir nuestro monolito en dominios específicos:
+*   **`css/styles.css`**: Encapsula todos los estilos visuales, eliminando dependencias de `<style>` en línea y atributos `style=""` en el HTML. Esto asegura que el diseño visual sea reutilizable, limpio y mantenible de forma independiente.
+*   **`js/app.js`**: Centraliza la lógica interactiva del lado del cliente (Modales, Canvas interactivo, navegación y el embudo `app-trigger`). Al aislar este comportamiento, el HTML se mantiene puramente semántico.
+*   **`js/db/`**: Directorio dedicado a la gestión de datos. Aquí se almacena la "verdad" de nuestro contenido para no mezclar datos con la presentación.
 
-*   **`css/`**: Contiene el archivo `styles.css`, el cual aloja todos los estilos visuales de la plataforma. Se eliminaron por completo las etiquetas `<style>` y los estilos en línea (atributos `style=""`) del HTML, garantizando un diseño limpio y reutilizable mediante clases CSS.
-*   **`js/`**: Contiene la lógica interactiva de la aplicación.
-    *   **`js/app.js`**: Aloja la lógica del frontend: la interacción de los Modales de lectura, el renderizado dinámico del Canvas de constelaciones, la navegación (scroll, menú hamburguesa) y el embudo de la App (funcionalidad `.app-trigger`).
-*   **`js/db_articulos.js`**: Actúa como nuestra "Base de Datos" local. Contiene el objeto `contenidosDB`.
-*   **`vistas/`**: (Proyectado para la fase de Navegación Dinámica) Directorio destinado a alojar plantillas HTML (`detalle_devocional.html`, `template_serie.html`) para el renderizado de contenido dinámico.
+## Bases de Datos por Dominio
+Para proteger el **MET (Mensaje, Estética y Tono)**, extrajimos la información de manera precisa, asegurando que ningún carácter o etiqueta HTML interna se modifique o resuma.
+*   **`js/db/db_articulos.js`**: Actúa como nuestra fuente de verdad local (agrupando artículos y devocionales temporalmente antes de separarlos totalmente en `articulos.js` y `devocionales.js`). Estas bases de datos permiten actualizar contenido sin tocar el `index.html`.
 
-## Separación de Datos y Protección del MET
+## Sistema de Vistas Dinámicas (Proyección)
+Para evitar la redundancia de crear múltiples archivos HTML estáticos para cada nuevo contenido, hemos establecido las bases para un sistema de vistas dinámicas:
+*   **Plantillas en `/vistas/`**: Archivos como `detalle_devocional.html` y `template_serie.html` servirán como esqueletos.
+*   **Enrutamiento por Parámetros**: A través de JavaScript, interceptaremos parámetros en la URL (ej. `?id=articulo_fisica`). La lógica buscará este ID en nuestras bases de datos locales (`js/db/`) e inyectará el título, texto y ejercicios dinámicamente en la plantilla. Esto consolida el concepto de "Cero Monolitos".
 
-El archivo `js/db_articulos.js` encapsula la información de los artículos y devocionales. La regla de oro aplicada en la extracción fue la preservación íntegra de los textos. El contenido del MET (Mensaje, Estética y Tono) se extrajo caracter por caracter sin resúmenes, truncamientos o modificaciones de las etiquetas HTML internas de los párrafos. Esto garantiza que la curaduría original se mantenga exacta al diseño monolítico, aislando los datos de la interfaz visual.
+## UX/UI Premium
+Nuestra interfaz se apoya en patrones modernos para ofrecer una experiencia de inmersión:
+*   **Efecto Reveal (IntersectionObserver)**: Los elementos aparecen fluidamente mientras el usuario hace scroll, creando una lectura relajada y progresiva.
+*   **Diseño Estilo MasterClass**: El contenido (como las series en el modal) se organiza mediante "tarjetas apiladas", con una tipografía limpia y un diseño libre de distracciones, enfocado puramente en la retención del lector.
+*   **Canvas Interactivo**: Añade dinamismo visual sin interferir con la navegación, representando la temática cósmica/creacional.
 
-## Navegación Dinámica y Vistas (Próxima Fase)
-
-*(Diseño Arquitectónico)*
-El sistema evolucionará para no requerir archivos HTML nuevos por cada artículo. En su lugar, se implementará un sistema de plantillas en `/vistas/` (ej. `detalle_devocional.html`, `template_serie.html`).
-*   **Funcionamiento**: Mediante JavaScript, se interceptarán los parámetros de la URL (ej. `?id=devocional_01`) para buscar el ID correspondiente en `contenidosDB`.
-*   **Renderizado**: La plantilla inyectará el título, metadatos, contenido y ejercicios en el DOM en tiempo de ejecución.
-
-## UI/UX Premium
-
-La experiencia de usuario se fundamenta en los siguientes pilares:
-*   **Efecto Reveal (IntersectionObserver)**: Los elementos con la clase `.reveal` aparecen fluidamente a medida que el usuario hace scroll, mejorando la inmersión.
-*   **Canvas Interactivo**: Un sistema de partículas en el fondo de la página, proporcionando una estética cósmica o espacial.
-*   **Modal de Lectura Estilo MasterClass**: Diseño limpio, enfocado y libre de distracciones para consumir el contenido de la base de datos (con citas destacadas y ejercicios).
-*   **Responsive Design**: Adaptación fluida a dispositivos móviles, incluyendo un menú hamburguesa y redimensionamiento dinámico del Canvas.
-
-## Guía de Ingesta (Protocolo "Cero Monolitos")
-
-Para agregar nuevos contenidos (artículos, audios, devocionales) sin alterar el `index.html`:
-
-1.  **Abrir `js/db_articulos.js`**.
-2.  **Añadir un nuevo nodo** al objeto `contenidosDB` siguiendo el esquema existente:
-    ```javascript
-    'nuevo_id': {
-      tipo: 'articulo', // o 'devocional'
-      esfera: 'Nombre de la Esfera',
-      tiempo: 'X min',
-      serie: 'Nombre de la Serie',
-      titulo: 'Título del Contenido',
-      lead: 'Cita destacada o resumen...',
-      autor: 'Autor o Referencia',
-      texto: '<p>Párrafo 1...</p><p>Párrafo 2...</p>',
-      ejercicio: 'Texto del ejercicio práctico (opcional)'
-    }
-    ```
-3.  **Actualizar la Interfaz** (Si aplica en la pantalla principal o muro): Añadir una tarjeta HTML simple en `index.html` que invoque el modal u enlace con el ID: `onclick="openModal('nuevo_id')"`. (En la fase de navegación dinámica, esto será automático o apuntará a la ruta parametrizada).
-
-## Próximos Pasos
-
-Esta arquitectura establece las bases sólidas para:
-*   Implementar la fase de **"Diálogo y Respuestas"**.
-*   Integrar de forma nativa la **Audioteca**.
-*   Escalar el uso de vistas dinámicas y `fetch`/API en el futuro.
+Esta estructura sienta las bases para las siguientes fases, como la integración de la **Audioteca** y el sistema de **Diálogo y Respuestas**.
