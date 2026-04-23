@@ -2,78 +2,120 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Artículo - Reforma 2.1</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículo | Reforma 2.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0B0F1E; color: #E8EBF4; font-family: 'Roboto', sans-serif; line-height: 1.8; margin: 0; }
-        .hero-header { height: 300px; background-size: cover; background-position: center; position: relative; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #0B0F1E, transparent); }
-        .container { max-width: 800px; margin: 0 auto; padding: 30px 24px; position: relative; z-index: 10; }
-        .tags { display: flex; gap: 8px; margin-bottom: 20px; }
-        .tag { padding: 6px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
-        .title { font-family: 'Georgia', serif; font-size: 28px; font-weight: 900; line-height: 1.2; margin-bottom: 16px; }
-        .extract { border-left: 4px solid var(--theme-color, #2563EB); padding-left: 16px; font-style: italic; color: #8892A8; margin-bottom: 24px; }
-        .author-info { color: #D4A843; font-weight: bold; display: flex; align-items: center; gap: 8px; margin-bottom: 30px; letter-spacing: 1px; font-size: 14px;}
-        .divider { height: 1px; background-color: #252D40; margin-bottom: 30px; }
-        .content p { font-size: 17px; text-align: justify; margin-bottom: 16px; color: #E8EBF4; }
-        /* Estilos en línea del contenido inyectado complementan esto */
+        :root {
+            --bg-dark: #0a0e17;
+            --text-gray: #8892a8;
+            --text-light: #e8ebf4;
+            --accent: #d4a843;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Source Sans 3', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Contenedor Responsivo */
+        .article-container {
+            width: 100%;
+            max-width: 800px; /* Ancho máximo para lectura cómoda en PC */
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 2.5rem; /* Se ajusta solo */
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .meta-info {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #252d40;
+            padding-bottom: 15px;
+        }
+
+        #article-content {
+            font-size: 1.15rem; /* Tamaño de lectura ideal */
+            line-height: 1.8;
+        }
+
+        /* --- MEDIA QUERIES (MAGIA PARA CELULAR) --- */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem; /* Letra más pequeña para títulos en celular */
+            }
+            .header-image {
+                height: 200px; /* Imagen más baja para no robar espacio */
+            }
+            #article-content {
+                font-size: 1.1rem; /* Mantenemos la letra grande para que sea legible */
+            }
+            .article-container {
+                padding: 15px; /* Menos margen lateral en móvil */
+            }
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
-    <div class="hero-header" id="hero-img">
-        <div class="hero-overlay"></div>
-    </div>
-    
-    <div class="container">
-        <div class="tags" id="tag-container"></div>
-        <h1 class="title" id="art-title">Cargando...</h1>
-        <div class="extract" id="art-extract"></div>
-        <div class="author-info">✍️ Por: <span id="art-author"></span></div>
-        <div class="divider"></div>
-        
-        <div class="content" id="art-content"></div>
+    <div class="article-container">
+        <a href="../index.html" class="btn-back">← Volver al inicio</a>
+        <img id="header-img" class="header-image" src="" alt="">
+        <h1 id="article-title">Cargando...</h1>
+        <div class="meta-info">
+            <span id="article-author"></span> | <span id="article-date"></span>
+        </div>
+        <div id="article-content">
+            </div>
     </div>
 
     <script src="../js/db/articulos.js"></script>
     <script>
-        // Obtener el ID de la URL (ej: ?id=article_fisica)
-        const urlParams = new URLSearchParams(window.location.search);
-        const articleId = urlParams.get('id') || 'article_fisica'; // Default para probar
-        
-        const articleData = articulosDB[articleId];
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const article = articulos[id];
 
-        if (articleData) {
-            document.getElementById('hero-img').style.backgroundImage = `url('${articleData.imagen_cabecera}')`;
-            document.title = articleData.titulo;
-            document.getElementById('art-title').innerText = articleData.titulo;
-            document.getElementById('art-extract').innerText = articleData.extracto;
-            document.getElementById('art-author').innerText = articleData.autor;
-            document.getElementById('art-content').innerHTML = articleData.contenido;
-            
-            // Establecer el color del tema dinámicamente
-            document.documentElement.style.setProperty('--theme-color', articleData.color_tema);
-            document.querySelector('.extract').style.borderColor = articleData.color_tema;
-
-            const tagsContainer = document.getElementById('tag-container');
-            articleData.etiquetas.forEach((tag, index) => {
-                const el = document.createElement('span');
-                el.className = 'tag';
-                el.innerText = tag;
-                // Colorear el primer tag con el color del tema, el segundo gold
-                if(index === 0) {
-                    el.style.color = articleData.color_tema;
-                    el.style.border = `1px solid ${articleData.color_tema}80`; // 50% opacidad
-                    el.style.backgroundColor = `${articleData.color_tema}1A`; // 10% opacidad
-                } else {
-                    el.style.color = '#F59E0B'; // Warning/Gold
-                    el.style.border = `1px solid #F59E0B80`;
-                    el.style.backgroundColor = `#F59E0B1A`;
-                }
-                tagsContainer.appendChild(el);
-            });
-        } else {
-            document.getElementById('art-title').innerText = 'Artículo no encontrado';
-        }
+            if (article) {
+                document.title = article.titulo + " | Reforma 2.1";
+                document.getElementById('header-img').src = article.imagen_cabecera;
+                document.getElementById('article-title').innerText = article.titulo;
+                document.getElementById('article-title').style.color = article.color_tema || 'var(--accent)';
+                document.getElementById('article-author').innerText = "Por: " + article.autor;
+                document.getElementById('article-date').innerText = article.fecha;
+                document.getElementById('article-content').innerHTML = article.contenido;
+            } else {
+                document.getElementById('article-content').innerHTML = "<h2>Artículo no encontrado</h2>";
+            }
+        });
     </script>
 </body>
 </html>
