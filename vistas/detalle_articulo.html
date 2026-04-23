@@ -97,16 +97,25 @@
             </div>
     </div>
 
+    <script src="../js/db/db_articulos.js"></script>
     <script src="../js/db/articulos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
-            const article = articulos[id];
+            // Fallback robusto para encontrar la base de datos correcta
+            const db = typeof db_articulos !== 'undefined' ? db_articulos : (typeof articulos !== 'undefined' ? articulos : null);
+            const article = db ? db[id] : null;
 
             if (article) {
                 document.title = article.titulo + " | Reforma 2.1";
-                document.getElementById('header-img').src = article.imagen_cabecera;
+                
+                // Reparación de ruta de imagen (subir un nivel desde /vistas)
+                let imgSrc = article.imagen_cabecera;
+                if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('../')) {
+                    imgSrc = '../' + imgSrc;
+                }
+                document.getElementById('header-img').src = imgSrc;
                 document.getElementById('article-title').innerText = article.titulo;
                 document.getElementById('article-title').style.color = article.color_tema || 'var(--accent)';
                 document.getElementById('article-author').innerText = "Por: " + article.autor;
