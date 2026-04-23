@@ -22,10 +22,9 @@
             line-height: 1.6;
         }
 
-        /* Contenedor Responsivo */
         .article-container {
             width: 100%;
-            max-width: 800px; /* Ancho máximo para lectura cómoda en PC */
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             box-sizing: border-box;
@@ -37,11 +36,12 @@
             object-fit: cover;
             border-radius: 12px;
             margin-bottom: 30px;
+            display: none; /* Oculto hasta que cargue para evitar el cuadro roto */
         }
 
         h1 {
             font-family: 'Merriweather', serif;
-            font-size: 2.5rem; /* Se ajusta solo */
+            font-size: 2.5rem;
             line-height: 1.2;
             margin-bottom: 10px;
             color: var(--accent);
@@ -56,24 +56,22 @@
         }
 
         #article-content {
-            font-size: 1.15rem; /* Tamaño de lectura ideal */
+            font-size: 1.15rem;
             line-height: 1.8;
         }
 
-        /* --- MEDIA QUERIES (MAGIA PARA CELULAR) --- */
+        #article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
         @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8rem; /* Letra más pequeña para títulos en celular */
-            }
-            .header-image {
-                height: 200px; /* Imagen más baja para no robar espacio */
-            }
-            #article-content {
-                font-size: 1.1rem; /* Mantenemos la letra grande para que sea legible */
-            }
-            .article-container {
-                padding: 15px; /* Menos margen lateral en móvil */
-            }
+            h1 { font-size: 1.8rem; }
+            .header-image { height: 200px; }
+            #article-content { font-size: 1.1rem; }
+            .article-container { padding: 15px; }
         }
 
         .btn-back {
@@ -88,7 +86,7 @@
 <body>
     <div class="article-container">
         <a href="../index.html" class="btn-back">← Volver al inicio</a>
-        <img id="header-img" class="header-image" src="" alt="">
+        <img id="header-img" class="header-image" src="" alt="Cabecera del artículo">
         <h1 id="article-title">Cargando...</h1>
         <div class="meta-info">
             <span id="article-author"></span> | <span id="article-date"></span>
@@ -103,26 +101,42 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
-            // Fallback robusto para encontrar la base de datos correcta
-            const db = typeof db_articulos !== 'undefined' ? db_articulos : (typeof articulos !== 'undefined' ? articulos : null);
-            const article = db ? db[id] : null;
+            
+            let article = null;
+            
+            // Búsqueda inteligente del artículo
+            if (typeof articulos !== 'undefined' && articulos[id]) {
+                article = articulos[id];
+            } else if (typeof db_articulos !== 'undefined' && db_articulos[id]) {
+                article = db_articulos[id];
+            } else if (typeof window[id] !== 'undefined') {
+                article = window[id];
+            }
 
             if (article) {
                 document.title = article.titulo + " | Reforma 2.1";
                 
-                // Reparación de ruta de imagen (subir un nivel desde /vistas)
                 let imgSrc = article.imagen_cabecera;
                 if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('../')) {
                     imgSrc = '../' + imgSrc;
                 }
-                document.getElementById('header-img').src = imgSrc;
+                
+                const imgEl = document.getElementById('header-img');
+                if(imgSrc) {
+                    imgEl.src = imgSrc;
+                    imgEl.style.display = 'block';
+                }
+                
                 document.getElementById('article-title').innerText = article.titulo;
                 document.getElementById('article-title').style.color = article.color_tema || 'var(--accent)';
-                document.getElementById('article-author').innerText = "Por: " + article.autor;
-                document.getElementById('article-date').innerText = article.fecha;
+                document.getElementById('article-author').innerText = "Por: " + (article.autor || "Equipo Reforma 2.1");
+                document.getElementById('article-date').innerText = article.fecha || "";
                 document.getElementById('article-content').innerHTML = article.contenido;
             } else {
-                document.getElementById('article-content').innerHTML = "<h2>Artículo no encontrado</h2>";
+                document.getElementById('article-content').innerHTML = `
+                    <h2 style="color: #ff6b6b;">Error Crítico</h2>
+                    <p>No se pudo cargar la información del ID: <b>${id}</b>.</p>
+                `;
             }
         });
     </script>
