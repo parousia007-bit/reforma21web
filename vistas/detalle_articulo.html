@@ -104,13 +104,11 @@
             
             let article = null;
             
-            // Búsqueda inteligente del artículo
-            if (typeof articulos !== 'undefined' && articulos[id]) {
-                article = articulos[id];
-            } else if (typeof db_articulos !== 'undefined' && db_articulos[id]) {
-                article = db_articulos[id];
-            } else if (typeof window[id] !== 'undefined') {
-                article = window[id];
+            // Búsqueda EXACTA con los nombres reales de la base de datos
+            if (typeof articulosDB !== 'undefined' && articulosDB[id]) {
+                article = articulosDB[id];
+            } else if (typeof contenidosDB !== 'undefined' && contenidosDB[id]) {
+                article = contenidosDB[id];
             }
 
             if (article) {
