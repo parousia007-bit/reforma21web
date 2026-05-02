@@ -174,3 +174,82 @@ document.getElementById('articleModal').addEventListener('click', function(e) {
     });
   });
 })();
+
+// 5. CARGA DINÁMICA DE ARTÍCULOS (API FETCH)
+async function loadArticles() {
+  const container = document.getElementById('dynamic-articles');
+  if (!container) return; // Solo ejecutar en index.html
+
+  let articles = [];
+
+  try {
+    const response = await fetch('/api/articles');
+    if (!response.ok) throw new Error('API request failed');
+    articles = await response.json();
+  } catch (error) {
+    console.warn('Backend fetch failed, falling back to articulosDB...', error);
+    // Fallback de Seguridad: usar la variable local antigua si existe
+    if (typeof articulosDB !== 'undefined') {
+      articles = Object.keys(articulosDB).map(key => ({
+        id: key,
+        ...articulosDB[key]
+      }));
+    }
+  }
+
+  // Filtrar los que no deben mostrarse o ya están estáticos
+  articles = articles.filter(a => a.tipo !== 'devocional' && a.id !== 'fasciculo_01');
+
+  // Renderizar
+  articles.forEach(article => {
+    const card = document.createElement('article');
+    card.className = 'muro-card reveal';
+    card.style.cursor = 'pointer';
+    card.onclick = () => { window.location.href = 'vistas/detalle_articulo.html?id=' + encodeURIComponent(article.id); };
+    
+    // Tag / Categoría
+    let tagHtml = '';
+    const tagText = article.categoria || (article.etiquetas && article.etiquetas[0]);
+    if (tagText) {
+       const color = article.color_tema || 'var(--gold)';
+       tagHtml = `<span class="muro-tag" style="background: ${color}; color: #FFFFFF;">${DOMPurify.sanitize(tagText)}</span>`;
+    }
+
+    const imgStyle = article.imagen_cabecera ? `background-image: url('${DOMPurify.sanitize(article.imagen_cabecera)}');` : '';
+    const title = article.titulo ? DOMPurify.sanitize(article.titulo) : 'Sin título';
+    const excerpt = article.extracto || article.lead || '';
+    
+    card.innerHTML = `
+      <div class="muro-img" style="${imgStyle}">
+        ${tagHtml}
+      </div>
+      <div class="muro-content">
+        <h3 class="muro-title">${title}</h3>
+        <p class="muro-excerpt">${DOMPurify.sanitize(excerpt)}</p>
+        <button class="btn btn-outline btn-sm">Leer Artículo →</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Re-aplicar el IntersectionObserver para las nuevas tarjetas
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
+    
+    container.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = (i % 4) * 0.08 + 's';
+      io.observe(el);
+    });
+  } else {
+    container.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadArticles);

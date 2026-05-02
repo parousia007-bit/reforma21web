@@ -97,22 +97,41 @@
 
     <script src="../js/db/db_articulos.js"></script>
     <script src="../js/db/articulos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
+            const contentEl = document.getElementById('article-content');
             
+            if (!id) {
+                contentEl.innerHTML = `<h2 style="color: #ff6b6b;">Error</h2><p>ID de artículo no proporcionado.</p>`;
+                return;
+            }
+
             let article = null;
-            
-            // Búsqueda EXACTA con los nombres reales de la base de datos
-            if (typeof articulosDB !== 'undefined' && articulosDB[id]) {
-                article = articulosDB[id];
-            } else if (typeof contenidosDB !== 'undefined' && contenidosDB[id]) {
-                article = contenidosDB[id];
+            let usedFallback = false;
+
+            try {
+                // 1. Fetch from the new API
+                const response = await fetch('/api/articles/' + encodeURIComponent(id));
+                if (!response.ok) throw new Error('Network response was not ok');
+                article = await response.json();
+            } catch (error) {
+                console.warn('Fallo al obtener artículo de la API. Intentando fallback estático...', error);
+                
+                // 2. Fallback to old JS variable if API fails
+                if (typeof articulosDB !== 'undefined' && articulosDB[id]) {
+                    article = articulosDB[id];
+                } else if (typeof contenidosDB !== 'undefined' && contenidosDB[id]) {
+                    article = contenidosDB[id];
+                }
+                usedFallback = true;
             }
 
             if (article) {
-                document.title = article.titulo + " | Reforma 2.1";
+                // Update DOM with sanitized data
+                document.title = (DOMPurify.sanitize(article.titulo) || "Artículo") + " | Reforma 2.1";
                 
                 let imgSrc = article.imagen_cabecera;
                 if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('../')) {
@@ -120,21 +139,40 @@
                 }
                 
                 const imgEl = document.getElementById('header-img');
-                if(imgSrc) {
-                    imgEl.src = imgSrc;
+                if (imgSrc) {
+                    imgEl.src = DOMPurify.sanitize(imgSrc);
                     imgEl.style.display = 'block';
+                    // Pequeña animación de entrada suave para la cabecera
+                    imgEl.style.opacity = '0';
+                    imgEl.style.transition = 'opacity 0.8s ease-in-out';
+                    setTimeout(() => imgEl.style.opacity = '1', 50);
                 }
                 
-                document.getElementById('article-title').innerText = article.titulo;
-                document.getElementById('article-title').style.color = article.color_tema || 'var(--accent)';
-                document.getElementById('article-author').innerText = "Por: " + (article.autor || "Equipo Reforma 2.1");
-                document.getElementById('article-date').innerText = article.fecha || "";
-                document.getElementById('article-content').innerHTML = article.contenido;
+                const titleEl = document.getElementById('article-title');
+                titleEl.innerHTML = DOMPurify.sanitize(article.titulo || '');
+                titleEl.style.color = DOMPurify.sanitize(article.color_tema || 'var(--accent)');
+                
+                document.getElementById('article-author').innerText = "Por: " + DOMPurify.sanitize(article.autor || "Equipo Reforma 2.1");
+                document.getElementById('article-date').innerText = DOMPurify.sanitize(article.fecha || "");
+                
+                // Animación suave de carga del contenido
+                contentEl.style.opacity = '0';
+                contentEl.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    contentEl.innerHTML = DOMPurify.sanitize(article.htmlContent || article.contenido || '');
+                    contentEl.style.opacity = '1';
+                }, 100);
+
             } else {
-                document.getElementById('article-content').innerHTML = `
-                    <h2 style="color: #ff6b6b;">Error Crítico</h2>
-                    <p>No se pudo cargar la información del ID: <b>${id}</b>.</p>
-                `;
+                contentEl.style.opacity = '0';
+                setTimeout(() => {
+                    contentEl.innerHTML = `
+                        <h2 style="color: #ff6b6b;">Error Crítico</h2>
+                        <p>No se pudo cargar la información del ID: <b>${DOMPurify.sanitize(id)}</b>.</p>
+                        <p style="font-size: 0.9rem; color: #8892a8;">(La API está inactiva y no se encontró en la base de datos estática de respaldo)</p>
+                    `;
+                    contentEl.style.opacity = '1';
+                }, 100);
             }
         });
     </script>

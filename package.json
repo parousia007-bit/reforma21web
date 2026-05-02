@@ -1,0 +1,26 @@
+{
+  "name": "reforma_2.1-web",
+  "version": "1.0.0",
+  "description": "En Reforma 2.1, nuestro orden técnico busca reflejar el orden creacional que buscamos restaurar. Hemos migrado de un `index.html` monolítico a una estructura modular limpia y organizada. Cada parte de nuestro código ahora tiene un propósito y lugar específico, eliminando el desorden y permitiendo que la plataforma crezca de manera sostenible.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parousia007-bit/reforma21web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/parousia007-bit/reforma21web/issues"
+  },
+  "homepage": "https://github.com/parousia007-bit/reforma21web#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.2"
+  }
+}
