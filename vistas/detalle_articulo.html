@@ -159,7 +159,11 @@
                 contentEl.style.opacity = '0';
                 contentEl.style.transition = 'opacity 0.5s ease';
                 setTimeout(() => {
-                    contentEl.innerHTML = DOMPurify.sanitize(article.htmlContent || article.contenido || '');
+                    const purifyConfig = {
+                        ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img', 'figure', 'figcaption'],
+                        ALLOWED_ATTR: ['class', 'style', 'href', 'src', 'alt', 'target']
+                    };
+                    contentEl.innerHTML = DOMPurify.sanitize(article.htmlContent || article.contenido || '', purifyConfig);
                     contentEl.style.opacity = '1';
 
                     // --- INICIO DE TELEMETRÍA FRONTEND ---
