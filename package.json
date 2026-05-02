@@ -19,8 +19,12 @@
   },
   "homepage": "https://github.com/parousia007-bit/reforma21web#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "gray-matter": "^4.0.3",
-    "marked": "^18.0.2"
+    "jsonwebtoken": "^9.0.3",
+    "marked": "^18.0.2",
+    "mongoose": "^9.6.1"
   }
 }

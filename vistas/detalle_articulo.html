@@ -161,6 +161,70 @@
                 setTimeout(() => {
                     contentEl.innerHTML = DOMPurify.sanitize(article.htmlContent || article.contenido || '');
                     contentEl.style.opacity = '1';
+
+                    // --- INICIO DE TELEMETRÍA FRONTEND ---
+                    // 1. Centinela para detectar el final real del artículo
+                    const sentinel = document.createElement('div');
+                    sentinel.style.height = '1px';
+                    sentinel.style.marginTop = '20px';
+                    contentEl.appendChild(sentinel);
+
+                    let timeSpent = 0;
+                    let lastTime = Date.now();
+                    let maxScrollDepth = 0;
+
+                    // 2. Tracker de Scroll (Porcentaje + Observer)
+                    const updateScroll = () => {
+                        const h = document.documentElement.scrollHeight - window.innerHeight;
+                        if (h > 0) {
+                            const pct = Math.round((window.scrollY / h) * 100);
+                            if (pct > maxScrollDepth) maxScrollDepth = Math.min(pct, 100);
+                        }
+                    };
+                    window.addEventListener('scroll', updateScroll, { passive: true });
+
+                    if ('IntersectionObserver' in window) {
+                        const io = new IntersectionObserver(entries => {
+                            if (entries[0].isIntersecting) {
+                                maxScrollDepth = 100;
+                                io.disconnect(); // No necesitamos observarlo más si ya llegó a 100
+                            }
+                        });
+                        io.observe(sentinel);
+                    }
+
+                    // 3. Tracker de Tiempo y Transmisión de Datos (Visibility API)
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.visibilityState === 'hidden') {
+                            // Sumar los segundos reales en foco
+                            timeSpent += Math.round((Date.now() - lastTime) / 1000);
+                            
+                            // Actualizar scroll por si la ventana se cerró de golpe sin disparar evento scroll final
+                            updateScroll();
+
+                            // Enviar payload de forma asíncrona sin bloquear la navegación
+                            const payload = {
+                                articleId: id,
+                                timeSpent: timeSpent,
+                                scrollDepth: maxScrollDepth
+                            };
+
+                            fetch('/api/metrics', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload),
+                                keepalive: true
+                            }).catch(err => console.warn('Telemetry transmit error:', err));
+                            
+                            // Resetear timeSpent a 0 para que si el usuario regresa a la pestaña y la vuelve a cerrar, 
+                            // solo se envíe el tiempo incremental nuevo (MongoDB usa $inc)
+                            timeSpent = 0; 
+                        } else if (document.visibilityState === 'visible') {
+                            // Reiniciar el reloj cuando recobra el foco
+                            lastTime = Date.now();
+                        }
+                    });
+                    // --- FIN DE TELEMETRÍA ---
                 }, 100);
 
             } else {

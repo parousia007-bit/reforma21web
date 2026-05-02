@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Reforma 2.1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0e17;
+      --text-gray: #8892a8;
+      --text-light: #e8ebf4;
+      --accent: #d4a843;
+      --surface: rgba(30, 41, 59, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.05);
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Source Sans 3', sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: radial-gradient(circle at 50% 50%, rgba(212, 168, 67, 0.08), transparent 40%);
+    }
+    .login-container {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 3rem;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      font-family: 'Merriweather', serif;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      margin-top: 0;
+    }
+    p {
+      color: var(--text-gray);
+      margin-bottom: 2rem;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      color: var(--text-light);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    input[type="password"]:focus {
+      border-color: var(--accent);
+    }
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #111;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.1s;
+    }
+    button:hover {
+      background: #e5b954;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    .error-msg {
+      color: #ef4444;
+      font-size: 0.9rem;
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 2rem;
+      color: var(--text-gray);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .btn-back:hover {
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Reforma 2.1</h1>
+    <p>Acceso al Dashboard Administrativo</p>
+    <form id="loginForm">
+      <input type="password" id="password" placeholder="Contraseña Maestra" required>
+      <div class="error-msg" id="errorMsg">Contraseña incorrecta. Intente de nuevo.</div>
+      <button type="submit">Ingresar al Dashboard</button>
+    </form>
+    <a href="../index.html" class="btn-back">← Volver al inicio</a>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const btn = document.querySelector('button');
+      
+      btn.textContent = 'Verificando...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Token is set in httpOnly cookie automatically
+          window.location.href = 'dashboard_admin.html';
+        } else {
+          errorMsg.style.display = 'block';
+          errorMsg.textContent = data.error || 'Credenciales inválidas';
+          btn.textContent = 'Ingresar al Dashboard';
+          btn.disabled = false;
+        }
+      } catch (err) {
+        errorMsg.style.display = 'block';
+        errorMsg.textContent = 'Error de conexión.';
+        btn.textContent = 'Ingresar al Dashboard';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -176,24 +176,46 @@ document.getElementById('articleModal').addEventListener('click', function(e) {
 })();
 
 // 5. CARGA DINÁMICA DE ARTÍCULOS (API FETCH)
-async function loadArticles() {
+let currentPage = 1;
+let hasMoreArticles = true;
+let isFetchingArticles = false;
+
+async function loadMoreArticles() {
   const container = document.getElementById('dynamic-articles');
+  const loader = document.getElementById('articles-loader');
   if (!container) return; // Solo ejecutar en index.html
+
+  if (!hasMoreArticles || isFetchingArticles) return;
+  isFetchingArticles = true;
+  if (loader) loader.style.display = 'block';
 
   let articles = [];
 
   try {
-    const response = await fetch('/api/articles');
+    const response = await fetch(`/api/articles?page=${currentPage}&limit=6`);
     if (!response.ok) throw new Error('API request failed');
-    articles = await response.json();
+    const data = await response.json();
+    
+    articles = data.articles || data; // Fallback for old API if needed
+    
+    if (data.hasMore !== undefined) {
+       hasMoreArticles = data.hasMore;
+    } else {
+       hasMoreArticles = articles.length >= 6; 
+    }
+    currentPage++;
+
   } catch (error) {
     console.warn('Backend fetch failed, falling back to articulosDB...', error);
     // Fallback de Seguridad: usar la variable local antigua si existe
-    if (typeof articulosDB !== 'undefined') {
+    if (typeof articulosDB !== 'undefined' && currentPage === 1) {
       articles = Object.keys(articulosDB).map(key => ({
         id: key,
         ...articulosDB[key]
       }));
+      hasMoreArticles = false; // Cargamos todo de golpe, ya no hay más
+    } else {
+      hasMoreArticles = false;
     }
   }
 
@@ -250,6 +272,22 @@ async function loadArticles() {
   } else {
     container.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
   }
+  
+  if (loader) loader.style.display = 'none';
+  isFetchingArticles = false;
 }
 
-document.addEventListener('DOMContentLoaded', loadArticles);
+document.addEventListener('DOMContentLoaded', () => {
+  loadMoreArticles();
+
+  // Scroll Infinito Observer
+  const trigger = document.getElementById('infinite-scroll-trigger');
+  if (trigger && 'IntersectionObserver' in window) {
+    const scrollObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        loadMoreArticles();
+      }
+    }, { rootMargin: '0px 0px 200px 0px' });
+    scrollObserver.observe(trigger);
+  }
+});
