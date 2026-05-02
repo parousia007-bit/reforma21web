@@ -164,6 +164,17 @@
                         ALLOWED_ATTR: ['class', 'style', 'href', 'src', 'alt', 'target']
                     };
                     contentEl.innerHTML = DOMPurify.sanitize(article.htmlContent || article.contenido || '', purifyConfig);
+                    
+                    // Autocorrección de Tablas (Estándar Editorial)
+                    const tables = contentEl.querySelectorAll('table');
+                    tables.forEach(table => {
+                        table.classList.add('pro-table');
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'pro-table-wrapper';
+                        table.parentNode.insertBefore(wrapper, table);
+                        wrapper.appendChild(table);
+                    });
+
                     contentEl.style.opacity = '1';
 
                     // --- INICIO DE TELEMETRÍA FRONTEND ---

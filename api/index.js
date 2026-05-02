@@ -112,6 +112,7 @@ app.get('/api/articles/:id', async (req, res) => {
 
     const fileContent = await fs.readFile(filePath, 'utf-8');
     const { data, content } = matter(fileContent);
+    marked.use({ breaks: true, gfm: true });
     const htmlContent = marked.parse(content);
 
     res.json({

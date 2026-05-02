@@ -183,6 +183,11 @@ footer{border-top:1px solid var(--border);background:var(--surface);position:rel
 
 /* === ESTÁNDAR EDITORIAL REFORMA 2.1 === */
 
+#article-content p {
+  text-align: justify;
+  line-height: 1.8;
+}
+
 /* Citas de Análisis (Plata / Gris) */
 blockquote.cita-analisis {
   border-left: 4px solid var(--border);
