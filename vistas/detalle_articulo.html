@@ -84,7 +84,7 @@
     </style>
 </head>
 <body>
-<div id="maintenance-notice" style="position: sticky; top: 0; z-index: 9999; background: rgba(212, 168, 67, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 168, 67, 0.4); color: #D4A843; text-align: center; padding: 12px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">✨ Estamos perfeccionando la arquitectura visual para una lectura trascendental. Este fin de semana la plataforma tendrá ajustes en vivo.</div>
+<div id="maintenance-notice" style="position: sticky; top: 0; z-index: 9999; background: rgba(212, 168, 67, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 168, 67, 0.4); color: #D4A843; text-align: center; padding: 12px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">✨ Estamos perfeccionando la arquitectura visual para mejorar la experiencia de lectura. Este fin de semana realizaremos ajustes en vivo; si encuentra algún error de visualización, lo resolveremos a la brevedad. Gracias por su paciencia.</div>
     <div class="article-container">
         <a href="../index.html" class="btn-back">← Volver al inicio</a>
         <img id="header-img" class="header-image" src="" alt="Cabecera del artículo">
@@ -96,10 +96,17 @@
             </div>
     </div>
 
-    <script src="../js/db/db_articulos.js?v=1.1"></script>
-    <script src="../js/db/articulos.js?v=1.1"></script>
+    <script src="../js/db/db_articulos.js?v=1.2"></script>
+    <script src="../js/db/articulos.js?v=1.2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <script>
+        // Decodifica entidades HTML escapadas (ej: &lt;p&gt; → <p>)
+        function decodeHTMLEntities(text) {
+            var textArea = document.createElement('textarea');
+            textArea.innerHTML = text;
+            return textArea.value;
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
@@ -164,7 +171,10 @@
                         ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img', 'figure', 'figcaption'],
                         ALLOWED_ATTR: ['class', 'style', 'href', 'src', 'alt', 'target']
                     };
-                    contentEl.innerHTML = DOMPurify.sanitize(article.htmlContent || article.contenido || '', purifyConfig);
+                    // Pipeline: Decodificar Entidades → Sanitizar → Inyectar
+                    const rawContent = article.htmlContent || article.contenido || '';
+                    const decodedHTML = decodeHTMLEntities(rawContent);
+                    contentEl.innerHTML = DOMPurify.sanitize(decodedHTML, purifyConfig);
                     
                     // Autocorrección de Tablas (Estándar Editorial)
                     const tables = contentEl.querySelectorAll('table');
