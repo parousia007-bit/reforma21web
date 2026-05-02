@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const ArticleMetricSchema = new mongoose.Schema({
   articleId: {
@@ -28,4 +28,4 @@ const ArticleMetricSchema = new mongoose.Schema({
 });
 
 // Evitamos problemas de recompilación del modelo en entornos Serverless
-module.exports = mongoose.models.ArticleMetric || mongoose.model('ArticleMetric', ArticleMetricSchema);
+export default mongoose.models.ArticleMetric || mongoose.model('ArticleMetric', ArticleMetricSchema);

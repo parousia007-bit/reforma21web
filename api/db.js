@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 // Configuración local: leer variables del .env
 dotenv.config();
@@ -50,4 +50,4 @@ async function dbConnect() {
   return cached.conn;
 }
 
-module.exports = dbConnect;
+export default dbConnect;

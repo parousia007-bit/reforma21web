@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-function requireAuth(req, res, next) {
+export function requireAuth(req, res, next) {
   const token = req.cookies.auth_token;
 
   if (!token) {
@@ -15,5 +15,3 @@ function requireAuth(req, res, next) {
     return res.status(403).json({ success: false, error: 'Token inválido o expirado.' });
   }
 }
-
-module.exports = { requireAuth };

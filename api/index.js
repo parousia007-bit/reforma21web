@@ -1,15 +1,20 @@
-const express = require('express');
-const fs = require('fs').promises;
-const path = require('path');
-const matter = require('gray-matter');
-const { marked } = require('marked');
-const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import fs from 'fs/promises';
+import path from 'path';
+import matter from 'gray-matter';
+import { marked } from 'marked';
+import cookieParser from 'cookie-parser';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 
-require('dotenv').config();
-const dbConnect = require('./db');
-const ArticleMetric = require('./models/ArticleMetric');
-const { requireAuth } = require('./auth');
+dotenv.config();
+import dbConnect from './db.js';
+import ArticleMetric from './models/ArticleMetric.js';
+import { requireAuth } from './auth.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json()); // Necesario para parsear el body en las peticiones POST
@@ -233,10 +238,11 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
 });
 
 // Export the express app for Vercel Serverless Functions
-module.exports = app;
+export default app;
 
 // Provide a local fallback to run the app if not in Vercel
-if (require.main === module) {
+import { pathToFileURL } from 'url';
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
