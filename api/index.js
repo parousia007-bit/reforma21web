@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import { UAParser } from 'ua-parser-js';
 
 dotenv.config();
 import dbConnect from './db.js';
@@ -133,24 +134,33 @@ app.post('/api/metrics', async (req, res) => {
       return res.status(400).json({ error: 'Falta articleId' });
     }
 
-    // Aseguramos que la conexión esté lista (aprovecha la caché global en Vercel)
     await dbConnect();
 
-    // Calculamos los incrementos y actualizaciones seguras
     const incTime = Number(timeSpent) || 0;
     const scroll = Number(scrollDepth) || 0;
 
-    const updatedMetric = await ArticleMetric.findOneAndUpdate(
-      { articleId },
-      {
-        $inc: { views: 1, totalReadTime: incTime },
-        $max: { maxScrollDepth: scroll },
-        $set: { lastInteraction: Date.now() }
-      },
-      { upsert: true, returnDocument: 'after' } // crea el registro si no existe
-    );
+    // Obtener IP y datos de User-Agent
+    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+    const uaString = req.headers['user-agent'];
+    const parser = new UAParser(uaString);
+    const result = parser.getResult();
 
-    res.json({ success: true, data: updatedMetric });
+    const os = result.os.name || 'Unknown';
+    const browser = result.browser.name || 'Unknown';
+    const deviceType = result.device.type || 'desktop';
+
+    // Crear un nuevo log en vez de actualizar
+    const newMetric = await ArticleMetric.create({
+      articleId,
+      timeSpent: incTime,
+      scrollDepth: scroll,
+      ip,
+      os,
+      deviceType,
+      browser
+    });
+
+    res.json({ success: true, data: newMetric });
   } catch (error) {
     console.error('Error registrando métricas:', error);
     res.status(500).json({ error: 'No se pudieron guardar las métricas' });
@@ -186,29 +196,34 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
   try {
     await dbConnect();
 
-    // Top 5 artículos más vistos
-    let topArticles = await ArticleMetric.find().sort({ views: -1 }).limit(5).lean();
+    // Top 5 artículos más vistos (agrupando logs)
+    let topArticles = await ArticleMetric.aggregate([
+      { $group: { _id: "$articleId", views: { $sum: 1 } } },
+      { $sort: { views: -1 } },
+      { $limit: 5 }
+    ]);
 
-    // Mapear IDs a Títulos reales leyendo los archivos Markdown
+    // Mapear IDs a Títulos reales y darle formato
     for (let article of topArticles) {
+      article.articleId = article._id;
       try {
         const filePath = path.join(contentDir, `${article.articleId}.md`);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         const { data } = matter(fileContent);
         article.title = data.titulo || article.articleId;
       } catch (e) {
-        article.title = article.articleId; // Si no existe el .md, fallback al ID
+        article.title = article.articleId; 
       }
     }
 
-    // Promedios Globales mediante MongoDB Aggregation
+    // Promedios Globales
     const aggregateData = await ArticleMetric.aggregate([
       {
         $group: {
           _id: null,
-          totalViews: { $sum: "$views" },
-          sumTotalReadTime: { $sum: "$totalReadTime" },
-          avgScroll: { $avg: "$maxScrollDepth" }
+          totalViews: { $sum: 1 },
+          sumTotalReadTime: { $sum: "$timeSpent" },
+          avgScroll: { $avg: "$scrollDepth" }
         }
       }
     ]);
@@ -222,13 +237,27 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
       avgScrollPercentage = Math.round(stats.avgScroll);
     }
 
+    // Distribución por OS
+    const osData = await ArticleMetric.aggregate([
+      { $group: { _id: "$os", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+
+    // Distribución por Dispositivo
+    const deviceData = await ArticleMetric.aggregate([
+      { $group: { _id: "$deviceType", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+
     res.json({
       success: true,
       topArticles,
       globalStats: {
         avgReadTimeSeconds,
         avgScrollPercentage
-      }
+      },
+      osDistribution: osData,
+      deviceDistribution: deviceData
     });
 
   } catch (error) {

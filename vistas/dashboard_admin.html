@@ -114,6 +114,18 @@
         </div>
       </div>
     </div>
+
+    <!-- Nuevos Gráficos de Audiencia -->
+    <div class="charts-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr;">
+      <div class="chart-container">
+        <h3 style="color: var(--text-gray); margin-top: 0; margin-bottom: 1rem;">Sistemas Operativos</h3>
+        <canvas id="osChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3 style="color: var(--text-gray); margin-top: 0; margin-bottom: 1rem;">Proporción de Dispositivos</h3>
+        <canvas id="deviceChart"></canvas>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -186,6 +198,51 @@
             cutout: '75%',
             plugins: {
               legend: { display: false }
+            }
+          }
+        });
+
+        // Gráfica: Sistemas Operativos
+        const osLabels = data.osDistribution.map(d => d._id);
+        const osCounts = data.osDistribution.map(d => d.count);
+        new Chart(document.getElementById('osChart'), {
+          type: 'pie',
+          data: {
+            labels: osLabels,
+            datasets: [{
+              data: osCounts,
+              backgroundColor: ['#2563EB', '#D4AF37', '#10B981', '#F59E0B', '#8B5CF6'],
+              borderColor: 'transparent',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'right', labels: { color: '#8892a8' } }
+            }
+          }
+        });
+
+        // Gráfica: Dispositivos
+        const devLabels = data.deviceDistribution.map(d => d._id);
+        const devCounts = data.deviceDistribution.map(d => d.count);
+        new Chart(document.getElementById('deviceChart'), {
+          type: 'doughnut',
+          data: {
+            labels: devLabels,
+            datasets: [{
+              data: devCounts,
+              backgroundColor: ['#10B981', '#3B82F6', '#8B5CF6'],
+              borderColor: 'transparent',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            cutout: '60%',
+            plugins: {
+              legend: { position: 'right', labels: { color: '#8892a8' } }
             }
           }
         });

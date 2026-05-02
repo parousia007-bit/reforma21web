@@ -4,22 +4,21 @@ const ArticleMetricSchema = new mongoose.Schema({
   articleId: {
     type: String,
     required: true,
-    unique: true, // indexado automáticamente, vital para búsquedas rápidas
-    index: true
+    index: true // ya no es unique, ahora es un log de interacciones
   },
-  views: {
+  timeSpent: {
     type: Number,
     default: 0
   },
-  totalReadTime: {
+  scrollDepth: {
     type: Number,
     default: 0
   },
-  maxScrollDepth: {
-    type: Number,
-    default: 0
-  },
-  lastInteraction: {
+  ip: { type: String },
+  os: { type: String },
+  deviceType: { type: String },
+  browser: { type: String },
+  timestamp: {
     type: Date,
     default: Date.now
   }
