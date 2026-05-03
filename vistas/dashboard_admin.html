@@ -549,6 +549,25 @@
         </div>
       </div>
 
+      <!-- ── CONVERSIONES ─────────────────────────────────────────────────── -->
+      <div class="section-title" style="margin-top:2.5rem;margin-bottom:1rem;">
+        <h2 style="font-family:'Merriweather',serif;font-size:1.2rem;color:var(--accent);font-weight:700;letter-spacing:.03em;">🎯 Impacto Directo (Conversiones)</h2>
+      </div>
+      <div class="impact-grid" style="margin-bottom: 2rem;">
+        <div class="chart-container" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem;background:rgba(37,99,235,0.05);border-color:rgba(37,99,235,0.2);">
+          <div style="font-size:3rem;margin-bottom:1rem;">💬</div>
+          <h3 style="margin-bottom:0.5rem;color:var(--text-light);font-size:1.1rem;">Interés en Comunidad</h3>
+          <div style="font-size:4rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:1rem;text-shadow: 0 0 20px rgba(212,168,67,0.3);" id="conv-whatsapp">0</div>
+          <span class="visits-badge">Clics Totales</span>
+        </div>
+        <div class="chart-container" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem;background:rgba(91,44,141,0.05);border-color:rgba(91,44,141,0.2);">
+          <div style="font-size:3rem;margin-bottom:1rem;">🎓</div>
+          <h3 style="margin-bottom:0.5rem;color:var(--text-light);font-size:1.1rem;">Solicitudes de Apoyo</h3>
+          <div style="font-size:4rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:1rem;text-shadow: 0 0 20px rgba(212,168,67,0.3);" id="conv-beca">0</div>
+          <span class="visits-badge">Clics Totales</span>
+        </div>
+      </div>
+
       <!-- ── RECURSOS DESCARGADOS ───────────────────────────────────────── -->
       <div class="charts-grid" style="grid-template-columns: 1fr; margin-bottom: 2rem;">
         <div class="chart-container">
@@ -1166,6 +1185,31 @@
               </tr>`;
             }).join('');
           }
+
+          // ── ANIMACIÓN CONVERSIONES ──────────────────────────────────────
+          const animateValue = (id, start, end, duration) => {
+            if (start === end) {
+              const obj = document.getElementById(id);
+              if (obj) obj.innerHTML = end;
+              return;
+            }
+            let range = end - start;
+            let current = start;
+            let increment = end > start ? 1 : -1;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            if (stepTime === 0) stepTime = 10;
+            let obj = document.getElementById(id);
+            if (!obj) return;
+            let timer = setInterval(function() {
+              current += increment;
+              obj.innerHTML = current;
+              if (current == end) clearInterval(timer);
+            }, stepTime);
+          };
+
+          const conv = data.conversions || { whatsapp: 0, beca: 0 };
+          animateValue('conv-whatsapp', 0, conv.whatsapp, 1500);
+          animateValue('conv-beca', 0, conv.beca, 1500);
 
         } catch (mapErr) {
           console.error('Leaflet/Geo error:', mapErr.message);

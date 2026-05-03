@@ -298,6 +298,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     geo:               { topCities: [], topCountries: [], visitPoints: [] },
     downloads:         [],
     recentActivity:    [],
+    conversions:       { whatsapp: 0, beca: 0 },
     errors:            [],   // log de fallos parciales (visible solo en respuesta)
   };
 
@@ -437,6 +438,21 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     console.error('[Dashboard] ❌ geolocalización:', e.message);
     payload.errors.push({ section: 'geo', error: e.message });
     // payload.geo ya tiene arrays vacíos por defecto → el mapa carga en blanco sin romper
+  }
+
+  // ── CONVERSIONES ───────────────────────────────────────────────────
+  try {
+    const db = mongoose.connection.db;
+    if (!db) throw new Error('mongoose.connection.db no disponible aún');
+
+    const whatsappCount = await db.collection('analytics').countDocuments({ event_type: 'whatsapp' });
+    const becaCount = await db.collection('analytics').countDocuments({ event_type: 'beca' });
+
+    payload.conversions.whatsapp = whatsappCount;
+    payload.conversions.beca = becaCount;
+  } catch (e) {
+    console.error('[Dashboard] ❌ conversiones:', e.message);
+    payload.errors.push({ section: 'conversions', error: e.message });
   }
 
   // ── ACTIVIDAD RECIENTE ───────────────────────────────────────────────
