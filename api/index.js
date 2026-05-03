@@ -63,13 +63,19 @@ const logSecurityIncident = async (type, ip, details) => {
   }
 };
 
-// 3. Mongo Sanitize: Prevenir inyecciones NoSQL
-app.use(mongoSanitize({
-  onSanitize: ({ req, key }) => {
-    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
-    logSecurityIncident('nosql_injection', ip, { key, path: req.path });
+// 3. Mongo Sanitize: Prevenir inyecciones NoSQL (Saltamos req.query para evitar crash en Express 5)
+app.use((req, res, next) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+  const originalBody = JSON.stringify(req.body || {});
+  
+  mongoSanitize.sanitize(req.body, { replaceWith: '_' });
+  mongoSanitize.sanitize(req.params, { replaceWith: '_' });
+  
+  if (originalBody !== JSON.stringify(req.body || {})) {
+    logSecurityIncident('nosql_injection', ip, { path: req.path });
   }
-}));
+  next();
+});
 
 const rateLimitHandler = (req, res, next, options) => {
   const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
@@ -241,9 +247,9 @@ app.get('/api/articles/:id', async (req, res) => {
 // --- VALIDACIÓN DE ESQUEMAS (JOI) ---
 const metricSchema = Joi.object({
   articleId: Joi.string().trim().max(100).required(),
-  timeSpent: Joi.number().min(0).optional(),
-  scrollDepth: Joi.number().min(0).max(100).optional()
-}).options({ stripUnknown: false }); // Reject if extra fields are present
+  timeSpent: Joi.number().min(0).optional().allow(null, ''),
+  scrollDepth: Joi.number().min(0).max(100).optional().allow(null, '')
+}).options({ stripUnknown: true }); // Permitir campos extra silenciosamente
 
 const visitSchema = Joi.object({
   article_id: Joi.string().trim().max(100).allow(null, ''),
@@ -251,24 +257,24 @@ const visitSchema = Joi.object({
     country: Joi.string().allow(null, ''),
     country_code: Joi.string().allow(null, ''),
     city: Joi.string().allow(null, ''),
-    latitude: Joi.number().allow(null),
-    longitude: Joi.number().allow(null)
-  }).allow(null),
+    latitude: Joi.number().allow(null, ''),
+    longitude: Joi.number().allow(null, '')
+  }).allow(null, ''),
   device_type: Joi.string().allow(null, ''),
   referrer: Joi.string().allow(null, '')
-}).options({ stripUnknown: false });
+}).options({ stripUnknown: true });
 
 const downloadSchema = Joi.object({
   article_id: Joi.string().trim().max(100).allow(null, ''),
   pdf_url: Joi.string().uri().allow(null, ''),
   pdf_text: Joi.string().max(200).allow(null, '')
-}).options({ stripUnknown: false });
+}).options({ stripUnknown: true });
 
 const eventSchema = Joi.object({
   article_id: Joi.string().trim().max(100).allow(null, ''),
   event_type: Joi.string().trim().max(50).required(),
   button_name: Joi.string().trim().max(100).allow(null, '')
-}).options({ stripUnknown: false });
+}).options({ stripUnknown: true });
 
 // POST /api/metrics - Guardar telemetría de un artículo
 app.post('/api/metrics', async (req, res) => {
