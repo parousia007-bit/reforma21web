@@ -235,17 +235,31 @@ app.post('/api/login', (req, res) => {
 
 // GET /api/dashboard - Obtener analíticas agregadas (PROTEGIDO)
 app.get('/api/dashboard', requireAuth, async (req, res) => {
+  // Respuesta acumulada — se devuelve con lo que logre obtener aunque alguna sección falle
+  const payload = {
+    success: true,
+    topArticles:       [],
+    globalStats:       { avgReadTimeSeconds: 0, avgScrollPercentage: 0 },
+    osDistribution:    [],
+    deviceDistribution: [],
+    geo:               { topCities: [], topCountries: [], visitPoints: [] },
+    errors:            [],   // log de fallos parciales (visible solo en respuesta)
+  };
+
   try {
     await dbConnect();
+  } catch (dbErr) {
+    console.error('[Dashboard] ❌ dbConnect falló:', dbErr.message);
+    return res.status(503).json({ success: false, error: 'No se pudo conectar a la base de datos', detail: dbErr.message });
+  }
 
-    // Top 5 artículos más vistos (agrupando logs)
+  // ── TOP ARTÍCULOS ─────────────────────────────────────────────────────
+  try {
     let topArticles = await ArticleMetric.aggregate([
-      { $group: { _id: "$articleId", views: { $sum: 1 } } },
+      { $group: { _id: '$articleId', views: { $sum: 1 } } },
       { $sort: { views: -1 } },
       { $limit: 5 }
     ]);
-
-    // Mapear IDs a Títulos reales y darle formato
     for (let article of topArticles) {
       article.articleId = article._id;
       try {
@@ -253,87 +267,93 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
         const fileContent = await fs.readFile(filePath, 'utf-8');
         const { data } = matter(fileContent);
         article.title = data.titulo || article.articleId;
-      } catch (e) {
-        article.title = article.articleId; 
-      }
+      } catch (_) { article.title = article.articleId; }
     }
-
-    // Promedios Globales
-    const aggregateData = await ArticleMetric.aggregate([
-      {
-        $group: {
-          _id: null,
-          totalViews: { $sum: 1 },
-          sumTotalReadTime: { $sum: "$timeSpent" },
-          avgScroll: { $avg: "$scrollDepth" }
-        }
-      }
-    ]);
-
-    let avgReadTimeSeconds = 0;
-    let avgScrollPercentage = 0;
-
-    if (aggregateData.length > 0) {
-      const stats = aggregateData[0];
-      avgReadTimeSeconds = stats.totalViews > 0 ? Math.round(stats.sumTotalReadTime / stats.totalViews) : 0;
-      avgScrollPercentage = Math.round(stats.avgScroll);
-    }
-
-    // Distribución por OS
-    const osData = await ArticleMetric.aggregate([
-      { $group: { _id: "$os", count: { $sum: 1 } } },
-      { $sort: { count: -1 } }
-    ]);
-
-    // Distribución por Dispositivo
-    const deviceData = await ArticleMetric.aggregate([
-      { $group: { _id: "$deviceType", count: { $sum: 1 } } },
-      { $sort: { count: -1 } }
-    ]);
-
-    // ── GEOLOCALIZACIÓN (colección analytics) ─────────────────────────────
-    const db = mongoose.connection.db;
-
-    // Top 5 Ciudades
-    const topCities = await db.collection('analytics').aggregate([
-      { $match: { 'location.city': { $exists: true, $ne: null } } },
-      { $group: { _id: { city: '$location.city', country: '$location.country' }, count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 5 }
-    ]).toArray();
-
-    // Top 5 Países
-    const topCountries = await db.collection('analytics').aggregate([
-      { $match: { 'location.country': { $exists: true, $ne: null } } },
-      { $group: { _id: '$location.country', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 5 }
-    ]).toArray();
-
-    // Puntos para el mapa (último campo lat/lon si ipapi los incluye)
-    const visitPoints = await db.collection('analytics').aggregate([
-      { $match: { 'location.latitude': { $exists: true }, 'location.longitude': { $exists: true } } },
-      { $group: {
-        _id: { lat: '$location.latitude', lon: '$location.longitude', city: '$location.city' },
-        count: { $sum: 1 }
-      }},
-      { $limit: 200 }
-    ]).toArray();
-
-    res.json({
-      success: true,
-      topArticles,
-      globalStats: { avgReadTimeSeconds, avgScrollPercentage },
-      osDistribution: osData,
-      deviceDistribution: deviceData,
-      geo: { topCities, topCountries, visitPoints },
-    });
-
-  } catch (error) {
-    console.error('Error obteniendo dashboard:', error);
-    res.status(500).json({ error: 'Fallo al obtener las métricas del dashboard' });
+    payload.topArticles = topArticles;
+  } catch (e) {
+    console.error('[Dashboard] ❌ topArticles:', e.message);
+    payload.errors.push({ section: 'topArticles', error: e.message });
   }
+
+  // ── PROMEDIOS GLOBALES ────────────────────────────────────────────────
+  try {
+    const agg = await ArticleMetric.aggregate([{
+      $group: { _id: null, totalViews: { $sum: 1 }, sumTime: { $sum: '$timeSpent' }, avgScroll: { $avg: '$scrollDepth' } }
+    }]);
+    if (agg.length > 0) {
+      payload.globalStats.avgReadTimeSeconds  = agg[0].totalViews > 0 ? Math.round(agg[0].sumTime / agg[0].totalViews) : 0;
+      payload.globalStats.avgScrollPercentage = Math.round(agg[0].avgScroll || 0);
+    }
+  } catch (e) {
+    console.error('[Dashboard] ❌ globalStats:', e.message);
+    payload.errors.push({ section: 'globalStats', error: e.message });
+  }
+
+  // ── OS & DISPOSITIVOS ─────────────────────────────────────────────────
+  try {
+    payload.osDistribution = await ArticleMetric.aggregate([
+      { $group: { _id: '$os', count: { $sum: 1 } } }, { $sort: { count: -1 } }
+    ]);
+    payload.deviceDistribution = await ArticleMetric.aggregate([
+      { $group: { _id: '$deviceType', count: { $sum: 1 } } }, { $sort: { count: -1 } }
+    ]);
+  } catch (e) {
+    console.error('[Dashboard] ❌ os/device:', e.message);
+    payload.errors.push({ section: 'osDevice', error: e.message });
+  }
+
+  // ── GEOLOCALIZACIÓN (colección analytics) ────────────────────────────
+  // Usamos try/catch independiente — si 'analytics' no existe aún, no rompe las métricas principales
+  try {
+    const db = mongoose.connection.db;
+    if (!db) throw new Error('mongoose.connection.db no disponible aún');
+
+    const [topCities, topCountries, visitPoints] = await Promise.all([
+      // Top 5 Ciudades — filtramos estrictamente: location debe ser objeto con city string
+      db.collection('analytics').aggregate([
+        { $match: { location: { $type: 'object' }, 'location.city': { $type: 'string', $gt: '' } } },
+        { $group: { _id: { city: '$location.city', country: '$location.country' }, count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+      ]).toArray(),
+
+      // Top 5 Países
+      db.collection('analytics').aggregate([
+        { $match: { location: { $type: 'object' }, 'location.country': { $type: 'string', $gt: '' } } },
+        { $group: { _id: '$location.country', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+      ]).toArray(),
+
+      // Puntos mapa — lat y lon deben ser números reales
+      db.collection('analytics').aggregate([
+        { $match: {
+          location: { $type: 'object' },
+          'location.latitude':  { $type: 'number' },
+          'location.longitude': { $type: 'number' }
+        }},
+        { $group: {
+          _id: { lat: '$location.latitude', lon: '$location.longitude', city: '$location.city' },
+          count: { $sum: 1 }
+        }},
+        { $sort: { count: -1 } },
+        { $limit: 200 }
+      ]).toArray()
+    ]);
+
+    payload.geo = { topCities, topCountries, visitPoints };
+    console.log(`[Dashboard] ✅ Geo: ${topCities.length} ciudades, ${topCountries.length} países, ${visitPoints.length} puntos`);
+
+  } catch (e) {
+    console.error('[Dashboard] ❌ geolocalización:', e.message);
+    payload.errors.push({ section: 'geo', error: e.message });
+    // payload.geo ya tiene arrays vacíos por defecto → el mapa carga en blanco sin romper
+  }
+
+  // Siempre HTTP 200 — el cliente puede ver payload.errors para diagnóstico
+  res.json(payload);
 });
+
 
 // GET /api/cms/files - Listar archivos .md del repositorio en GitHub (PROTEGIDO)
 app.get('/api/cms/files', requireAuth, async (req, res) => {
