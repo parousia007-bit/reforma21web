@@ -10,7 +10,7 @@ color_tema: '#d4a843'
 layout: 'hero'
 imagen_cabecera: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop"
 video_url: ""
-pdf_url: ""
+pdf_url: "https://drive.google.com/file/d/1kYEIVm97DmA4nPRUiXswqtXY5Zz7iXHw/view?usp=drive_link"
 pdf_text: 'Descargar PDF'
 extracto: >-
   ¿Qué sucede cuando el seminario exige investigar con las reglas del mundo que dice rechazar? Un diagnóstico sobre la infiltración del empirismo positivista en la formación teológica y el camino hacia una investigación con coherencia cosmovisional.
