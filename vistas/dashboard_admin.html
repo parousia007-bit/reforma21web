@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
   <style>
     :root {
       --bg-dark: #0a0e17;
@@ -566,6 +567,25 @@
           </table>
         </div>
       </div>
+
+      <!-- ── ACTIVIDAD RECIENTE ───────────────────────────────────────── -->
+      <div class="charts-grid" style="grid-template-columns: 1fr; margin-bottom: 2rem;">
+        <div class="chart-container">
+          <h3>⚡ Registro de Actividad Reciente</h3>
+          <table class="geo-table" id="activity-table">
+            <thead>
+              <tr>
+                <th>Tipo de Evento</th>
+                <th>IP</th>
+                <th style="text-align:right;">Tiempo</th>
+              </tr>
+            </thead>
+            <tbody id="activity-tbody">
+              <tr><td colspan="3" style="text-align:center;color:var(--text-gray);">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <!-- TAB: EDITOR EDITORIAL (CMS) -->
@@ -1098,6 +1118,53 @@
                 <td><a href="${DOMPurify.sanitize(dl.pdf_url)}" target="_blank" style="color:var(--accent);text-decoration:none;">${DOMPurify.sanitize(dl.pdf_text)}</a></td>
                 <td style="text-align:center;"><span class="visits-badge">${dl.count}</span></td>
               </tr>`).join('');
+          }
+
+          // ── TABLA ACTIVIDAD RECIENTE ────────────────────────────────────
+          const activityBody = document.getElementById('activity-tbody');
+          const recentActivity = data.recentActivity || [];
+          const currentIp = data.current_ip || '';
+
+          const timeAgo = (dateStr) => {
+            if (!dateStr) return 'Desconocido';
+            const seconds = Math.floor((new Date() - new Date(dateStr)) / 1000);
+            if (seconds < 60) return `Hace ${seconds}s`;
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `Hace ${minutes} min`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `Hace ${hours} h`;
+            return `Hace ${Math.floor(hours / 24)} d`;
+          };
+
+          const maskIp = (ip) => {
+            if (!ip || ip === 'unknown') return 'Desconocida';
+            const parts = ip.split('.');
+            if (parts.length === 4) return `${parts[0]}.${parts[1]}.${parts[2]}.***`;
+            if (ip === '::1' || ip === '127.0.0.1') return 'Localhost';
+            return ip.substring(0, 8) + '***'; // ipv6 fallback
+          };
+
+          if (recentActivity.length === 0) {
+            activityBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-gray);font-style:italic;">Sin actividad reciente</td></tr>';
+          } else {
+            activityBody.innerHTML = recentActivity.map(act => {
+              const isMe = (act.ip === currentIp) ? '<span style="color:var(--accent);font-size:0.75rem;margin-left:5px;">(Tú)</span>' : '';
+              let eventIcon = '📍';
+              if (act.event_type === 'download') eventIcon = '📥';
+              else if (act.event_type === 'whatsapp') eventIcon = '💬';
+              else if (act.event_type === 'beca') eventIcon = '🎓';
+              else if (act.event_type === 'visit') eventIcon = '👁️';
+              
+              const eventName = act.event_type.charAt(0).toUpperCase() + act.event_type.slice(1);
+              const extraInfo = act.button_name || act.pdf_text || act.article_id || '';
+              
+              return `
+              <tr>
+                <td><strong>${eventIcon} ${DOMPurify.sanitize(eventName)}</strong> <span style="color:var(--text-gray);font-size:0.8rem;margin-left:8px;">${DOMPurify.sanitize(extraInfo)}</span></td>
+                <td><span style="font-family:monospace;color:#93C5FD;">${DOMPurify.sanitize(maskIp(act.ip))}</span>${isMe}</td>
+                <td style="text-align:right;color:var(--text-gray);font-size:0.85rem;">${DOMPurify.sanitize(timeAgo(act.timestamp))}</td>
+              </tr>`;
+            }).join('');
           }
 
         } catch (mapErr) {

@@ -447,6 +447,21 @@
           keepalive: true
         }).catch(err => console.warn('[Download] Error tracking:', err));
       };
+
+      // Registrar eventos personalizados (WhatsApp, Becas, etc)
+      window.trackInteraction = function(type, buttonName) {
+        const articleId = new URLSearchParams(window.location.search).get('id') || null;
+        fetch('/api/metrics/event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            article_id: articleId,
+            event_type: type,
+            button_name: buttonName
+          }),
+          keepalive: true
+        }).catch(err => console.warn(`[Interaction - ${type}] Error tracking:`, err));
+      };
     </script>
 </body>
 </html>

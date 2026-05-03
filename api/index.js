@@ -236,6 +236,31 @@ app.post('/api/metrics/download', async (req, res) => {
   }
 });
 
+// POST /api/metrics/event - Registrar eventos personalizados (WhatsApp, Becas, etc)
+app.post('/api/metrics/event', async (req, res) => {
+  try {
+    const { article_id, event_type, button_name } = req.body;
+    await dbConnect();
+
+    const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown')
+      .split(',')[0].trim();
+
+    const db = mongoose.connection.db;
+    await db.collection('analytics').insertOne({
+      event_type: event_type || 'interaction',
+      button_name: button_name || null,
+      article_id: article_id || null,
+      ip,
+      timestamp: new Date(),
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error registrando evento:', error);
+    res.status(200).json({ success: false, error: error.message });
+  }
+});
+
 
 // POST /api/login - Endpoint de Autenticación
 app.post('/api/login', (req, res) => {
@@ -272,6 +297,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     deviceDistribution: [],
     geo:               { topCities: [], topCountries: [], visitPoints: [] },
     downloads:         [],
+    recentActivity:    [],
     errors:            [],   // log de fallos parciales (visible solo en respuesta)
   };
 
@@ -413,6 +439,23 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     // payload.geo ya tiene arrays vacíos por defecto → el mapa carga en blanco sin romper
   }
 
+  // ── ACTIVIDAD RECIENTE ───────────────────────────────────────────────
+  try {
+    const db = mongoose.connection.db;
+    if (!db) throw new Error('mongoose.connection.db no disponible aún');
+
+    const recentActivity = await db.collection('analytics')
+      .find({})
+      .sort({ timestamp: -1 })
+      .limit(5)
+      .toArray();
+
+    payload.recentActivity = recentActivity;
+  } catch (e) {
+    console.error('[Dashboard] ❌ actividad reciente:', e.message);
+    payload.errors.push({ section: 'recentActivity', error: e.message });
+  }
+
   // Cabeceras anti-caché: fuerza a Vercel/CDN a NO cachear esta respuesta,
   // garantizando datos en tiempo real desde MongoDB en cada apertura del Dashboard.
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
@@ -420,6 +463,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
   res.setHeader('Expires', '0');
 
   // Siempre HTTP 200 — el cliente puede ver payload.errors para diagnóstico
+  payload.current_ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
   res.json(payload);
 });
 
