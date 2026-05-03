@@ -12,8 +12,6 @@ layout: 'hero'
 extracto: >-
   ¿Qué sucede cuando el seminario exige investigar con las reglas del mundo que dice rechazar? Un diagnóstico sobre la infiltración del empirismo positivista en la formación teológica y el camino hacia una investigación con coherencia cosmovisional.
 ---
-
-
 Existe una grieta profunda en la base de la formación teológica evangélica latinoamericana. Las paredes de nuestras instituciones pueden estar decoradas con citas de los reformadores, pero los cimientos epistemológicos pertenecen al mismo sistema filosófico que el evangelio viene a desmantelar.
 
 > "El ídolo que nadie vio entrar no estaba en la doctrina, estaba en la metodología."
@@ -29,4 +27,4 @@ Al aplicar el bisturí de la **Hermenéutica Trascendental (HT)** a los proyecto
 ### El Camino de Restauración: El MICC
 La alternativa es el **Marco de Investigación para la Coherencia Cosmovisional (MICC)**. Un paradigma que no busca acumular datos, sino diagnosticar idolatrías y proponer caminos de restauración cultural.
 
-El llamado es a la **plantación de escuelas**: ecosistemas donde la próxima generación descubra que el orden del Creador abarca el laboratorio tanto como el púlpito.
+El llamado es a la **plantación de escuelas**: ecosistemas donde la próxima generación descubra que el orden del Creador abarca el laboratorio tanto como el púlpito. -
