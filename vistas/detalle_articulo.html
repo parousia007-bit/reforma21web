@@ -60,6 +60,17 @@
         #article-content {
             font-size: 1.15rem;
             line-height: 1.8;
+            text-align: justify;
+        }
+        #article-content p {
+            text-align: justify !important;
+            line-height: 1.8 !important;
+            margin-bottom: 1.2em;
+        }
+        #article-content h1, #article-content h2, #article-content h3,
+        #article-content h4, #article-content h5, #article-content h6 {
+            text-align: left;
+            line-height: 1.3;
         }
 
         #article-content img {
@@ -336,6 +347,57 @@
                 }, 100);
             }
         });
+    </script>
+
+    <!-- ── VISIT TRACKING + GEOLOCALIZACIÓN ─────────────────────────────── -->
+    <script>
+      (async function trackVisit() {
+        try {
+          // Obtener article_id de la URL
+          const articleId = new URLSearchParams(window.location.search).get('id') || null;
+
+          // Detectar tipo de dispositivo del lado cliente
+          const ua = navigator.userAgent;
+          let deviceType = 'desktop';
+          if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
+            deviceType = /iPad/i.test(ua) ? 'tablet' : 'mobile';
+          }
+
+          // Obtener ubicación vía ipapi.co (petición ligera, ~200ms)
+          let location = null;
+          try {
+            const geoRes = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
+            if (geoRes.ok) {
+              const geo = await geoRes.json();
+              location = {
+                country:      geo.country_name || null,
+                country_code: geo.country_code  || null,
+                city:         geo.city          || null,
+                region:       geo.region        || null,
+              };
+            }
+          } catch (geoErr) {
+            console.warn('[Visit] ipapi.co no disponible:', geoErr.message);
+          }
+
+          // Enviar al backend — fire-and-forget (no bloqueamos la UI)
+          await fetch('/api/metrics/visit', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              article_id:  articleId,
+              location,
+              device_type: deviceType,
+              referrer:    document.referrer || null,
+            }),
+            keepalive: true,  // permite que la petición continúe aunque el usuario navegue
+          });
+
+        } catch (err) {
+          // Nunca interrumpimos la experiencia del lector por un error de analytics
+          console.warn('[Visit] Error en visit tracking:', err.message);
+        }
+      })();
     </script>
 </body>
 </html>

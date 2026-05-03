@@ -169,6 +169,46 @@ app.post('/api/metrics', async (req, res) => {
   }
 });
 
+// POST /api/metrics/visit - Registrar visita con ubicación geográfica (colección analytics)
+app.post('/api/metrics/visit', async (req, res) => {
+  try {
+    const { article_id, location, device_type, referrer } = req.body;
+
+    await dbConnect();
+
+    // Obtener IP real (Vercel usa x-forwarded-for)
+    const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown')
+      .split(',')[0].trim();
+
+    const uaString = req.headers['user-agent'] || '';
+    const parser = new UAParser(uaString);
+    const uaResult = parser.getResult();
+    const detectedDevice = device_type || uaResult.device.type || 'desktop';
+    const detectedOs     = uaResult.os.name || 'Unknown';
+    const detectedBrowser = uaResult.browser.name || 'Unknown';
+
+    // Guardar en colección dinámica 'analytics' (sin necesidad de un Model separado)
+    const db = mongoose.connection.db;
+    await db.collection('analytics').insertOne({
+      article_id:  article_id || null,
+      ip,
+      location:    location   || null,      // { country, city, country_code }
+      device_type: detectedDevice,
+      os:          detectedOs,
+      browser:     detectedBrowser,
+      referrer:    referrer   || req.headers.referer || null,
+      timestamp:   new Date(),
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error registrando visita:', error);
+    // Respuesta 200 siempre para no bloquear la carga de página al usuario
+    res.status(200).json({ success: false, error: error.message });
+  }
+});
+
+
 // POST /api/login - Endpoint de Autenticación
 app.post('/api/login', (req, res) => {
   const { password } = req.body;
