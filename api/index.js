@@ -9,6 +9,11 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { UAParser } from 'ua-parser-js';
 import { Octokit } from '@octokit/rest';
+import helmet from 'helmet';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import mongoSanitize from 'express-mongo-sanitize';
+import Joi from 'joi';
 
 dotenv.config();
 import mongoose from 'mongoose';
@@ -23,6 +28,111 @@ const app = express();
 app.use(express.json()); // Necesario para parsear el body en las peticiones POST
 app.use(cookieParser()); // Necesario para leer las cookies httpOnly
 
+// --- HARDENING DE SEGURIDAD ---
+
+// 1. Helmet: Asegurar cabeceras HTTP
+app.use(helmet());
+
+// 2. CORS Estricto: Permitir solo frontend oficial y localhost
+const allowedOrigins = ['https://reforma21.vercel.app', 'http://localhost:3000'];
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permite peticiones sin origin (como herramientas server-to-server o localhost en algunos casos) y orígenes autorizados
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bloqueado por política CORS estricta'));
+    }
+  },
+  credentials: true // Necesario si se envían cookies entre subdominios
+}));
+
+// --- LOGGING DE SEGURIDAD ---
+const logSecurityIncident = async (type, ip, details) => {
+  try {
+    if (mongoose.connection.readyState !== 1) await dbConnect();
+    const db = mongoose.connection.db;
+    await db.collection('security_logs').insertOne({
+      type,
+      ip,
+      details,
+      timestamp: new Date()
+    });
+  } catch (e) {
+    console.error('Error guardando log de seguridad:', e.message);
+  }
+};
+
+// 3. Mongo Sanitize: Prevenir inyecciones NoSQL
+app.use(mongoSanitize({
+  onSanitize: ({ req, key }) => {
+    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+    logSecurityIncident('nosql_injection', ip, { key, path: req.path });
+  }
+}));
+
+const rateLimitHandler = (req, res, next, options) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+  logSecurityIncident('rate_limit_exceeded', ip, { path: req.path, max: options.max });
+  res.status(options.statusCode).json(options.message);
+};
+
+// 4. Rate Limiting Global y Específico
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 150, // 150 peticiones máximo por IP
+  message: { success: false, error: 'Límite global excedido. Por favor, intente más tarde.' },
+  handler: rateLimitHandler,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(globalLimiter);
+
+const metricsLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+  message: { success: false, error: 'Demasiadas peticiones de telemetría. Por favor, intente más tarde.' },
+  handler: rateLimitHandler,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/metrics', metricsLimiter);
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { success: false, error: 'Demasiados intentos de acceso. Bloqueado por 15 minutos.' },
+  handler: rateLimitHandler,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/login', authLimiter);
+app.use('/api/admin', authLimiter);
+
+// 5. Honeypot: Trampa para bots
+const blockedIPs = new Map();
+app.use((req, res, next) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+  const blockUntil = blockedIPs.get(ip);
+  if (blockUntil && blockUntil > Date.now()) {
+    logSecurityIncident('honeypot_blocked', ip, { path: req.path });
+    return res.status(403).json({ success: false, error: 'Acceso denegado temporalmente por política de seguridad.' });
+  }
+  next();
+});
+
+const honeypotPaths = ['/admin', '/.env', '/wp-admin', '/wp-login.php', '/config.php'];
+app.use((req, res, next) => {
+  if (honeypotPaths.includes(req.path)) {
+    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+    blockedIPs.set(ip, Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    logSecurityIncident('honeypot_trap_triggered', ip, { path: req.path });
+    return res.status(403).json({ success: false, error: 'Ruta prohibida.' });
+  }
+  next();
+});
+
+// --- FIN HARDENING ---
 const contentDir = path.resolve(__dirname, '../content');
 
 // Helper to check if file exists
@@ -73,7 +183,7 @@ app.get('/api/articles', async (req, res) => {
 
     // Pagination
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 6;
+    const limit = Math.min(parseInt(req.query.limit) || 6, 100); // Límite público obligatorio
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const totalPages = Math.ceil(articles.length / limit);
@@ -128,14 +238,49 @@ app.get('/api/articles/:id', async (req, res) => {
   }
 });
 
+// --- VALIDACIÓN DE ESQUEMAS (JOI) ---
+const metricSchema = Joi.object({
+  articleId: Joi.string().trim().max(100).required(),
+  timeSpent: Joi.number().min(0).optional(),
+  scrollDepth: Joi.number().min(0).max(100).optional()
+}).options({ stripUnknown: false }); // Reject if extra fields are present
+
+const visitSchema = Joi.object({
+  article_id: Joi.string().trim().max(100).allow(null, ''),
+  location: Joi.object({
+    country: Joi.string().allow(null, ''),
+    country_code: Joi.string().allow(null, ''),
+    city: Joi.string().allow(null, ''),
+    latitude: Joi.number().allow(null),
+    longitude: Joi.number().allow(null)
+  }).allow(null),
+  device_type: Joi.string().allow(null, ''),
+  referrer: Joi.string().allow(null, '')
+}).options({ stripUnknown: false });
+
+const downloadSchema = Joi.object({
+  article_id: Joi.string().trim().max(100).allow(null, ''),
+  pdf_url: Joi.string().uri().allow(null, ''),
+  pdf_text: Joi.string().max(200).allow(null, '')
+}).options({ stripUnknown: false });
+
+const eventSchema = Joi.object({
+  article_id: Joi.string().trim().max(100).allow(null, ''),
+  event_type: Joi.string().trim().max(50).required(),
+  button_name: Joi.string().trim().max(100).allow(null, '')
+}).options({ stripUnknown: false });
+
 // POST /api/metrics - Guardar telemetría de un artículo
 app.post('/api/metrics', async (req, res) => {
   try {
-    const { articleId, timeSpent, scrollDepth } = req.body;
-
-    if (!articleId) {
-      return res.status(400).json({ error: 'Falta articleId' });
+    const { error, value } = metricSchema.validate(req.body);
+    if (error) {
+      const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+      logSecurityIncident('joi_validation_failed', ip, { path: '/api/metrics', details: error.details[0].message });
+      return res.status(400).json({ success: false, error: error.details[0].message });
     }
+
+    const { articleId, timeSpent, scrollDepth } = value;
 
     await dbConnect();
 
@@ -173,7 +318,13 @@ app.post('/api/metrics', async (req, res) => {
 // POST /api/metrics/visit - Registrar visita con ubicación geográfica (colección analytics)
 app.post('/api/metrics/visit', async (req, res) => {
   try {
-    const { article_id, location, device_type, referrer } = req.body;
+    const { error, value } = visitSchema.validate(req.body);
+    if (error) {
+      const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+      logSecurityIncident('joi_validation_failed', ip, { path: '/api/metrics/visit', details: error.details[0].message });
+      return res.status(400).json({ success: false, error: error.details[0].message });
+    }
+    const { article_id, location, device_type, referrer } = value;
 
     await dbConnect();
 
@@ -213,7 +364,13 @@ app.post('/api/metrics/visit', async (req, res) => {
 // POST /api/metrics/download - Registrar descarga de un recurso (PDF, etc)
 app.post('/api/metrics/download', async (req, res) => {
   try {
-    const { article_id, pdf_url, pdf_text } = req.body;
+    const { error, value } = downloadSchema.validate(req.body);
+    if (error) {
+      const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+      logSecurityIncident('joi_validation_failed', ip, { path: '/api/metrics/download', details: error.details[0].message });
+      return res.status(400).json({ success: false, error: error.details[0].message });
+    }
+    const { article_id, pdf_url, pdf_text } = value;
     await dbConnect();
 
     const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown')
@@ -239,7 +396,13 @@ app.post('/api/metrics/download', async (req, res) => {
 // POST /api/metrics/event - Registrar eventos personalizados (WhatsApp, Becas, etc)
 app.post('/api/metrics/event', async (req, res) => {
   try {
-    const { article_id, event_type, button_name } = req.body;
+    const { error, value } = eventSchema.validate(req.body);
+    if (error) {
+      const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+      logSecurityIncident('joi_validation_failed', ip, { path: '/api/metrics/event', details: error.details[0].message });
+      return res.status(400).json({ success: false, error: error.details[0].message });
+    }
+    const { article_id, event_type, button_name } = value;
     await dbConnect();
 
     const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown')
@@ -315,7 +478,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
       { $group: { _id: '$articleId', views: { $sum: 1 } } },
       { $sort: { views: -1 } },
       { $limit: 5 }
-    ]);
+    ]).option({ maxTimeMS: 5000 });
     for (let article of topArticles) {
       article.articleId = article._id;
       try {
@@ -335,7 +498,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
   try {
     const agg = await ArticleMetric.aggregate([{
       $group: { _id: null, totalViews: { $sum: 1 }, sumTime: { $sum: '$timeSpent' }, avgScroll: { $avg: '$scrollDepth' } }
-    }]);
+    }]).option({ maxTimeMS: 5000 });
     if (agg.length > 0) {
       payload.globalStats.avgReadTimeSeconds  = agg[0].totalViews > 0 ? Math.round(agg[0].sumTime / agg[0].totalViews) : 0;
       payload.globalStats.avgScrollPercentage = Math.round(agg[0].avgScroll || 0);
@@ -349,10 +512,10 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
   try {
     payload.osDistribution = await ArticleMetric.aggregate([
       { $group: { _id: '$os', count: { $sum: 1 } } }, { $sort: { count: -1 } }
-    ]);
+    ]).option({ maxTimeMS: 5000 });
     payload.deviceDistribution = await ArticleMetric.aggregate([
       { $group: { _id: '$deviceType', count: { $sum: 1 } } }, { $sort: { count: -1 } }
-    ]);
+    ]).option({ maxTimeMS: 5000 });
   } catch (e) {
     console.error('[Dashboard] ❌ os/device:', e.message);
     payload.errors.push({ section: 'osDevice', error: e.message });
@@ -371,7 +534,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
       }},
       { $sort: { count: -1 } },
       { $limit: 10 }
-    ]).toArray();
+    ]).maxTimeMS(5000).toArray();
 
     // Map to titles
     for (let dl of topDownloads) {
@@ -404,7 +567,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
         { $group: { _id: { city: '$location.city', country: '$location.country' }, count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 5 }
-      ]).toArray(),
+      ]).maxTimeMS(5000).toArray(),
 
       // Top 5 Países
       db.collection('analytics').aggregate([
@@ -412,7 +575,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
         { $group: { _id: '$location.country', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 5 }
-      ]).toArray(),
+      ]).maxTimeMS(5000).toArray(),
 
       // Puntos mapa — lat y lon deben ser números reales
       db.collection('analytics').aggregate([
@@ -428,7 +591,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
         }},
         { $sort: { count: -1 } },
         { $limit: 200 }
-      ]).toArray()
+      ]).maxTimeMS(5000).toArray()
     ]);
 
     payload.geo = { topCities, topCountries, visitPoints };
@@ -445,8 +608,8 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     const db = mongoose.connection.db;
     if (!db) throw new Error('mongoose.connection.db no disponible aún');
 
-    const whatsappCount = await db.collection('analytics').countDocuments({ event_type: 'whatsapp' });
-    const becaCount = await db.collection('analytics').countDocuments({ event_type: 'beca' });
+    const whatsappCount = await db.collection('analytics').countDocuments({ event_type: 'whatsapp' }, { maxTimeMS: 5000 });
+    const becaCount = await db.collection('analytics').countDocuments({ event_type: 'beca' }, { maxTimeMS: 5000 });
 
     payload.conversions.whatsapp = whatsappCount;
     payload.conversions.beca = becaCount;
