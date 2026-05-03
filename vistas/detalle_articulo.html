@@ -257,7 +257,8 @@
                               </div>
                               <a href="${DOMPurify.sanitize(pdfUrl)}" target="_blank" rel="noopener noreferrer"
                                  style="display:inline-flex;align-items:center;gap:.5rem;background:#D4A843;color:#0a0e17;font-weight:700;padding:.7rem 1.5rem;border-radius:8px;text-decoration:none;transition:opacity .2s;"
-                                 onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+                                 onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"
+                                 onclick="window.trackDownload('${id}', '${DOMPurify.sanitize(pdfUrl)}', '${DOMPurify.sanitize(pdfText)}')">
                                 📥 ${DOMPurify.sanitize(pdfText)}
                               </a>`;
                             // Insertar después del video si existe, si no, después del contenido
@@ -400,6 +401,20 @@
           console.warn('[Visit] Error en visit tracking:', err.message);
         }
       })();
+
+      // Registrar descarga de PDF
+      window.trackDownload = function(articleId, pdfUrl, pdfText) {
+        fetch('/api/metrics/download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            article_id: articleId,
+            pdf_url: pdfUrl,
+            pdf_text: pdfText
+          }),
+          keepalive: true
+        }).catch(err => console.warn('[Download] Error tracking:', err));
+      };
     </script>
 </body>
 </html>

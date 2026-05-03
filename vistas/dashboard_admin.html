@@ -549,6 +549,25 @@
           </table>
         </div>
       </div>
+
+      <!-- ── RECURSOS DESCARGADOS ───────────────────────────────────────── -->
+      <div class="charts-grid" style="grid-template-columns: 1fr; margin-bottom: 2rem;">
+        <div class="chart-container">
+          <h3>📥 Recursos Descargados</h3>
+          <table class="geo-table" id="dl-table">
+            <thead>
+              <tr>
+                <th>Artículo</th>
+                <th>Archivo PDF</th>
+                <th style="text-align:center;">Total Descargas</th>
+              </tr>
+            </thead>
+            <tbody id="dl-tbody">
+              <tr><td colspan="3" style="text-align:center;color:var(--text-gray);">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <!-- TAB: EDITOR EDITORIAL (CMS) -->
@@ -1066,6 +1085,20 @@
                 <td>${i + 1}</td>
                 <td>${c._id || '—'}</td>
                 <td><span class="visits-badge">${c.count}</span></td>
+              </tr>`).join('');
+          }
+
+          // ── TABLA DESCARGAS ─────────────────────────────────────────────
+          const dlBody = document.getElementById('dl-tbody');
+          const downloads = data.downloads || [];
+          if (downloads.length === 0) {
+            dlBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-gray);font-style:italic;">Sin descargas registradas</td></tr>';
+          } else {
+            dlBody.innerHTML = downloads.map(dl => `
+              <tr>
+                <td><strong>${DOMPurify.sanitize(dl.title)}</strong></td>
+                <td><a href="${DOMPurify.sanitize(dl.pdf_url)}" target="_blank" style="color:var(--accent);text-decoration:none;">${DOMPurify.sanitize(dl.pdf_text)}</a></td>
+                <td style="text-align:center;"><span class="visits-badge">${dl.count}</span></td>
               </tr>`).join('');
           }
 

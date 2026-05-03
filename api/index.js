@@ -190,6 +190,7 @@ app.post('/api/metrics/visit', async (req, res) => {
     // Guardar en colección dinámica 'analytics' (sin necesidad de un Model separado)
     const db = mongoose.connection.db;
     await db.collection('analytics').insertOne({
+      event_type:  'visit',
       article_id:  article_id || null,
       ip,
       location:    location   || null,      // { country, city, country_code }
@@ -204,6 +205,32 @@ app.post('/api/metrics/visit', async (req, res) => {
   } catch (error) {
     console.error('Error registrando visita:', error);
     // Respuesta 200 siempre para no bloquear la carga de página al usuario
+    res.status(200).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/metrics/download - Registrar descarga de un recurso (PDF, etc)
+app.post('/api/metrics/download', async (req, res) => {
+  try {
+    const { article_id, pdf_url, pdf_text } = req.body;
+    await dbConnect();
+
+    const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown')
+      .split(',')[0].trim();
+
+    const db = mongoose.connection.db;
+    await db.collection('analytics').insertOne({
+      event_type: 'download',
+      article_id: article_id || null,
+      pdf_url:    pdf_url || null,
+      pdf_text:   pdf_text || 'Descargar PDF',
+      ip,
+      timestamp:  new Date(),
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error registrando descarga:', error);
     res.status(200).json({ success: false, error: error.message });
   }
 });
@@ -243,6 +270,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     osDistribution:    [],
     deviceDistribution: [],
     geo:               { topCities: [], topCountries: [], visitPoints: [] },
+    downloads:         [],
     errors:            [],   // log de fallos parciales (visible solo en respuesta)
   };
 
@@ -302,6 +330,39 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     payload.errors.push({ section: 'osDevice', error: e.message });
   }
 
+  // ── DESCARGAS (colección analytics) ──────────────────────────────────
+  try {
+    const db = mongoose.connection.db;
+    if (!db) throw new Error('mongoose.connection.db no disponible aún');
+
+    const topDownloads = await db.collection('analytics').aggregate([
+      { $match: { event_type: 'download', article_id: { $exists: true, $ne: null } } },
+      { $group: {
+        _id: { article_id: '$article_id', pdf_text: '$pdf_text', pdf_url: '$pdf_url' },
+        count: { $sum: 1 }
+      }},
+      { $sort: { count: -1 } },
+      { $limit: 10 }
+    ]).toArray();
+
+    // Map to titles
+    for (let dl of topDownloads) {
+      dl.article_id = dl._id.article_id;
+      dl.pdf_text = dl._id.pdf_text;
+      dl.pdf_url = dl._id.pdf_url;
+      try {
+        const filePath = path.join(contentDir, `${dl.article_id}.md`);
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const { data } = matter(fileContent);
+        dl.title = data.titulo || dl.article_id;
+      } catch (_) { dl.title = dl.article_id; }
+    }
+    payload.downloads = topDownloads;
+  } catch (e) {
+    console.error('[Dashboard] ❌ descargas:', e.message);
+    payload.errors.push({ section: 'downloads', error: e.message });
+  }
+
   // ── GEOLOCALIZACIÓN (colección analytics) ────────────────────────────
   // Usamos try/catch independiente — si 'analytics' no existe aún, no rompe las métricas principales
   try {
@@ -311,7 +372,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     const [topCities, topCountries, visitPoints] = await Promise.all([
       // Top 5 Ciudades — filtramos estrictamente: location debe ser objeto con city string
       db.collection('analytics').aggregate([
-        { $match: { location: { $type: 'object' }, 'location.city': { $type: 'string', $gt: '' } } },
+        { $match: { event_type: { $ne: 'download' }, location: { $type: 'object' }, 'location.city': { $type: 'string', $gt: '' } } },
         { $group: { _id: { city: '$location.city', country: '$location.country' }, count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 5 }
@@ -319,7 +380,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
 
       // Top 5 Países
       db.collection('analytics').aggregate([
-        { $match: { location: { $type: 'object' }, 'location.country': { $type: 'string', $gt: '' } } },
+        { $match: { event_type: { $ne: 'download' }, location: { $type: 'object' }, 'location.country': { $type: 'string', $gt: '' } } },
         { $group: { _id: '$location.country', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 5 }
@@ -328,6 +389,7 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
       // Puntos mapa — lat y lon deben ser números reales
       db.collection('analytics').aggregate([
         { $match: {
+          event_type: { $ne: 'download' },
           location: { $type: 'object' },
           'location.latitude':  { $type: 'number' },
           'location.longitude': { $type: 'number' }
