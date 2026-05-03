@@ -268,10 +268,76 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/cms/files - Listar archivos .md del repositorio en GitHub (PROTEGIDO)
+app.get('/api/cms/files', requireAuth, async (req, res) => {
+  try {
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    const GITHUB_OWNER = process.env.GITHUB_OWNER;
+    const GITHUB_REPO  = process.env.GITHUB_REPO;
+
+    if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
+      return res.status(500).json({ success: false, error: 'Faltan variables de entorno de GitHub' });
+    }
+
+    const octokit = new Octokit({ auth: GITHUB_TOKEN });
+    const { data } = await octokit.repos.getContent({
+      owner: GITHUB_OWNER,
+      repo: GITHUB_REPO,
+      path: 'content',
+      ref: 'main',
+    });
+
+    const files = Array.isArray(data)
+      ? data.filter(f => f.name.endsWith('.md')).map(f => ({ name: f.name, sha: f.sha, size: f.size }))
+      : [];
+
+    res.json({ success: true, files });
+  } catch (error) {
+    console.error('Error listando archivos GitHub:', error);
+    res.status(500).json({ success: false, error: error.message || 'Error al listar archivos' });
+  }
+});
+
+// GET /api/cms/files/:filename - Obtener contenido RAW de un archivo .md desde GitHub (PROTEGIDO)
+app.get('/api/cms/files/:filename', requireAuth, async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const safeFilename = path.basename(filename);
+
+    if (!safeFilename.endsWith('.md')) {
+      return res.status(400).json({ success: false, error: 'Solo se permiten archivos .md' });
+    }
+
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    const GITHUB_OWNER = process.env.GITHUB_OWNER;
+    const GITHUB_REPO  = process.env.GITHUB_REPO;
+
+    if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
+      return res.status(500).json({ success: false, error: 'Faltan variables de entorno de GitHub' });
+    }
+
+    const octokit = new Octokit({ auth: GITHUB_TOKEN });
+    const { data } = await octokit.repos.getContent({
+      owner: GITHUB_OWNER,
+      repo: GITHUB_REPO,
+      path: `content/${safeFilename}`,
+      ref: 'main',
+    });
+
+    // El contenido viene en Base64 desde GitHub
+    const rawContent = Buffer.from(data.content, 'base64').toString('utf-8');
+
+    res.json({ success: true, filename: safeFilename, sha: data.sha, rawContent });
+  } catch (error) {
+    console.error('Error descargando archivo GitHub:', error);
+    res.status(error.status === 404 ? 404 : 500).json({ success: false, error: error.message || 'Error al descargar archivo' });
+  }
+});
+
 // POST /api/publish - Publicar nuevo artículo via GitHub API (PROTEGIDO)
 app.post('/api/publish', requireAuth, async (req, res) => {
   try {
-    const { titulo, autor, extracto, layout, fecha, etiquetas, color_tema, imagen_cabecera, markdownContent } = req.body;
+    const { titulo, autor, extracto, layout, fecha, etiquetas, color_tema, imagen_cabecera, markdownContent, existingFilename } = req.body;
 
     if (!titulo || !markdownContent) {
       return res.status(400).json({ success: false, error: 'Faltan campos obligatorios: titulo y markdownContent' });
@@ -285,15 +351,21 @@ app.post('/api/publish', requireAuth, async (req, res) => {
       return res.status(500).json({ success: false, error: 'Faltan variables de entorno de GitHub (GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO)' });
     }
 
-    // Generar slug a partir del título
-    const slug = titulo
-      .toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9\s-]/g, '')
-      .trim()
-      .replace(/\s+/g, '_');
-
-    const filename = `content/${slug}.md`;
+    // Si venimos de editar un archivo existente, conservar su nombre exacto.
+    // Si es un artículo nuevo, generar el slug desde el título.
+    let slug, filename;
+    if (existingFilename) {
+      filename = `content/${path.basename(existingFilename)}`;
+      slug = path.basename(existingFilename).replace('.md', '');
+    } else {
+      slug = titulo
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '_');
+      filename = `content/${slug}.md`;
+    }
 
     // Construir el Frontmatter YAML
     const tagsList = (etiquetas || '').split(',').map(t => `\n  - ${t.trim()}`).join('');

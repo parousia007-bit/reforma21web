@@ -258,7 +258,81 @@
       letter-spacing: .05em;
       margin: 1.5rem 0 .5rem 0;
     }
-  </style>
+
+    /* ── EXPLORADOR DE ARCHIVOS ─────────────────── */
+    .file-explorer {
+      background: rgba(10, 14, 23, 0.5);
+      border: 1px solid rgba(212, 168, 67, 0.2);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .file-explorer label {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+    .file-explorer select {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(10, 14, 23, 0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: var(--text-light);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: .95rem;
+      padding: .55rem 1rem;
+    }
+    .file-explorer select:focus { outline: none; border-color: var(--accent); }
+    .btn-load {
+      background: rgba(212, 168, 67, 0.15);
+      border: 1px solid rgba(212, 168, 67, 0.4);
+      border-radius: 8px;
+      color: var(--accent);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      padding: .55rem 1.25rem;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .btn-load:hover { background: rgba(212, 168, 67, 0.25); }
+    .btn-load:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-new {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: var(--text-gray);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: .95rem;
+      font-weight: 600;
+      padding: .55rem 1.25rem;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .btn-new:hover { color: var(--text-light); border-color: rgba(255,255,255,0.25); }
+    .edit-badge {
+      display: none;
+      align-items: center;
+      gap: .4rem;
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(37, 99, 235, 0.35);
+      color: #93C5FD;
+      border-radius: 20px;
+      padding: .3rem .85rem;
+      font-size: .8rem;
+      font-weight: 700;
+    }
+    .edit-badge.visible { display: flex; }
 </head>
 <body>
 <div id="maintenance-notice" style="position: sticky; top: 0; z-index: 9999; background: rgba(212, 168, 67, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 168, 67, 0.4); color: #D4A843; text-align: center; padding: 12px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">✨ Estamos perfeccionando la arquitectura visual para mejorar la experiencia de lectura. Este fin de semana realizaremos ajustes en vivo; si encuentra algún error de visualización, lo resolveremos a la brevedad. Gracias por su paciencia.</div>
@@ -323,7 +397,20 @@
     <!-- TAB: EDITOR EDITORIAL (CMS) -->
     <section class="tab-panel" id="panel-editor" role="tabpanel" aria-labelledby="tab-editor">
       <div class="cms-form">
-        <h2>✍️ Editor Editorial — Publicar Nuevo Artículo</h2>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+          <h2 style="margin:0;">✍️ Editor Editorial</h2>
+          <span class="edit-badge" id="edit-badge">✏️ Editando: <span id="edit-filename"></span></span>
+        </div>
+
+        <!-- EXPLORADOR DE ARCHIVOS -->
+        <div class="file-explorer">
+          <label>📂 Cargar y Editar:</label>
+          <select id="file-selector" onchange="onFileSelectorChange()">
+            <option value="">— Selecciona un artículo existente —</option>
+          </select>
+          <button class="btn-load" id="btn-load" onclick="loadSelectedFile()" disabled>⬇ Cargar</button>
+          <button class="btn-new" onclick="resetForm()">✦ Nuevo</button>
+        </div>
 
         <div class="meta-grid">
           <div class="form-group full">
@@ -406,35 +493,189 @@
         previewClass: ['editor-preview', 'article-preview'],
         minHeight: '350px',
       });
+      // Cargar lista de archivos existentes en GitHub
+      loadFileList();
     });
 
-    // ── PUBLICAR VÍA API ─────────────────────────────────────────────────
+    // ── ESTADO DE EDICIÓN ────────────────────────────────────────────────
+    let currentFilename = null; // null = nuevo artículo, string = editando archivo existente
+
+    // ── EXPLORADOR DE ARCHIVOS ───────────────────────────────────────────
+    async function loadFileList() {
+      const sel = document.getElementById('file-selector');
+      try {
+        const res = await fetch('/api/cms/files', { credentials: 'same-origin' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success) return;
+        data.files.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.name;
+          opt.textContent = f.name.replace('.md', '');
+          sel.appendChild(opt);
+        });
+      } catch (e) {
+        console.warn('No se pudo cargar la lista de archivos GitHub:', e.message);
+      }
+    }
+
+    function onFileSelectorChange() {
+      const sel = document.getElementById('file-selector');
+      document.getElementById('btn-load').disabled = !sel.value;
+    }
+
+    async function loadSelectedFile() {
+      const sel   = document.getElementById('file-selector');
+      const fname = sel.value;
+      if (!fname) return;
+
+      const btn = document.getElementById('btn-load');
+      btn.disabled = true;
+      btn.textContent = '⏳ Cargando...';
+
+      try {
+        const res  = await fetch(`/api/cms/files/${encodeURIComponent(fname)}`, { credentials: 'same-origin' });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error);
+
+        populateFormFromRaw(data.rawContent, data.filename);
+        showStatus(`✅ Artículo "${fname}" cargado. Edita y pulsa Publicar para guardar.`, 'success');
+      } catch (err) {
+        showStatus(`❌ Error al cargar: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '⬇ Cargar';
+      }
+    }
+
+    // ── PARSER DE FRONTMATTER YAML ───────────────────────────────────────
+    function parseFrontmatter(raw) {
+      const match = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/m);
+      if (!match) return { meta: {}, body: raw };
+
+      const yamlBlock = match[1];
+      const body      = match[2].trimStart();
+      const meta      = {};
+
+      // Parsear línea a línea los campos simples y listas
+      const lines = yamlBlock.split('\n');
+      let currentKey = null;
+      let listMode   = false;
+      const listAccum = [];
+
+      for (const line of lines) {
+        const simpleMatch = line.match(/^([\w_]+):\s*(.*)$/);
+        const listItem    = line.match(/^\s+-\s+(.+)$/);
+        const blockScalar = line.match(/^([\w_]+):\s*>-\s*$/);
+
+        if (blockScalar) {
+          if (listMode && currentKey) meta[currentKey] = listAccum.join(', ');
+          listMode   = false;
+          currentKey = blockScalar[1];
+          meta[currentKey] = '';
+        } else if (listItem && listMode) {
+          listAccum.push(listItem[1].trim());
+        } else if (simpleMatch && simpleMatch[2].trim() === '') {
+          // Campo de lista: etiquetas:\n  - X
+          if (listMode && currentKey) meta[currentKey] = listAccum.join(', ');
+          currentKey = simpleMatch[1];
+          listAccum.length = 0;
+          listMode   = true;
+        } else if (simpleMatch) {
+          if (listMode && currentKey) meta[currentKey] = listAccum.join(', ');
+          listMode   = false;
+          currentKey = simpleMatch[1];
+          let val    = simpleMatch[2].trim().replace(/^'(.*)'$/, '$1').replace(/^"(.*)"$/, '$1');
+          // Líneas de continuación block scalar
+          if (meta[currentKey] === '') {
+            meta[currentKey] = val;
+          } else {
+            meta[currentKey] = val;
+          }
+        } else if (currentKey && !listMode && line.match(/^\s{2}/)) {
+          // Continuación de block scalar (titulo largo)
+          meta[currentKey] += ' ' + line.trim();
+        }
+      }
+      if (listMode && currentKey) meta[currentKey] = listAccum.join(', ');
+
+      return { meta, body };
+    }
+
+    function populateFormFromRaw(rawContent, filename) {
+      const { meta, body } = parseFrontmatter(rawContent);
+
+      // Rellenar campos
+      document.getElementById('cms-titulo').value   = (meta.titulo   || '').trim();
+      document.getElementById('cms-autor').value    = (meta.autor    || 'Reforma 2.1').trim();
+      document.getElementById('cms-fecha').value    = (meta.fecha    || '').replace(/'/g, '').trim();
+      document.getElementById('cms-extracto').value = (meta.extracto || '').trim();
+      document.getElementById('cms-imagen').value   = (meta.imagen_cabecera || '').replace(/'/g, '').trim();
+      document.getElementById('cms-etiquetas').value = (meta.etiquetas || '').trim();
+
+      const colorVal = (meta.color_tema || '#D4A843').replace(/'/g, '').trim();
+      document.getElementById('cms-color').value = colorVal.startsWith('#') ? colorVal : '#D4A843';
+
+      const layoutSel = document.getElementById('cms-layout');
+      const layoutVal = (meta.layout || 'clasico').replace(/'/g, '').trim();
+      if ([...layoutSel.options].some(o => o.value === layoutVal)) layoutSel.value = layoutVal;
+
+      if (easyMDE) easyMDE.value(body);
+
+      // Marcar modo edición
+      currentFilename = filename;
+      document.getElementById('edit-badge').classList.add('visible');
+      document.getElementById('edit-filename').textContent = filename;
+      document.getElementById('publish-btn-text').textContent = '💾 Guardar Cambios en GitHub';
+    }
+
+    function resetForm() {
+      currentFilename = null;
+      document.getElementById('cms-titulo').value   = '';
+      document.getElementById('cms-autor').value    = 'Futura Editions';
+      document.getElementById('cms-fecha').value    = String(new Date().getFullYear());
+      document.getElementById('cms-extracto').value = '';
+      document.getElementById('cms-imagen').value   = '';
+      document.getElementById('cms-etiquetas').value = '';
+      document.getElementById('cms-color').value    = '#D4A843';
+      document.getElementById('cms-layout').value   = 'clasico';
+      document.getElementById('file-selector').value = '';
+      document.getElementById('btn-load').disabled   = true;
+      if (easyMDE) easyMDE.value('');
+      document.getElementById('edit-badge').classList.remove('visible');
+      document.getElementById('publish-btn-text').textContent = '🚀 Publicar en GitHub';
+      document.getElementById('publish-status').className = 'publish-status';
+    }
+
+    // ── PUBLICAR / ACTUALIZAR VÍA API ────────────────────────────────────
     async function publishArticle() {
-      const titulo      = document.getElementById('cms-titulo').value.trim();
+      const titulo          = document.getElementById('cms-titulo').value.trim();
       const markdownContent = easyMDE ? easyMDE.value() : document.getElementById('cms-content').value;
 
       if (!titulo) { showStatus('El Título es obligatorio.', 'error'); return; }
       if (!markdownContent) { showStatus('El contenido Markdown no puede estar vacío.', 'error'); return; }
 
-      const btn = document.getElementById('btn-publish');
+      const btn     = document.getElementById('btn-publish');
       const btnText = document.getElementById('publish-btn-text');
-      btn.disabled = true;
+      btn.disabled  = true;
       btnText.textContent = '⏳ Publicando...';
 
       const payload = {
         titulo,
-        autor:           document.getElementById('cms-autor').value.trim()   || 'Reforma 2.1',
+        autor:           document.getElementById('cms-autor').value.trim()    || 'Reforma 2.1',
         extracto:        document.getElementById('cms-extracto').value.trim(),
         layout:          document.getElementById('cms-layout').value,
-        fecha:           document.getElementById('cms-fecha').value.trim()   || String(new Date().getFullYear()),
+        fecha:           document.getElementById('cms-fecha').value.trim()    || String(new Date().getFullYear()),
         etiquetas:       document.getElementById('cms-etiquetas').value.trim(),
         color_tema:      document.getElementById('cms-color').value,
         imagen_cabecera: document.getElementById('cms-imagen').value.trim(),
         markdownContent,
+        // Si estamos editando, pasamos el nombre de archivo existente
+        existingFilename: currentFilename || null,
       };
 
       try {
-        const res = await fetch('/api/publish', {
+        const res  = await fetch('/api/publish', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -443,12 +684,13 @@
         const data = await res.json();
 
         if (data.success) {
-          showStatus(`✅ ${data.message}`, 'success');
-          // Limpiar el formulario
-          document.getElementById('cms-titulo').value = '';
-          document.getElementById('cms-extracto').value = '';
-          document.getElementById('cms-imagen').value = '';
-          if (easyMDE) easyMDE.value('');
+          const action = currentFilename ? 'actualizado' : 'publicado';
+          showStatus(`✅ Artículo ${action} exitosamente. ${data.message}`, 'success');
+          resetForm();
+          // Recargar lista de archivos para reflejar posibles nuevos archivos
+          const sel = document.getElementById('file-selector');
+          while (sel.options.length > 1) sel.remove(1);
+          await loadFileList();
         } else {
           showStatus(`❌ Error: ${data.error}`, 'error');
         }
@@ -456,7 +698,7 @@
         showStatus(`❌ Error de red: ${err.message}`, 'error');
       } finally {
         btn.disabled = false;
-        btnText.textContent = '🚀 Publicar en GitHub';
+        btnText.textContent = currentFilename ? '💾 Guardar Cambios en GitHub' : '🚀 Publicar en GitHub';
       }
     }
 
