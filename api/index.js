@@ -412,6 +412,12 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     // payload.geo ya tiene arrays vacíos por defecto → el mapa carga en blanco sin romper
   }
 
+  // Cabeceras anti-caché: fuerza a Vercel/CDN a NO cachear esta respuesta,
+  // garantizando datos en tiempo real desde MongoDB en cada apertura del Dashboard.
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   // Siempre HTTP 200 — el cliente puede ver payload.errors para diagnóstico
   res.json(payload);
 });

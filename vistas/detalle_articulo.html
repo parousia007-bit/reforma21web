@@ -97,7 +97,7 @@
     </style>
 </head>
 <body>
-<div id="maintenance-notice" style="position: sticky; top: 0; z-index: 9999; background: rgba(212, 168, 67, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 168, 67, 0.4); color: #D4A843; text-align: center; padding: 12px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">✨ Estamos perfeccionando la arquitectura visual para mejorar la experiencia de lectura. Este fin de semana realizaremos ajustes en vivo; si encuentra algún error de visualización, lo resolveremos a la brevedad. Gracias por su paciencia.</div>
+
     <div class="article-container">
         <a href="../index.html" class="btn-back">← Volver al inicio</a>
         <img id="header-img" class="header-image" src="" alt="Cabecera del artículo">
@@ -250,17 +250,39 @@
                         try {
                             const dlBlock = document.createElement('div');
                             dlBlock.style.cssText = 'margin:2.5rem 0;padding:1.5rem 2rem;background:rgba(212,168,67,0.07);border:1px solid rgba(212,168,67,0.25);border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;';
-                            dlBlock.innerHTML = `
-                              <div>
-                                <p style="margin:0 0 .25rem 0;font-size:.8rem;font-weight:700;color:rgba(212,168,67,.7);text-transform:uppercase;letter-spacing:.1em;">Recurso Descargable</p>
-                                <p style="margin:0;color:#e8ebf4;font-weight:600;">${DOMPurify.sanitize(pdfText)}</p>
-                              </div>
-                              <a href="${DOMPurify.sanitize(pdfUrl)}" target="_blank" rel="noopener noreferrer"
-                                 style="display:inline-flex;align-items:center;gap:.5rem;background:#D4A843;color:#0a0e17;font-weight:700;padding:.7rem 1.5rem;border-radius:8px;text-decoration:none;transition:opacity .2s;"
-                                 onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"
-                                 onclick="window.trackDownload('${id}', '${DOMPurify.sanitize(pdfUrl)}', '${DOMPurify.sanitize(pdfText)}')">
-                                📥 ${DOMPurify.sanitize(pdfText)}
-                              </a>`;
+
+                            // ── Binding seguro via data-* + addEventListener ──────────────
+                            // El onclick inline con template literal rompía cuando pdfUrl o
+                            // pdfText contenían comillas simples. Aquí los valores se leen
+                            // siempre desde los atributos data-* (inmunes a caracteres especiales).
+                            const infoDiv = document.createElement('div');
+                            infoDiv.innerHTML = `
+                              <p style="margin:0 0 .25rem 0;font-size:.8rem;font-weight:700;color:rgba(212,168,67,.7);text-transform:uppercase;letter-spacing:.1em;">Recurso Descargable</p>
+                              <p style="margin:0;color:#e8ebf4;font-weight:600;">${DOMPurify.sanitize(pdfText)}</p>`;
+
+                            const dlAnchor = document.createElement('a');
+                            dlAnchor.href              = DOMPurify.sanitize(pdfUrl);
+                            dlAnchor.target            = '_blank';
+                            dlAnchor.rel               = 'noopener noreferrer';
+                            dlAnchor.dataset.articleId = id;       // binding seguro
+                            dlAnchor.dataset.pdfUrl    = pdfUrl;   // binding seguro
+                            dlAnchor.dataset.pdfText   = pdfText;  // binding seguro
+                            dlAnchor.style.cssText     = 'display:inline-flex;align-items:center;gap:.5rem;background:#D4A843;color:#0a0e17;font-weight:700;padding:.7rem 1.5rem;border-radius:8px;text-decoration:none;transition:opacity .2s;';
+                            dlAnchor.textContent       = '📥 ' + DOMPurify.sanitize(pdfText);
+                            dlAnchor.addEventListener('mouseover', () => dlAnchor.style.opacity = '.8');
+                            dlAnchor.addEventListener('mouseout',  () => dlAnchor.style.opacity = '1');
+                            dlAnchor.addEventListener('click', () => {
+                                // Lee siempre desde data-*, nunca desde el template literal
+                                window.trackDownload(
+                                    dlAnchor.dataset.articleId,
+                                    dlAnchor.dataset.pdfUrl,
+                                    dlAnchor.dataset.pdfText
+                                );
+                            });
+
+                            dlBlock.appendChild(infoDiv);
+                            dlBlock.appendChild(dlAnchor);
+
                             // Insertar después del video si existe, si no, después del contenido
                             const anchorEl = videoWrapper || contentEl;
                             anchorEl.parentNode.insertBefore(dlBlock, anchorEl.nextSibling);
@@ -380,7 +402,17 @@
               };
             }
           } catch (geoErr) {
-            console.warn('[Visit] ipapi.co no disponible:', geoErr.message);
+            // ── AUDITORÍA GEO ────────────────────────────────────────────────
+            // Si este warn aparece en la consola del cliente, la causa más probable es:
+            //   1. CORS bloqueado por el navegador (política restrictiva del ISP o VPN)
+            //   2. AdBlocker / uBlock Origin interceptando peticiones a ipapi.co
+            //   3. La IP es de un datacenter y ipapi.co la rechaza (rate-limit)
+            // Inspecciona: F12 → Red → busca "ipapi.co" para ver el código de estado real.
+            console.warn(
+              '[Visit] ⚠️ ipapi.co falló — la geolocalización de esta visita no se registrará.\n' +
+              '  Causa probable: CORS, AdBlocker, o rate-limit de ipapi.co.\n' +
+              '  Detalle del error:', geoErr.message
+            );
           }
 
           // Enviar al backend — fire-and-forget (no bloqueamos la UI)
