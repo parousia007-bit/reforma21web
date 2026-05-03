@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Admin | Reforma 2.1</title>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <!-- EasyMDE para el editor Markdown -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+  <!-- Toast UI Editor WYSIWYG -->
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -334,7 +334,72 @@
     }
     .edit-badge.visible { display: flex; }
 
-    /* ── SEGURIDAD VISUAL: garantizar que el primer tab-panel activo sea visible ── */
+    /* ── TOAST UI EDITOR TEMA OSCURO ────────────────────────────── */
+    .toastui-editor-defaultUI {
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 10px !important;
+      overflow: hidden;
+    }
+    .toastui-editor-toolbar {
+      background: rgba(30, 41, 59, 0.95) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .toastui-editor-toolbar-group button {
+      color: var(--text-gray) !important;
+    }
+    .toastui-editor-toolbar-group button:hover,
+    .toastui-editor-toolbar-group button.active {
+      background: rgba(212, 168, 67, 0.15) !important;
+      color: var(--accent) !important;
+    }
+    .toastui-editor-ww-container,
+    .toastui-editor-md-container {
+      background: rgba(10, 14, 23, 0.85) !important;
+    }
+    .toastui-editor-ww-container .toastui-editor {
+      color: var(--text-light) !important;
+      font-family: 'Source Sans 3', sans-serif !important;
+      font-size: 1rem !important;
+      line-height: 1.8 !important;
+    }
+    .toastui-editor-ww-container h1, .toastui-editor-ww-container h2,
+    .toastui-editor-ww-container h3 { color: var(--accent) !important; }
+    .toastui-editor-contents blockquote {
+      border-left: 3px solid var(--accent) !important;
+      background: rgba(212,168,67,0.05) !important;
+      color: #E0E0E0 !important;
+    }
+    .toastui-editor-mode-switch { background: rgba(10,14,23,0.9) !important; border-top: 1px solid rgba(255,255,255,0.08) !important; }
+    .toastui-editor-mode-switch .tab-item { color: var(--text-gray) !important; }
+    .toastui-editor-mode-switch .tab-item.active { color: var(--accent) !important; background: rgba(212,168,67,0.1) !important; }
+
+    /* ── PANELES GLASS MULTIMEDIA/RECURSOS ───────────────────────── */
+    .cms-panel {
+      background: rgba(10, 14, 23, 0.5);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .cms-panel-title {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin: 0 0 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .cms-panel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) { .cms-panel-grid { grid-template-columns: 1fr; } }
+
+    /* ── SEGURIDAD VISUAL TABS ──────────────────────────────────── */
     .tab-panel { display: none; }
     .tab-panel.active { display: block !important; }
   </style>
@@ -443,17 +508,43 @@
             <input type="text" id="cms-etiquetas" placeholder="Educación, Filosofía, MET">
           </div>
           <div class="form-group full">
-            <label for="cms-imagen">URL de Imagen de Cabecera</label>
-            <input type="url" id="cms-imagen" placeholder="https://images.unsplash.com/...">
-          </div>
-          <div class="form-group full">
             <label for="cms-extracto">Descripción Corta / Extracto</label>
-            <textarea id="cms-extracto" rows="2" placeholder="Un resumen atractivo de 1-2 oraciones que aparecerá en la tarjeta del artículo..."></textarea>
+            <textarea id="cms-extracto" rows="2" placeholder="Un resumen atractivo de 1-2 oraciones..."></textarea>
           </div>
         </div>
 
-        <p class="editor-section-label">Contenido Markdown *</p>
-        <textarea id="cms-content" placeholder="Escribe el contenido del artículo aquí en Markdown..."></textarea>
+        <!-- PANEL: MULTIMEDIA -->
+        <div class="cms-panel">
+          <p class="cms-panel-title">🎬 Multimedia</p>
+          <div class="cms-panel-grid">
+            <div class="form-group">
+              <label for="cms-imagen">🖼️ URL Imagen de Cabecera</label>
+              <input type="url" id="cms-imagen" placeholder="https://images.unsplash.com/...">
+            </div>
+            <div class="form-group">
+              <label for="cms-video">🎥 URL Video (YouTube / Facebook)</label>
+              <input type="url" id="cms-video" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL: RECURSOS DESCARGABLES -->
+        <div class="cms-panel">
+          <p class="cms-panel-title">📄 Recursos Descargables</p>
+          <div class="cms-panel-grid">
+            <div class="form-group">
+              <label for="cms-pdf-url">🔗 URL del Archivo (Google Drive / Dropbox)</label>
+              <input type="url" id="cms-pdf-url" placeholder="https://drive.google.com/file/...">
+            </div>
+            <div class="form-group">
+              <label for="cms-pdf-text">📝 Texto del Botón de Descarga</label>
+              <input type="text" id="cms-pdf-text" placeholder="Descargar PDF" value="Descargar PDF">
+            </div>
+          </div>
+        </div>
+
+        <p class="editor-section-label">✍️ Contenido del Artículo (Editor Visual) *</p>
+        <div id="toast-editor-container"></div>
 
         <div class="publish-bar">
           <div class="color-row">
@@ -486,27 +577,46 @@
       });
     });
 
-    // ── EASYMDE (blindado con try/catch) ───────────────────────
-    let easyMDE = null;
+    // ── TOAST UI EDITOR WYSIWYG (blindado con try/catch) ───────────
+    let toastEditor = null;
     window.addEventListener('DOMContentLoaded', () => {
       try {
-        easyMDE = new EasyMDE({
-          element: document.getElementById('cms-content'),
-          spellChecker: false,
-          autofocus: false,
-          placeholder: 'Escribe aquí el cuerpo del artículo en Markdown...',
-          toolbar: ['bold','italic','heading','|','quote','unordered-list','ordered-list','|','link','image','|','preview','side-by-side','fullscreen','|','guide'],
-          previewClass: ['editor-preview', 'article-preview'],
-          minHeight: '350px',
+        toastEditor = new toastui.Editor({
+          el: document.getElementById('toast-editor-container'),
+          height: '420px',
+          initialEditType: 'wysiwyg',
+          previewStyle: 'vertical',
+          placeholder: 'Escribe aquí... Los encabezados se verán grandes, las negritas en negrita.',
+          toolbarItems: [
+            ['heading', 'bold', 'italic', 'strike'],
+            ['hr', 'quote'],
+            ['ul', 'ol', 'indent', 'outdent'],
+            ['table', 'image', 'link'],
+            ['code', 'codeblock'],
+          ],
         });
       } catch (e) {
-        console.warn('EasyMDE no pudo inicializarse (CDN). Usando textarea simple.', e.message);
-        const ta = document.getElementById('cms-content');
-        if (ta) ta.style.display = 'block';
+        console.warn('Toast UI Editor no pudo inicializarse (CDN).', e.message);
+        // Fallback: mostrar textarea simple
+        const container = document.getElementById('toast-editor-container');
+        if (container) {
+          container.innerHTML = '<textarea id="cms-content-fallback" style="width:100%;height:400px;background:rgba(10,14,23,0.8);color:#e8ebf4;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:1rem;font-size:1rem;" placeholder="Contenido Markdown..."></textarea>';
+        }
       }
-      // Cargar lista de archivos existentes en GitHub
       loadFileList();
     });
+
+    // Helper para obtener el contenido del editor activo
+    function getEditorContent() {
+      if (toastEditor) return toastEditor.getMarkdown();
+      const fb = document.getElementById('cms-content-fallback');
+      return fb ? fb.value : '';
+    }
+    function setEditorContent(md) {
+      if (toastEditor) { toastEditor.setMarkdown(md); return; }
+      const fb = document.getElementById('cms-content-fallback');
+      if (fb) fb.value = md;
+    }
 
     // ── ESTADO DE EDICIÓN ────────────────────────────────────────────────
     let currentFilename = null; // null = nuevo artículo, string = editando archivo existente
@@ -616,13 +726,16 @@
     function populateFormFromRaw(rawContent, filename) {
       const { meta, body } = parseFrontmatter(rawContent);
 
-      // Rellenar campos
-      document.getElementById('cms-titulo').value   = (meta.titulo   || '').trim();
-      document.getElementById('cms-autor').value    = (meta.autor    || 'Reforma 2.1').trim();
-      document.getElementById('cms-fecha').value    = (meta.fecha    || '').replace(/'/g, '').trim();
-      document.getElementById('cms-extracto').value = (meta.extracto || '').trim();
-      document.getElementById('cms-imagen').value   = (meta.imagen_cabecera || '').replace(/'/g, '').trim();
+      document.getElementById('cms-titulo').value    = (meta.titulo   || '').trim();
+      document.getElementById('cms-autor').value     = (meta.autor    || 'Reforma 2.1').trim();
+      document.getElementById('cms-fecha').value     = (meta.fecha    || '').replace(/'/g, '').trim();
+      document.getElementById('cms-extracto').value  = (meta.extracto || '').trim();
+      document.getElementById('cms-imagen').value    = (meta.imagen_cabecera || '').replace(/'/g, '').trim();
       document.getElementById('cms-etiquetas').value = (meta.etiquetas || '').trim();
+      // Nuevos campos multimedia y recursos
+      document.getElementById('cms-video').value    = (meta.video_url  || '').replace(/'/g, '').trim();
+      document.getElementById('cms-pdf-url').value  = (meta.pdf_url   || '').replace(/'/g, '').trim();
+      document.getElementById('cms-pdf-text').value = (meta.pdf_text  || 'Descargar PDF').replace(/'/g, '').trim();
 
       const colorVal = (meta.color_tema || '#D4A843').replace(/'/g, '').trim();
       document.getElementById('cms-color').value = colorVal.startsWith('#') ? colorVal : '#D4A843';
@@ -631,9 +744,8 @@
       const layoutVal = (meta.layout || 'clasico').replace(/'/g, '').trim();
       if ([...layoutSel.options].some(o => o.value === layoutVal)) layoutSel.value = layoutVal;
 
-      if (easyMDE) easyMDE.value(body);
+      setEditorContent(body);
 
-      // Marcar modo edición
       currentFilename = filename;
       document.getElementById('edit-badge').classList.add('visible');
       document.getElementById('edit-filename').textContent = filename;
@@ -642,29 +754,32 @@
 
     function resetForm() {
       currentFilename = null;
-      document.getElementById('cms-titulo').value   = '';
-      document.getElementById('cms-autor').value    = 'Futura Editions';
-      document.getElementById('cms-fecha').value    = String(new Date().getFullYear());
-      document.getElementById('cms-extracto').value = '';
-      document.getElementById('cms-imagen').value   = '';
+      document.getElementById('cms-titulo').value    = '';
+      document.getElementById('cms-autor').value     = 'Futura Editions';
+      document.getElementById('cms-fecha').value     = String(new Date().getFullYear());
+      document.getElementById('cms-extracto').value  = '';
+      document.getElementById('cms-imagen').value    = '';
+      document.getElementById('cms-video').value     = '';
+      document.getElementById('cms-pdf-url').value   = '';
+      document.getElementById('cms-pdf-text').value  = 'Descargar PDF';
       document.getElementById('cms-etiquetas').value = '';
-      document.getElementById('cms-color').value    = '#D4A843';
-      document.getElementById('cms-layout').value   = 'clasico';
+      document.getElementById('cms-color').value     = '#D4A843';
+      document.getElementById('cms-layout').value    = 'clasico';
       document.getElementById('file-selector').value = '';
       document.getElementById('btn-load').disabled   = true;
-      if (easyMDE) easyMDE.value('');
+      setEditorContent('');
       document.getElementById('edit-badge').classList.remove('visible');
       document.getElementById('publish-btn-text').textContent = '🚀 Publicar en GitHub';
       document.getElementById('publish-status').className = 'publish-status';
     }
 
-    // ── PUBLICAR / ACTUALIZAR VÍA API ────────────────────────────────────
+    // ── PUBLICAR / ACTUALIZAR VÍA API ─────────────────────────────────
     async function publishArticle() {
       const titulo          = document.getElementById('cms-titulo').value.trim();
-      const markdownContent = easyMDE ? easyMDE.value() : document.getElementById('cms-content').value;
+      const markdownContent = getEditorContent();
 
       if (!titulo) { showStatus('El Título es obligatorio.', 'error'); return; }
-      if (!markdownContent) { showStatus('El contenido Markdown no puede estar vacío.', 'error'); return; }
+      if (!markdownContent.trim()) { showStatus('El contenido no puede estar vacío.', 'error'); return; }
 
       const btn     = document.getElementById('btn-publish');
       const btnText = document.getElementById('publish-btn-text');

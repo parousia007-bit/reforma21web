@@ -337,7 +337,9 @@ app.get('/api/cms/files/:filename', requireAuth, async (req, res) => {
 // POST /api/publish - Publicar nuevo artículo via GitHub API (PROTEGIDO)
 app.post('/api/publish', requireAuth, async (req, res) => {
   try {
-    const { titulo, autor, extracto, layout, fecha, etiquetas, color_tema, imagen_cabecera, markdownContent, existingFilename } = req.body;
+    const { titulo, autor, extracto, layout, fecha, etiquetas, color_tema, imagen_cabecera,
+            video_url, pdf_url, pdf_text,
+            markdownContent, existingFilename } = req.body;
 
     if (!titulo || !markdownContent) {
       return res.status(400).json({ success: false, error: 'Faltan campos obligatorios: titulo y markdownContent' });
@@ -368,7 +370,8 @@ app.post('/api/publish', requireAuth, async (req, res) => {
     }
 
     // Construir el Frontmatter YAML
-    const tagsList = (etiquetas || '').split(',').map(t => `\n  - ${t.trim()}`).join('');
+    const tagsList = (etiquetas || '').split(',').map(t => `
+  - ${t.trim()}`).join('');
     const frontmatter = `---
 id: ${slug}
 titulo: >-
@@ -378,7 +381,9 @@ fecha: '${fecha || new Date().getFullYear()}'
 etiquetas:${tagsList || '\n  - General'}
 color_tema: '${color_tema || '#D4A843'}'
 imagen_cabecera: '${imagen_cabecera || ''}'
-layout: '${layout || 'clasico'}'
+video_url: '${video_url || ''}'
+pdf_url: '${pdf_url || ''}'
+pdf_text: '${(pdf_text || 'Descargar PDF').replace(/'/g, "\\'")}'\nlayout: '${layout || 'clasico'}'
 extracto: >-
   ${extracto || ''}
 ---\n`;
