@@ -7,11 +7,11 @@ fecha: '2026'
 etiquetas:
   - Educación
 color_tema: '#d4a843'
-imagen_cabecera: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop'
-video_url: ''
-pdf_url: ''
-pdf_text: 'Descargar PDF'
 layout: 'hero'
+imagen_cabecera: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop"
+video_url: ""
+pdf_url: ""
+pdf_text: 'Descargar PDF'
 extracto: >-
   ¿Qué sucede cuando el seminario exige investigar con las reglas del mundo que dice rechazar? Un diagnóstico sobre la infiltración del empirismo positivista en la formación teológica y el camino hacia una investigación con coherencia cosmovisional.
 ---
@@ -21,7 +21,7 @@ Existe una grieta profunda en la base de la formación teológica evangélica la
 
 Esta es la anatomía de una quiebra silenciosa: la contradicción estructural que ocurre cuando un seminario exige a sus alumnos investigar las realidades espirituales utilizando las reglas del empirismo positivista moderno, disfrazado con versículos y terminología piadosa.
 
-### \#\# El Diagnóstico: La Anatomía del Ídolo
+### El Diagnóstico: La Anatomía del Ídolo
 
 Al aplicar el bisturí de la **Hermenéutica Trascendental (HT)** a los proyectos de investigación actuales de nuestros seminarios, los síntomas de contaminación estructural son innegables:
 
@@ -32,7 +32,7 @@ Al aplicar el bisturí de la **Hermenéutica Trascendental (HT)** a los proyecto
 
 El resultado es devastador: estamos formando teólogos que predican la soberanía de Dios el domingo, pero practican la autonomía metodológica el lunes.
 
-### \#\# El Camino de Restauración: De la Quiebra a la Coherencia
+### El Camino de Restauración: De la Quiebra a la Coherencia
 
 El diagnóstico cristiano no se detiene en la caída; avanza hacia la redención. No basta con la crítica; necesitamos reconstruir desde los cimientos.
 
@@ -42,4 +42,4 @@ El llamado es a dejar de replicar modelos institucionales rotos y avanzar hacia 
 
 ***
 
-**¿Está tu institución absolutizando el método y llamándolo rigor académico?**Te invitamos a examinar tus presuposiciones, leer el análisis completo y unirte a la conversación hacia una verdadera Coherencia Vocacional.
+\*\*¿Está tu institución absolutizando el método y llamándolo rigor académico?\*\*Te invitamos a examinar tus presuposiciones, leer el análisis completo y unirte a la conversación hacia una verdadera Coherencia Vocacional. --
