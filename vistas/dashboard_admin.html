@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Analytics Dashboard | Reforma 2.1</title>
+  <title>Dashboard Admin | Reforma 2.1</title>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- EasyMDE para el editor Markdown -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -13,8 +16,9 @@
       --text-light: #e8ebf4;
       --accent: #d4a843;
       --surface: rgba(30, 41, 59, 0.4);
-      --glass-border: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.07);
     }
+    * { box-sizing: border-box; }
     body {
       background-color: var(--bg-dark);
       color: var(--text-light);
@@ -22,16 +26,61 @@
       margin: 0;
       padding: 2rem;
       background-image: radial-gradient(circle at 15% 50%, rgba(212, 168, 67, 0.05), transparent 25%);
+      min-height: 100vh;
     }
+    .dashboard-wrapper { max-width: 1200px; margin: 0 auto; }
     h1 {
       font-family: 'Merriweather', serif;
       color: var(--accent);
       text-align: center;
       margin-bottom: 2rem;
+      font-size: 1.8rem;
     }
+    .btn-back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+    .btn-back:hover { opacity: .7; }
+
+    /* ── TABS ─────────────────────────────────────── */
+    .tabs-nav {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 0;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-gray);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: .75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+      border-radius: 8px 8px 0 0;
+    }
+    .tab-btn:hover { color: var(--text-light); }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: rgba(212, 168, 67, 0.05);
+    }
+    .tab-panel { display: none; animation: fadeIn .3s ease; }
+    .tab-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── MÉTRICAS ─────────────────────────────────── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.5rem;
       margin-bottom: 2rem;
     }
@@ -44,25 +93,14 @@
       padding: 1.5rem;
       text-align: center;
     }
-    .glass-card h3 {
-      font-size: 1rem;
-      color: var(--text-gray);
-      margin: 0 0 0.5rem 0;
-    }
-    .glass-card .value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--text-light);
-      margin: 0;
-    }
+    .glass-card h3 { font-size: 1rem; color: var(--text-gray); margin: 0 0 .5rem 0; }
+    .glass-card .value { font-size: 2.5rem; font-weight: 700; color: var(--text-light); margin: 0; }
     .charts-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 1.5rem;
     }
-    @media (max-width: 800px) {
-      .charts-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 800px) { .charts-grid { grid-template-columns: 1fr; } }
     .chart-container {
       background: var(--surface);
       border: 1px solid var(--glass-border);
@@ -70,83 +108,379 @@
       border-radius: 12px;
       padding: 1.5rem;
     }
-    .btn-back {
-      display: inline-block;
-      margin-bottom: 20px;
+    .chart-container h3 { color: var(--text-gray); margin-top: 0; margin-bottom: 1rem; font-size: 1rem; }
+
+    /* ── EDITOR CMS ───────────────────────────────── */
+    .cms-form {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    .cms-form h2 {
+      font-family: 'Merriweather', serif;
       color: var(--accent);
-      text-decoration: none;
+      margin: 0 0 1.5rem 0;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 700px) { .meta-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-size: .85rem;
       font-weight: 600;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: rgba(10, 14, 23, 0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: var(--text-light);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      padding: .65rem 1rem;
+      transition: border-color .2s;
+      width: 100%;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .form-group select option { background: #0a0e17; }
+
+    /* EasyMDE overrides para tema oscuro */
+    .EasyMDEContainer .CodeMirror {
+      background: rgba(10, 14, 23, 0.8) !important;
+      color: #e8ebf4 !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 0 0 8px 8px !important;
+      font-size: 1rem !important;
+      font-family: 'Source Sans 3', monospace !important;
+    }
+    .EasyMDEContainer .editor-toolbar {
+      background: rgba(30, 41, 59, 0.9) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 8px 8px 0 0 !important;
+    }
+    .EasyMDEContainer .editor-toolbar button {
+      color: var(--text-gray) !important;
+    }
+    .EasyMDEContainer .editor-toolbar button:hover,
+    .EasyMDEContainer .editor-toolbar button.active {
+      background: rgba(212, 168, 67, 0.15) !important;
+      color: var(--accent) !important;
+      border-color: transparent !important;
+    }
+    .EasyMDEContainer .editor-preview {
+      background: rgba(10, 14, 23, 0.95) !important;
+      color: #e8ebf4 !important;
+    }
+
+    .publish-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .color-row { display: flex; align-items: center; gap: .75rem; }
+    .color-row label { font-size: .85rem; color: var(--text-gray); white-space: nowrap; }
+    .color-row input[type="color"] {
+      width: 40px; height: 36px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      background: none;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .btn-publish {
+      background: var(--accent);
+      color: #0a0e17;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: .75rem 2rem;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .btn-publish:hover { opacity: .85; }
+    .btn-publish:active { transform: scale(.97); }
+    .btn-publish:disabled { opacity: .5; cursor: not-allowed; }
+
+    .publish-status {
+      margin-top: 1rem;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      display: none;
+    }
+    .publish-status.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10B981;
+      display: block;
+    }
+    .publish-status.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #EF4444;
+      display: block;
+    }
+
+    .editor-section-label {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin: 1.5rem 0 .5rem 0;
     }
   </style>
 </head>
 <body>
 <div id="maintenance-notice" style="position: sticky; top: 0; z-index: 9999; background: rgba(212, 168, 67, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 168, 67, 0.4); color: #D4A843; text-align: center; padding: 12px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">✨ Estamos perfeccionando la arquitectura visual para mejorar la experiencia de lectura. Este fin de semana realizaremos ajustes en vivo; si encuentra algún error de visualización, lo resolveremos a la brevedad. Gracias por su paciencia.</div>
-  <div style="max-width: 1200px; margin: 0 auto;">
-    <a href="../index.html" class="btn-back">← Volver al inicio</a>
-    <h1>Dashboard de Analíticas</h1>
-    
-    <div class="grid">
-      <div class="glass-card">
-        <h3>Tiempo Promedio de Lectura</h3>
-        <p class="value" id="avgTime">--</p>
-      </div>
-      <div class="glass-card">
-        <h3>Retención Global (Scroll)</h3>
-        <p class="value" id="avgScroll">--</p>
-      </div>
-      <div class="glass-card">
-        <h3>Artículos Listados (Top)</h3>
-        <p class="value" id="totalMonitored">--</p>
-      </div>
-    </div>
 
-    <div class="charts-grid">
-      <div class="chart-container">
-        <h3 style="color: var(--text-gray); margin-top: 0; margin-bottom: 1rem;">Top 5 Artículos más Vistos</h3>
-        <canvas id="viewsChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <h3 style="color: var(--text-gray); margin-top: 0; margin-bottom: 1rem;">Retención Promedio</h3>
-        <div style="position: relative;">
-            <canvas id="retentionChart"></canvas>
-            <div id="retentionLabel" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: 700; color: var(--text-light);">
-                --
-            </div>
+  <div class="dashboard-wrapper">
+    <a href="../index.html" class="btn-back">← Volver al inicio</a>
+    <h1>✦ Dashboard Admin — Reforma 2.1</h1>
+
+    <!-- TABS NAV -->
+    <nav class="tabs-nav" role="tablist">
+      <button class="tab-btn active" role="tab" aria-selected="true" data-tab="metricas" id="tab-metricas">
+        📊 Métricas
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="editor" id="tab-editor">
+        ✍️ Editor Editorial
+      </button>
+    </nav>
+
+    <!-- TAB: MÉTRICAS -->
+    <section class="tab-panel active" id="panel-metricas" role="tabpanel" aria-labelledby="tab-metricas">
+      <div class="grid">
+        <div class="glass-card">
+          <h3>Tiempo Promedio de Lectura</h3>
+          <p class="value" id="avgTime">--</p>
+        </div>
+        <div class="glass-card">
+          <h3>Retención Global (Scroll)</h3>
+          <p class="value" id="avgScroll">--</p>
+        </div>
+        <div class="glass-card">
+          <h3>Artículos en Top 5</h3>
+          <p class="value" id="totalMonitored">--</p>
         </div>
       </div>
-    </div>
 
-    <!-- Nuevos Gráficos de Audiencia -->
-    <div class="charts-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr;">
-      <div class="chart-container">
-        <h3 style="color: var(--text-gray); margin-top: 0; margin-bottom: 1rem;">Sistemas Operativos</h3>
-        <canvas id="osChart"></canvas>
+      <div class="charts-grid">
+        <div class="chart-container">
+          <h3>Top 5 Artículos más Vistos</h3>
+          <canvas id="viewsChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>Retención Promedio</h3>
+          <div style="position: relative;">
+            <canvas id="retentionChart"></canvas>
+            <div id="retentionLabel" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: 700; color: var(--text-light);">--</div>
+          </div>
+        </div>
       </div>
-      <div class="chart-container">
-        <h3 style="color: var(--text-gray); margin-top: 0; margin-bottom: 1rem;">Proporción de Dispositivos</h3>
-        <canvas id="deviceChart"></canvas>
+
+      <div class="charts-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr;">
+        <div class="chart-container">
+          <h3>Sistemas Operativos</h3>
+          <canvas id="osChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>Proporción de Dispositivos</h3>
+          <canvas id="deviceChart"></canvas>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- TAB: EDITOR EDITORIAL (CMS) -->
+    <section class="tab-panel" id="panel-editor" role="tabpanel" aria-labelledby="tab-editor">
+      <div class="cms-form">
+        <h2>✍️ Editor Editorial — Publicar Nuevo Artículo</h2>
+
+        <div class="meta-grid">
+          <div class="form-group full">
+            <label for="cms-titulo">Título del Artículo *</label>
+            <input type="text" id="cms-titulo" placeholder="Ej: La Quiebra Silenciosa de la Educación Moderna" required>
+          </div>
+          <div class="form-group">
+            <label for="cms-autor">Autor</label>
+            <input type="text" id="cms-autor" placeholder="Futura Editions" value="Futura Editions">
+          </div>
+          <div class="form-group">
+            <label for="cms-fecha">Año de publicación</label>
+            <input type="text" id="cms-fecha" placeholder="2025" value="2025">
+          </div>
+          <div class="form-group">
+            <label for="cms-layout">Layout (Diseño Visual)</label>
+            <select id="cms-layout">
+              <option value="clasico">📄 Clásico (Solo Texto)</option>
+              <option value="hero">🖼️ Hero (Imagen Principal Cinemática)</option>
+              <option value="multimedia">🎬 Multimedia (Video incrustado)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cms-etiquetas">Etiquetas (separadas por coma)</label>
+            <input type="text" id="cms-etiquetas" placeholder="Educación, Filosofía, MET">
+          </div>
+          <div class="form-group full">
+            <label for="cms-imagen">URL de Imagen de Cabecera</label>
+            <input type="url" id="cms-imagen" placeholder="https://images.unsplash.com/...">
+          </div>
+          <div class="form-group full">
+            <label for="cms-extracto">Descripción Corta / Extracto</label>
+            <textarea id="cms-extracto" rows="2" placeholder="Un resumen atractivo de 1-2 oraciones que aparecerá en la tarjeta del artículo..."></textarea>
+          </div>
+        </div>
+
+        <p class="editor-section-label">Contenido Markdown *</p>
+        <textarea id="cms-content" placeholder="Escribe el contenido del artículo aquí en Markdown..."></textarea>
+
+        <div class="publish-bar">
+          <div class="color-row">
+            <label>Color Tema:</label>
+            <input type="color" id="cms-color" value="#D4A843" title="Color del título del artículo">
+          </div>
+          <button class="btn-publish" id="btn-publish" onclick="publishArticle()">
+            <span id="publish-btn-text">🚀 Publicar en GitHub</span>
+          </button>
+        </div>
+
+        <div class="publish-status" id="publish-status"></div>
+      </div>
+    </section>
   </div>
 
   <script>
+    // ── TABS ──────────────────────────────────────────────────────────────
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        document.getElementById('panel-' + target).classList.add('active');
+      });
+    });
+
+    // ── EASYMDE ──────────────────────────────────────────────────────────
+    let easyMDE;
+    window.addEventListener('DOMContentLoaded', () => {
+      easyMDE = new EasyMDE({
+        element: document.getElementById('cms-content'),
+        spellChecker: false,
+        autofocus: false,
+        placeholder: 'Escribe aquí el cuerpo del artículo en Markdown...\n\nPuedes usar **negritas**, *cursivas*, ## Encabezados, > Citas, y HTML seguro como <blockquote class="cita-micc">...',
+        toolbar: ['bold','italic','heading','|','quote','unordered-list','ordered-list','|','link','image','|','preview','side-by-side','fullscreen','|','guide'],
+        previewClass: ['editor-preview', 'article-preview'],
+        minHeight: '350px',
+      });
+    });
+
+    // ── PUBLICAR VÍA API ─────────────────────────────────────────────────
+    async function publishArticle() {
+      const titulo      = document.getElementById('cms-titulo').value.trim();
+      const markdownContent = easyMDE ? easyMDE.value() : document.getElementById('cms-content').value;
+
+      if (!titulo) { showStatus('El Título es obligatorio.', 'error'); return; }
+      if (!markdownContent) { showStatus('El contenido Markdown no puede estar vacío.', 'error'); return; }
+
+      const btn = document.getElementById('btn-publish');
+      const btnText = document.getElementById('publish-btn-text');
+      btn.disabled = true;
+      btnText.textContent = '⏳ Publicando...';
+
+      const payload = {
+        titulo,
+        autor:           document.getElementById('cms-autor').value.trim()   || 'Reforma 2.1',
+        extracto:        document.getElementById('cms-extracto').value.trim(),
+        layout:          document.getElementById('cms-layout').value,
+        fecha:           document.getElementById('cms-fecha').value.trim()   || String(new Date().getFullYear()),
+        etiquetas:       document.getElementById('cms-etiquetas').value.trim(),
+        color_tema:      document.getElementById('cms-color').value,
+        imagen_cabecera: document.getElementById('cms-imagen').value.trim(),
+        markdownContent,
+      };
+
+      try {
+        const res = await fetch('/api/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          credentials: 'same-origin'
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showStatus(`✅ ${data.message}`, 'success');
+          // Limpiar el formulario
+          document.getElementById('cms-titulo').value = '';
+          document.getElementById('cms-extracto').value = '';
+          document.getElementById('cms-imagen').value = '';
+          if (easyMDE) easyMDE.value('');
+        } else {
+          showStatus(`❌ Error: ${data.error}`, 'error');
+        }
+      } catch (err) {
+        showStatus(`❌ Error de red: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = '🚀 Publicar en GitHub';
+      }
+    }
+
+    function showStatus(msg, type) {
+      const el = document.getElementById('publish-status');
+      el.textContent = msg;
+      el.className = 'publish-status ' + type;
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ── MÉTRICAS ──────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', async () => {
       Chart.defaults.color = '#8892a8';
       Chart.defaults.font.family = "'Source Sans 3', sans-serif";
 
       try {
         const res = await fetch('/api/dashboard');
-        
         if (res.status === 401 || res.status === 403) {
           window.location.href = 'login.html';
           return;
         }
-
         const data = await res.json();
-        
         if (!data.success) throw new Error('Failed to load data');
 
-        // Poblar Tarjetas
         const mins = Math.floor(data.globalStats.avgReadTimeSeconds / 60);
         const secs = data.globalStats.avgReadTimeSeconds % 60;
         document.getElementById('avgTime').innerText = `${mins}m ${secs}s`;
@@ -154,103 +488,36 @@
         document.getElementById('totalMonitored').innerText = data.topArticles.length;
         document.getElementById('retentionLabel').innerText = `${data.globalStats.avgScrollPercentage}%`;
 
-        // Preparar Datos Gráficas
-        const labels = data.topArticles.map(a => a.title.length > 35 ? a.title.substring(0, 35) + '...' : a.title);
-        const views = data.topArticles.map(a => a.views);
+        const labels = data.topArticles.map(a => a.title.length > 35 ? a.title.substring(0, 35) + '…' : a.title);
+        const views  = data.topArticles.map(a => a.views);
 
-        // Renderizar Gráfica de Barras
         new Chart(document.getElementById('viewsChart'), {
           type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Vistas Totales',
-              data: views,
-              backgroundColor: 'rgba(212, 168, 67, 0.7)',
-              borderColor: 'rgba(212, 168, 67, 1)',
-              borderWidth: 1,
-              borderRadius: 4
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
-              x: { grid: { display: false } }
-            }
-          }
+          data: { labels, datasets: [{ label: 'Vistas', data: views, backgroundColor: 'rgba(212,168,67,.7)', borderColor: 'rgba(212,168,67,1)', borderWidth: 1, borderRadius: 4 }] },
+          options: { responsive: true, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,.05)' } }, x: { grid: { display: false } } } }
         });
 
-        // Renderizar Gráfica de Dona (Retención)
         const scroll = data.globalStats.avgScrollPercentage;
         new Chart(document.getElementById('retentionChart'), {
           type: 'doughnut',
-          data: {
-            labels: ['Leído', 'Abandonado'],
-            datasets: [{
-              data: [scroll, 100 - scroll],
-              backgroundColor: ['rgba(37, 99, 235, 0.8)', 'rgba(255, 255, 255, 0.05)'],
-              borderColor: ['rgba(37, 99, 235, 1)', 'transparent'],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            cutout: '75%',
-            plugins: {
-              legend: { display: false }
-            }
-          }
+          data: { labels: ['Leído', 'Abandonado'], datasets: [{ data: [scroll, 100 - scroll], backgroundColor: ['rgba(37,99,235,.8)', 'rgba(255,255,255,.05)'], borderColor: ['rgba(37,99,235,1)', 'transparent'] }] },
+          options: { responsive: true, cutout: '75%', plugins: { legend: { display: false } } }
         });
 
-        // Gráfica: Sistemas Operativos
-        const osLabels = data.osDistribution.map(d => d._id);
-        const osCounts = data.osDistribution.map(d => d.count);
         new Chart(document.getElementById('osChart'), {
           type: 'pie',
-          data: {
-            labels: osLabels,
-            datasets: [{
-              data: osCounts,
-              backgroundColor: ['#2563EB', '#D4AF37', '#10B981', '#F59E0B', '#8B5CF6'],
-              borderColor: 'transparent',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: 'right', labels: { color: '#8892a8' } }
-            }
-          }
+          data: { labels: data.osDistribution.map(d => d._id), datasets: [{ data: data.osDistribution.map(d => d.count), backgroundColor: ['#2563EB','#D4AF37','#10B981','#F59E0B','#8B5CF6'], borderColor: 'transparent' }] },
+          options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#8892a8' } } } }
         });
 
-        // Gráfica: Dispositivos
-        const devLabels = data.deviceDistribution.map(d => d._id);
-        const devCounts = data.deviceDistribution.map(d => d.count);
         new Chart(document.getElementById('deviceChart'), {
           type: 'doughnut',
-          data: {
-            labels: devLabels,
-            datasets: [{
-              data: devCounts,
-              backgroundColor: ['#10B981', '#3B82F6', '#8B5CF6'],
-              borderColor: 'transparent',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            cutout: '60%',
-            plugins: {
-              legend: { position: 'right', labels: { color: '#8892a8' } }
-            }
-          }
+          data: { labels: data.deviceDistribution.map(d => d._id), datasets: [{ data: data.deviceDistribution.map(d => d.count), backgroundColor: ['#10B981','#3B82F6','#8B5CF6'], borderColor: 'transparent' }] },
+          options: { responsive: true, cutout: '60%', plugins: { legend: { position: 'right', labels: { color: '#8892a8' } } } }
         });
 
       } catch (err) {
         console.error('Dashboard Error:', err);
-        alert('No se pudo cargar el dashboard. Verifique que la API está corriendo.');
       }
     });
   </script>

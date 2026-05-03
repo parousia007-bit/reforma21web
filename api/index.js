@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { UAParser } from 'ua-parser-js';
+import { Octokit } from '@octokit/rest';
 
 dotenv.config();
 import dbConnect from './db.js';
@@ -264,6 +265,93 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Error obteniendo dashboard:', error);
     res.status(500).json({ error: 'Fallo al obtener las métricas del dashboard' });
+  }
+});
+
+// POST /api/publish - Publicar nuevo artículo via GitHub API (PROTEGIDO)
+app.post('/api/publish', requireAuth, async (req, res) => {
+  try {
+    const { titulo, autor, extracto, layout, fecha, etiquetas, color_tema, imagen_cabecera, markdownContent } = req.body;
+
+    if (!titulo || !markdownContent) {
+      return res.status(400).json({ success: false, error: 'Faltan campos obligatorios: titulo y markdownContent' });
+    }
+
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    const GITHUB_OWNER = process.env.GITHUB_OWNER;
+    const GITHUB_REPO  = process.env.GITHUB_REPO;
+
+    if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
+      return res.status(500).json({ success: false, error: 'Faltan variables de entorno de GitHub (GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO)' });
+    }
+
+    // Generar slug a partir del título
+    const slug = titulo
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '_');
+
+    const filename = `content/${slug}.md`;
+
+    // Construir el Frontmatter YAML
+    const tagsList = (etiquetas || '').split(',').map(t => `\n  - ${t.trim()}`).join('');
+    const frontmatter = `---
+id: ${slug}
+titulo: >-
+  ${titulo}
+autor: ${autor || 'Reforma 2.1'}
+fecha: '${fecha || new Date().getFullYear()}'
+etiquetas:${tagsList || '\n  - General'}
+color_tema: '${color_tema || '#D4A843'}'
+imagen_cabecera: '${imagen_cabecera || ''}'
+layout: '${layout || 'clasico'}'
+extracto: >-
+  ${extracto || ''}
+---\n`;
+
+    const fullContent = frontmatter + markdownContent;
+
+    // Codificar el contenido en Base64 (requerido por GitHub API)
+    const contentBase64 = Buffer.from(fullContent, 'utf-8').toString('base64');
+
+    const octokit = new Octokit({ auth: GITHUB_TOKEN });
+
+    // Verificar si el archivo ya existe para obtener su SHA (necesario para actualizar)
+    let fileSha = undefined;
+    try {
+      const { data } = await octokit.repos.getContent({
+        owner: GITHUB_OWNER,
+        repo: GITHUB_REPO,
+        path: filename,
+      });
+      fileSha = data.sha;
+    } catch (e) {
+      // El archivo no existe, es un artículo nuevo — no se necesita SHA
+    }
+
+    // Crear o actualizar el archivo en GitHub
+    await octokit.repos.createOrUpdateFileContents({
+      owner: GITHUB_OWNER,
+      repo: GITHUB_REPO,
+      path: filename,
+      message: `📝 [CMS] Publicar artículo: ${titulo}`,
+      content: contentBase64,
+      branch: 'main',
+      ...(fileSha ? { sha: fileSha } : {}),
+    });
+
+    res.json({
+      success: true,
+      message: `Artículo "${titulo}" publicado exitosamente. Vercel desplegará los cambios en unos momentos.`,
+      slug,
+      filename
+    });
+
+  } catch (error) {
+    console.error('Error publicando en GitHub:', error);
+    res.status(500).json({ success: false, error: error.message || 'Error al publicar en GitHub' });
   }
 });
 
