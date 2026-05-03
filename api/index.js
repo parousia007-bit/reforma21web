@@ -370,23 +370,37 @@ app.post('/api/publish', requireAuth, async (req, res) => {
     }
 
     // Construir el Frontmatter YAML
+    // Se usa array + join para garantizar que cada campo quede en su propia línea.
+    // Se usan comillas dobles para URLs para evitar conflictos con caracteres especiales.
     const tagsList = (etiquetas || '').split(',').map(t => `
   - ${t.trim()}`).join('');
-    const frontmatter = `---
-id: ${slug}
-titulo: >-
-  ${titulo}
-autor: ${autor || 'Reforma 2.1'}
-fecha: '${fecha || new Date().getFullYear()}'
-etiquetas:${tagsList || '\n  - General'}
-color_tema: '${color_tema || '#D4A843'}'
-imagen_cabecera: '${imagen_cabecera || ''}'
-video_url: '${video_url || ''}'
-pdf_url: '${pdf_url || ''}'
-pdf_text: '${(pdf_text || 'Descargar PDF').replace(/'/g, "\\'")}'\nlayout: '${layout || 'clasico'}'
-extracto: >-
-  ${extracto || ''}
----\n`;
+    const safePdfText = (pdf_text || 'Descargar PDF').replace(/'/g, "\\'");
+
+    const frontmatterLines = [
+      '---',
+      `id: ${slug}`,
+      `titulo: >-`,
+      `  ${titulo}`,
+      `autor: ${autor || 'Reforma 2.1'}`,
+      `fecha: '${fecha || new Date().getFullYear()}'`,
+      `etiquetas:${tagsList || '\n  - General'}`,
+      `color_tema: '${color_tema || '#D4A843'}'`,
+      `layout: '${layout || 'clasico'}'`,
+      `imagen_cabecera: "${(imagen_cabecera || '').replace(/"/g, "'")}"`,
+      `video_url: "${(video_url || '').replace(/"/g, "'")}"`,
+      `pdf_url: "${(pdf_url || '').replace(/"/g, "'")}"`,
+      `pdf_text: '${safePdfText}'`,
+      `extracto: >-`,
+      `  ${extracto || ''}`,
+      '---',
+      '',
+    ];
+    const frontmatter = frontmatterLines.join('\n');
+
+    // LOG DE AUDITORÍA — visible en los logs del servidor / Vercel Functions
+    console.log('[CMS PUBLISH] destino:', filename);
+    console.log('[CMS PUBLISH] frontmatter:\n' + frontmatter);
+    console.log('[CMS PUBLISH] primeros 300 chars del Markdown:', markdownContent.substring(0, 300));
 
     const fullContent = frontmatter + markdownContent;
 

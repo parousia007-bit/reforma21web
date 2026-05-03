@@ -174,7 +174,24 @@
                         ALLOWED_ATTR: ['class', 'style', 'href', 'src', 'alt', 'target']
                     };
                     // Pipeline: Decodificar Entidades → Sanitizar → Inyectar
-                    const rawContent = article.htmlContent || article.contenido || '';
+                    let rawContent = article.htmlContent || article.contenido || '';
+
+                    // ── DIAGNÓSTICO (F12 → Consola) ──────────────────────────────
+                    console.group('[Reforma 2.1] Renderizado del Artículo');
+                    console.log('📄 ID:', id);
+                    console.log('🔗 pdf_url:', article.pdf_url || '(vacío)');
+                    console.log('🎥 video_url:', article.video_url || '(vacío)');
+                    console.log('📝 Primeros 200 chars del contenido recibido:', rawContent.substring(0, 200));
+                    console.groupEnd();
+
+                    // ── STRIP DEFENSIVO DE FRONTMATTER ───────────────────────────
+                    // Si el backend envía el frontmatter pegado al HTML (error de config),
+                    // lo eliminamos aquí para que no aparezcan los -- y campos YAML en pantalla.
+                    if (rawContent.trimStart().startsWith('---')) {
+                        const fmEnd = rawContent.indexOf('\n---', 3);
+                        if (fmEnd !== -1) rawContent = rawContent.substring(fmEnd + 4).trimStart();
+                    }
+
                     const decodedHTML = decodeHTMLEntities(rawContent);
                     contentEl.innerHTML = DOMPurify.sanitize(decodedHTML, purifyConfig);
                     

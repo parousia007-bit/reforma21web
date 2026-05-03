@@ -795,10 +795,21 @@
         etiquetas:       document.getElementById('cms-etiquetas').value.trim(),
         color_tema:      document.getElementById('cms-color').value,
         imagen_cabecera: document.getElementById('cms-imagen').value.trim(),
+        video_url:       document.getElementById('cms-video').value.trim(),
+        pdf_url:         document.getElementById('cms-pdf-url').value.trim(),
+        pdf_text:        document.getElementById('cms-pdf-text').value.trim() || 'Descargar PDF',
         markdownContent,
-        // Si estamos editando, pasamos el nombre de archivo existente
         existingFilename: currentFilename || null,
       };
+
+      // ── LOG DE AUDITORÍA (F12 → Consola) ───────────────────────────────
+      console.group('[CMS] Payload enviado a /api/publish');
+      console.log('📄 Archivo destino:', currentFilename || `[NUEVO] ${titulo}`);
+      console.log('🔗 pdf_url:', payload.pdf_url || '(vacío)');
+      console.log('🎥 video_url:', payload.video_url || '(vacío)');
+      console.log('📝 Primeros 300 chars del Markdown enviado:');
+      console.log(markdownContent.substring(0, 300));
+      console.groupEnd();
 
       try {
         const res  = await fetch('/api/publish', {
@@ -813,7 +824,6 @@
           const action = currentFilename ? 'actualizado' : 'publicado';
           showStatus(`✅ Artículo ${action} exitosamente. ${data.message}`, 'success');
           resetForm();
-          // Recargar lista de archivos para reflejar posibles nuevos archivos
           const sel = document.getElementById('file-selector');
           while (sel.options.length > 1) sel.remove(1);
           await loadFileList();
