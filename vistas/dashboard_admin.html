@@ -333,6 +333,11 @@
       font-weight: 700;
     }
     .edit-badge.visible { display: flex; }
+
+    /* ── SEGURIDAD VISUAL: garantizar que el primer tab-panel activo sea visible ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block !important; }
+  </style>
 </head>
 <body>
 <div id="maintenance-notice" style="position: sticky; top: 0; z-index: 9999; background: rgba(212, 168, 67, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 168, 67, 0.4); color: #D4A843; text-align: center; padding: 12px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">✨ Estamos perfeccionando la arquitectura visual para mejorar la experiencia de lectura. Este fin de semana realizaremos ajustes en vivo; si encuentra algún error de visualización, lo resolveremos a la brevedad. Gracias por su paciencia.</div>
@@ -481,18 +486,24 @@
       });
     });
 
-    // ── EASYMDE ──────────────────────────────────────────────────────────
-    let easyMDE;
+    // ── EASYMDE (blindado con try/catch) ───────────────────────
+    let easyMDE = null;
     window.addEventListener('DOMContentLoaded', () => {
-      easyMDE = new EasyMDE({
-        element: document.getElementById('cms-content'),
-        spellChecker: false,
-        autofocus: false,
-        placeholder: 'Escribe aquí el cuerpo del artículo en Markdown...\n\nPuedes usar **negritas**, *cursivas*, ## Encabezados, > Citas, y HTML seguro como <blockquote class="cita-micc">...',
-        toolbar: ['bold','italic','heading','|','quote','unordered-list','ordered-list','|','link','image','|','preview','side-by-side','fullscreen','|','guide'],
-        previewClass: ['editor-preview', 'article-preview'],
-        minHeight: '350px',
-      });
+      try {
+        easyMDE = new EasyMDE({
+          element: document.getElementById('cms-content'),
+          spellChecker: false,
+          autofocus: false,
+          placeholder: 'Escribe aquí el cuerpo del artículo en Markdown...',
+          toolbar: ['bold','italic','heading','|','quote','unordered-list','ordered-list','|','link','image','|','preview','side-by-side','fullscreen','|','guide'],
+          previewClass: ['editor-preview', 'article-preview'],
+          minHeight: '350px',
+        });
+      } catch (e) {
+        console.warn('EasyMDE no pudo inicializarse (CDN). Usando textarea simple.', e.message);
+        const ta = document.getElementById('cms-content');
+        if (ta) ta.style.display = 'block';
+      }
       // Cargar lista de archivos existentes en GitHub
       loadFileList();
     });
@@ -733,30 +744,34 @@
         const labels = data.topArticles.map(a => a.title.length > 35 ? a.title.substring(0, 35) + '…' : a.title);
         const views  = data.topArticles.map(a => a.views);
 
-        new Chart(document.getElementById('viewsChart'), {
-          type: 'bar',
-          data: { labels, datasets: [{ label: 'Vistas', data: views, backgroundColor: 'rgba(212,168,67,.7)', borderColor: 'rgba(212,168,67,1)', borderWidth: 1, borderRadius: 4 }] },
-          options: { responsive: true, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,.05)' } }, x: { grid: { display: false } } } }
-        });
+        try {
+          new Chart(document.getElementById('viewsChart'), {
+            type: 'bar',
+            data: { labels, datasets: [{ label: 'Vistas', data: views, backgroundColor: 'rgba(212,168,67,.7)', borderColor: 'rgba(212,168,67,1)', borderWidth: 1, borderRadius: 4 }] },
+            options: { responsive: true, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,.05)' } }, x: { grid: { display: false } } } }
+          });
 
-        const scroll = data.globalStats.avgScrollPercentage;
-        new Chart(document.getElementById('retentionChart'), {
-          type: 'doughnut',
-          data: { labels: ['Leído', 'Abandonado'], datasets: [{ data: [scroll, 100 - scroll], backgroundColor: ['rgba(37,99,235,.8)', 'rgba(255,255,255,.05)'], borderColor: ['rgba(37,99,235,1)', 'transparent'] }] },
-          options: { responsive: true, cutout: '75%', plugins: { legend: { display: false } } }
-        });
+          const scroll = data.globalStats.avgScrollPercentage;
+          new Chart(document.getElementById('retentionChart'), {
+            type: 'doughnut',
+            data: { labels: ['Leído', 'Abandonado'], datasets: [{ data: [scroll, 100 - scroll], backgroundColor: ['rgba(37,99,235,.8)', 'rgba(255,255,255,.05)'], borderColor: ['rgba(37,99,235,1)', 'transparent'] }] },
+            options: { responsive: true, cutout: '75%', plugins: { legend: { display: false } } }
+          });
 
-        new Chart(document.getElementById('osChart'), {
-          type: 'pie',
-          data: { labels: data.osDistribution.map(d => d._id), datasets: [{ data: data.osDistribution.map(d => d.count), backgroundColor: ['#2563EB','#D4AF37','#10B981','#F59E0B','#8B5CF6'], borderColor: 'transparent' }] },
-          options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#8892a8' } } } }
-        });
+          new Chart(document.getElementById('osChart'), {
+            type: 'pie',
+            data: { labels: data.osDistribution.map(d => d._id), datasets: [{ data: data.osDistribution.map(d => d.count), backgroundColor: ['#2563EB','#D4AF37','#10B981','#F59E0B','#8B5CF6'], borderColor: 'transparent' }] },
+            options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#8892a8' } } } }
+          });
 
-        new Chart(document.getElementById('deviceChart'), {
-          type: 'doughnut',
-          data: { labels: data.deviceDistribution.map(d => d._id), datasets: [{ data: data.deviceDistribution.map(d => d.count), backgroundColor: ['#10B981','#3B82F6','#8B5CF6'], borderColor: 'transparent' }] },
-          options: { responsive: true, cutout: '60%', plugins: { legend: { position: 'right', labels: { color: '#8892a8' } } } }
-        });
+          new Chart(document.getElementById('deviceChart'), {
+            type: 'doughnut',
+            data: { labels: data.deviceDistribution.map(d => d._id), datasets: [{ data: data.deviceDistribution.map(d => d.count), backgroundColor: ['#10B981','#3B82F6','#8B5CF6'], borderColor: 'transparent' }] },
+            options: { responsive: true, cutout: '60%', plugins: { legend: { position: 'right', labels: { color: '#8892a8' } } } }
+          });
+        } catch (chartErr) {
+          console.error('Chart.js error:', chartErr.message);
+        }
 
       } catch (err) {
         console.error('Dashboard Error:', err);
