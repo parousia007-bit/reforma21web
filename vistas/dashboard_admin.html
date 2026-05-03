@@ -8,6 +8,9 @@
   <!-- Toast UI Editor WYSIWYG -->
   <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+  <!-- Leaflet.js para Mapa de Impacto -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -399,13 +402,73 @@
     }
     @media (max-width: 640px) { .cms-panel-grid { grid-template-columns: 1fr; } }
 
+    /* ── MAPA DE IMPACTO GLOBAL ──────────────────────────────────────── */
+    .impact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 900px) { .impact-grid { grid-template-columns: 1fr; } }
+
+    /* Tiles de Leaflet sobre fondo oscuro */
+    .leaflet-tile { filter: brightness(0.65) saturate(0.7) hue-rotate(200deg); }
+    .leaflet-container { background: #0a0e17 !important; }
+    .leaflet-control-attribution { display: none !important; }
+    .leaflet-control-zoom a {
+      background: rgba(30,41,59,0.9) !important;
+      border-color: rgba(255,255,255,0.1) !important;
+      color: var(--accent) !important;
+    }
+
+    /* Tabla Geo Glassmorphism */
+    .geo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+    .geo-table thead th {
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      padding: .5rem .75rem;
+      border-bottom: 1px solid rgba(212,168,67,.2);
+      text-align: left;
+    }
+    .geo-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      transition: background .15s;
+    }
+    .geo-table tbody tr:hover { background: rgba(212,168,67,.05); }
+    .geo-table tbody td {
+      padding: .55rem .75rem;
+      color: var(--text-light);
+    }
+    .geo-table tbody td:first-child {
+      color: var(--text-gray);
+      font-weight: 700;
+      font-size: .8rem;
+    }
+    .visits-badge {
+      display: inline-block;
+      background: rgba(212,168,67,.15);
+      border: 1px solid rgba(212,168,67,.3);
+      color: var(--accent);
+      border-radius: 20px;
+      padding: .1rem .6rem;
+      font-weight: 700;
+      font-size: .8rem;
+    }
+
     /* ── SEGURIDAD VISUAL TABS ──────────────────────────────────── */
     .tab-panel { display: none; }
     .tab-panel.active { display: block !important; }
   </style>
 </head>
 <body>
-<div id="maintenance-notice" style="position: sticky; top: 0; z-index: 9999; background: rgba(212, 168, 67, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212, 168, 67, 0.4); color: #D4A843; text-align: center; padding: 12px 20px; font-family: 'Georgia', serif; font-style: italic; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">✨ Estamos perfeccionando la arquitectura visual para mejorar la experiencia de lectura. Este fin de semana realizaremos ajustes en vivo; si encuentra algún error de visualización, lo resolveremos a la brevedad. Gracias por su paciencia.</div>
+
 
   <div class="dashboard-wrapper">
     <a href="../index.html" class="btn-back">← Volver al inicio</a>
@@ -460,6 +523,28 @@
         <div class="chart-container">
           <h3>Proporción de Dispositivos</h3>
           <canvas id="deviceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- ── MAPA DE IMPACTO GLOBAL ───────────────────────────────────────── -->
+      <div class="section-title" style="margin-top:2.5rem;margin-bottom:1rem;">
+        <h2 style="font-family:'Merriweather',serif;font-size:1.2rem;color:var(--accent);font-weight:700;letter-spacing:.03em;">🌍 Impacto Global de la Reforma</h2>
+      </div>
+      <div class="impact-grid">
+        <div class="chart-container" style="padding:0;overflow:hidden;">
+          <div id="impact-map" style="width:100%;height:360px;border-radius:12px;"></div>
+        </div>
+        <div class="chart-container">
+          <h3>Top 5 Ciudades</h3>
+          <table class="geo-table" id="geo-table-cities">
+            <thead><tr><th>#</th><th>Ciudad</th><th>País</th><th>Visitas</th></tr></thead>
+            <tbody id="geo-tbody-cities"><tr><td colspan="4" style="text-align:center;color:var(--text-gray);">Cargando...</td></tr></tbody>
+          </table>
+          <h3 style="margin-top:1.5rem;">Top 5 Países</h3>
+          <table class="geo-table" id="geo-table-countries">
+            <thead><tr><th>#</th><th>País</th><th>Visitas</th></tr></thead>
+            <tbody id="geo-tbody-countries"><tr><td colspan="3" style="text-align:center;color:var(--text-gray);">Cargando...</td></tr></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -896,6 +981,94 @@
           });
         } catch (chartErr) {
           console.error('Chart.js error:', chartErr.message);
+        }
+
+        // ── MAPA DE IMPACTO GLOBAL (Leaflet) ──────────────────────────────
+        try {
+          const geo = data.geo || {};
+
+          // Inicializar mapa con tiles CartoDB Dark Matter
+          const map = L.map('impact-map', { zoomControl: true, attributionControl: false })
+            .setView([20, 0], 2);
+
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            subdomains: 'abcd',
+          }).addTo(map);
+
+          // Dibujar círculos dorados con glow por cada punto de visita
+          const points = geo.visitPoints || [];
+          points.forEach(pt => {
+            const lat = pt._id?.lat;
+            const lon = pt._id?.lon;
+            const city = pt._id?.city || '';
+            const count = pt.count || 1;
+            if (!lat || !lon) return;
+
+            const radius = Math.min(6 + count * 2, 30);
+
+            // Halo exterior (glow)
+            L.circleMarker([lat, lon], {
+              radius: radius + 6,
+              color: 'transparent',
+              fillColor: '#d4af37',
+              fillOpacity: 0.12,
+              interactive: false,
+            }).addTo(map);
+
+            // Círculo principal
+            L.circleMarker([lat, lon], {
+              radius,
+              color: '#d4af37',
+              weight: 1.5,
+              fillColor: '#d4af37',
+              fillOpacity: 0.7,
+            }).bindTooltip(`<b>${city}</b><br>${count} visita${count > 1 ? 's' : ''}`, {
+              className: 'leaflet-tooltip-dark',
+              direction: 'top',
+            }).addTo(map);
+          });
+
+          // Añadir CSS del tooltip (una vez)
+          if (!document.getElementById('leaflet-tooltip-style')) {
+            const s = document.createElement('style');
+            s.id = 'leaflet-tooltip-style';
+            s.textContent = `.leaflet-tooltip-dark { background: rgba(10,14,23,0.92); border: 1px solid rgba(212,168,67,.4); color: #e8ebf4; font-size:.82rem; padding: .3rem .6rem; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,.4); }
+.leaflet-tooltip-dark::before { border-top-color: rgba(212,168,67,.4) !important; }`;
+            document.head.appendChild(s);
+          }
+
+          // ── TABLA TOP CIUDADES ───────────────────────────────────────────
+          const citiesBody = document.getElementById('geo-tbody-cities');
+          const cities = geo.topCities || [];
+          if (cities.length === 0) {
+            citiesBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-gray);">Sin datos aún</td></tr>';
+          } else {
+            citiesBody.innerHTML = cities.map((c, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${c._id?.city || '—'}</td>
+                <td>${c._id?.country || '—'}</td>
+                <td><span class="visits-badge">${c.count}</span></td>
+              </tr>`).join('');
+          }
+
+          // ── TABLA TOP PAÍSES ─────────────────────────────────────────────
+          const countriesBody = document.getElementById('geo-tbody-countries');
+          const countries = geo.topCountries || [];
+          if (countries.length === 0) {
+            countriesBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-gray);">Sin datos aún</td></tr>';
+          } else {
+            countriesBody.innerHTML = countries.map((c, i) => `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${c._id || '—'}</td>
+                <td><span class="visits-badge">${c.count}</span></td>
+              </tr>`).join('');
+          }
+
+        } catch (mapErr) {
+          console.error('Leaflet/Geo error:', mapErr.message);
         }
 
       } catch (err) {

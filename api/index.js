@@ -291,15 +291,42 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
       { $sort: { count: -1 } }
     ]);
 
+    // ── GEOLOCALIZACIÓN (colección analytics) ─────────────────────────────
+    const db = mongoose.connection.db;
+
+    // Top 5 Ciudades
+    const topCities = await db.collection('analytics').aggregate([
+      { $match: { 'location.city': { $exists: true, $ne: null } } },
+      { $group: { _id: { city: '$location.city', country: '$location.country' }, count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }
+    ]).toArray();
+
+    // Top 5 Países
+    const topCountries = await db.collection('analytics').aggregate([
+      { $match: { 'location.country': { $exists: true, $ne: null } } },
+      { $group: { _id: '$location.country', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }
+    ]).toArray();
+
+    // Puntos para el mapa (último campo lat/lon si ipapi los incluye)
+    const visitPoints = await db.collection('analytics').aggregate([
+      { $match: { 'location.latitude': { $exists: true }, 'location.longitude': { $exists: true } } },
+      { $group: {
+        _id: { lat: '$location.latitude', lon: '$location.longitude', city: '$location.city' },
+        count: { $sum: 1 }
+      }},
+      { $limit: 200 }
+    ]).toArray();
+
     res.json({
       success: true,
       topArticles,
-      globalStats: {
-        avgReadTimeSeconds,
-        avgScrollPercentage
-      },
+      globalStats: { avgReadTimeSeconds, avgScrollPercentage },
       osDistribution: osData,
-      deviceDistribution: deviceData
+      deviceDistribution: deviceData,
+      geo: { topCities, topCountries, visitPoints },
     });
 
   } catch (error) {
