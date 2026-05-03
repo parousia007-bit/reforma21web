@@ -11,6 +11,7 @@ import { UAParser } from 'ua-parser-js';
 import { Octokit } from '@octokit/rest';
 
 dotenv.config();
+import mongoose from 'mongoose';
 import dbConnect from './db.js';
 import ArticleMetric from './models/ArticleMetric.js';
 import { requireAuth } from './auth.js';
