@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /api/
+Disallow: /vistas/login.html
+Disallow: /vistas/dashboard_admin.html
+Disallow: /vistas/template_serie.html

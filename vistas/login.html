@@ -3,124 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Reforma 2.1</title>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #0a0e17;
-      --text-gray: #8892a8;
-      --text-light: #e8ebf4;
-      --accent: #d4a843;
-      --surface: rgba(30, 41, 59, 0.4);
-      --glass-border: rgba(255, 255, 255, 0.05);
-    }
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      font-family: 'Source Sans 3', sans-serif;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background-image: radial-gradient(circle at 50% 50%, rgba(212, 168, 67, 0.08), transparent 40%);
-    }
-    .login-container {
-      background: var(--surface);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 12px;
-      padding: 3rem;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    }
-    h1 {
-      font-family: 'Merriweather', serif;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-      margin-top: 0;
-    }
-    p {
-      color: var(--text-gray);
-      margin-bottom: 2rem;
-    }
-    input[type="password"] {
-      width: 100%;
-      padding: 1rem;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid var(--glass-border);
-      border-radius: 6px;
-      color: var(--text-light);
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    input[type="password"]:focus {
-      border-color: var(--accent);
-    }
-    button {
-      width: 100%;
-      padding: 1rem;
-      background: var(--accent);
-      color: #111;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.1s;
-    }
-    button:hover {
-      background: #e5b954;
-    }
-    button:active {
-      transform: scale(0.98);
-    }
-    .error-msg {
-      color: #ef4444;
-      font-size: 0.9rem;
-      margin-top: -1rem;
-      margin-bottom: 1rem;
-      display: none;
-    }
-    .btn-back {
-      display: inline-block;
-      margin-top: 2rem;
-      color: var(--text-gray);
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .btn-back:hover {
-      color: var(--text-light);
-    }
-  </style>
+  <title>Acceso administrativo · Reforma 2.1</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0D1020">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230D1020'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23E2B04F'%3E✦%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>Reforma 2.1</h1>
-    <p>Acceso al Dashboard Administrativo</p>
-    <form id="loginForm">
-      <input type="password" id="password" placeholder="Contraseña Maestra" required>
-      <div class="error-msg" id="errorMsg">Contraseña incorrecta. Intente de nuevo.</div>
-      <button type="submit">Ingresar al Dashboard</button>
-    </form>
-    <a href="../index.html" class="btn-back">← Volver al inicio</a>
-  </div>
+  <div class="ambient" aria-hidden="true"></div>
+
+  <main class="auth-wrap">
+    <div class="auth-card glass-card">
+      <a href="../index.html" class="nav-logo"><span class="mark">✦</span> Reforma <span>2.1</span></a>
+      <h1>Panel editorial</h1>
+      <p class="sub">Acceso al dashboard y al gestor de artículos</p>
+      <form id="loginForm" novalidate>
+        <input class="field" type="password" id="password" placeholder="Contraseña" autocomplete="current-password" aria-label="Contraseña" required autofocus>
+        <p class="form-error" id="errorMsg" role="alert"></p>
+        <button type="submit" class="btn btn-gold btn-block" id="submitBtn" style="margin-top:.5rem">Ingresar</button>
+      </form>
+      <a href="../index.html" class="subnav-back" style="margin-top:2rem">← Volver al sitio</a>
+    </div>
+  </main>
 
   <script>
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const password = document.getElementById('password').value;
       const errorMsg = document.getElementById('errorMsg');
-      const btn = document.querySelector('button');
-      
-      btn.textContent = 'Verificando...';
+      const btn = document.getElementById('submitBtn');
+      const reset = (msg) => { errorMsg.textContent = msg; btn.textContent = 'Ingresar'; btn.disabled = false; };
+
+      if (!password) return reset('Escribe la contraseña.');
+      btn.textContent = 'Verificando…';
       btn.disabled = true;
+      errorMsg.textContent = '';
 
       try {
         const response = await fetch('/api/login', {
@@ -128,23 +48,16 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password })
         });
-
         const data = await response.json();
 
         if (response.ok && data.success) {
-          // Token is set in httpOnly cookie automatically
+          // El token llega en una cookie httpOnly
           window.location.href = 'dashboard_admin.html';
         } else {
-          errorMsg.style.display = 'block';
-          errorMsg.textContent = data.error || 'Credenciales inválidas';
-          btn.textContent = 'Ingresar al Dashboard';
-          btn.disabled = false;
+          reset(data.error || 'Credenciales inválidas');
         }
       } catch (err) {
-        errorMsg.style.display = 'block';
-        errorMsg.textContent = 'Error de conexión.';
-        btn.textContent = 'Ingresar al Dashboard';
-        btn.disabled = false;
+        reset('Error de conexión.');
       }
     });
   </script>

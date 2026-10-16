@@ -2,6 +2,25 @@
 <html lang="es">
 
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reforma 2.1 · Recuperando el Diseño Original</title>
+  <meta name="description" content="Artículos, modelos educativos y materiales de formación desde una visión reformacional: toda la vida le pertenece a Cristo. Editorial Futura Editions." />
+  <meta name="theme-color" content="#0D1020" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Reforma 2.1" />
+  <meta property="og:title" content="Reforma 2.1 · Recuperando el Diseño Original" />
+  <meta property="og:description" content="Artículos, modelos educativos y materiales de formación desde una visión reformacional." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1200&q=80" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230D1020'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23E2B04F'%3E✦%3C/text%3E%3C/svg%3E" />
+
+  <script>
+    // Las animaciones ocultan contenido hasta que app.js lo revela; si app.js no arranca
+    // (CDN caído, red lenta) en 3 s, mostramos todo para no dejar la página en blanco.
+    document.documentElement.classList.add('js');
+    setTimeout(function () { if (!window.__appReady) document.documentElement.classList.add('no-anim'); }, 3000);
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PGY4ES8WNV"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -9,153 +28,215 @@
     gtag('js', new Date());
     gtag('config', 'G-PGY4ES8WNV');
   </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Reforma 2.1 · Recuperando el Diseño Original</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
 
   <header>
-    <nav id="nav">
+    <nav id="nav" aria-label="Principal">
       <div class="nav-inner">
-        <a href="#" class="nav-logo">✦ <em style="font-style:normal">Reforma</em> <span>2.1</span></a>
+        <a href="#inicio" class="nav-logo"><span class="mark">✦</span> Reforma <span>2.1</span></a>
         <ul class="nav-links">
-          <li><a href="#">Inicio</a></li>
           <li><a href="#muro">Artículos</a></li>
-          <li><a href="#instituto">Materiales CER</a></li>
+          <li><a href="#facetas">Áreas</a></li>
+          <li><a href="#consejeria">Fascículos</a></li>
+          <li><a href="#instituto">Instituto</a></li>
           <li><a href="#descargar" class="nav-dl">App Reforma 2.1</a></li>
         </ul>
-        <button class="burger" id="burger" aria-label="Menú" aria-expanded="false">
+        <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mob-menu">
           <span></span><span></span><span></span>
         </button>
       </div>
       <div class="mob-menu" id="mob-menu">
-        <a href="#">Inicio</a>
         <a href="#muro">Artículos</a>
-        <a href="#instituto">Materiales CER</a>
-        <a href="#descargar" style="color:var(--gold)">App Reforma 2.1</a>
+        <a href="#facetas">Áreas de restauración</a>
+        <a href="#consejeria">Fascículos</a>
+        <a href="#instituto">Instituto</a>
+        <a href="#descargar">App Reforma 2.1</a>
       </div>
     </nav>
   </header>
-  <main>
 
-    <section class="hero">
+  <main id="main">
+
+    <section class="hero" id="inicio">
+      <canvas class="hero-aurora" id="hero-aurora" aria-hidden="true"></canvas>
       <div class="hero-inner">
-        <p class="hero-label">Editorial Futura Editions</p>
-        <h1>Redescubre el<br /><em>diseño original.</em></h1>
-        <p class="hero-sub">No es solo educación; es aprender a ver la buena creación de Dios, reconocer cómo la hemos
-          distorsionado y encontrar el camino para restaurar lo que llega a nuestras manos. La profundidad que buscas
-          vive aquí.</p>
+        <p class="hero-label" data-hero>Editorial Futura Editions</p>
+        <h1>
+          <span class="line"><span data-hero-line>Redescubre el</span></span>
+          <span class="line"><span data-hero-line><em>diseño original.</em></span></span>
+        </h1>
+        <p class="hero-sub" data-hero>No es solo educación; es aprender a ver la buena creación de Dios, reconocer cómo
+          la hemos distorsionado y encontrar el camino para restaurar lo que llega a nuestras manos.</p>
 
-        <div class="hero-actions">
-          <a href="#descargar" class="btn btn-gold">↓ Descargar Reforma 2.1</a>
-          <a href="#muro" class="btn btn-outline">Ver últimos análisis</a>
+        <div class="hero-actions" data-hero>
+          <a href="#muro" class="btn btn-gold"><i data-lucide="book-open"></i> Leer los análisis</a>
+          <a href="#descargar" class="btn btn-outline"><i data-lucide="smartphone"></i> Conocer la App</a>
         </div>
 
-        <div class="qa-grid reveal">
-          <a href="#facetas" class="qa-card">
-            <span class="qa-icon">📚</span>
-            <div class="qa-text"><b>Nuestras Rutas</b><small>Formación Integral</small></div>
+        <div class="qa-grid" data-hero-stagger>
+          <a href="#facetas" class="qa-card" style="--c:var(--gold)">
+            <span class="qa-icon"><i data-lucide="compass"></i></span>
+            <span class="qa-text"><b>Nuestras Rutas</b><small>Formación integral</small></span>
+            <i data-lucide="arrow-right" class="qa-arrow"></i>
           </a>
-          <a href="#muro" class="qa-card app-trigger" data-target="Instituto Vida Nueva">
-            <span class="qa-icon">⛪</span>
-            <div class="qa-text"><b>Vida Nueva</b><small>Para tu Comunidad</small></div>
+          <a href="#instituto" class="qa-card" style="--c:var(--esf-psicoped)">
+            <span class="qa-icon"><i data-lucide="church"></i></span>
+            <span class="qa-text"><b>Vida Nueva</b><small>Para tu comunidad</small></span>
+            <i data-lucide="arrow-right" class="qa-arrow"></i>
           </a>
-          <a href="#muro" class="qa-card app-trigger" data-target="Servicios y Plantación">
-            <span class="qa-icon">🤝</span>
-            <div class="qa-text"><b>Servicios</b><small>Asesoría en Restauración</small></div>
+          <a href="#consejeria" class="qa-card" style="--c:var(--esf-psico)">
+            <span class="qa-icon"><i data-lucide="hand-heart"></i></span>
+            <span class="qa-text"><b>Consejería</b><small>Asesoría en restauración</small></span>
+            <i data-lucide="arrow-right" class="qa-arrow"></i>
           </a>
-          <a href="#descargar" class="qa-card">
-            <span class="qa-icon">🏛️</span>
-            <div class="qa-text"><b>Futura Editions</b><small>Nuestra Visión</small></div>
+          <a href="#descargar" class="qa-card" style="--c:var(--esf-teologia)">
+            <span class="qa-icon"><i data-lucide="landmark"></i></span>
+            <span class="qa-text"><b>Futura Editions</b><small>Nuestra visión</small></span>
+            <i data-lucide="arrow-right" class="qa-arrow"></i>
           </a>
         </div>
       </div>
+      <a href="#historia" class="scroll-cue" aria-hidden="true" tabindex="-1">Explorar</a>
     </section>
 
-    <section class="article-section sec-pad" id="muro">
-      <div class="container">
-        <div class="sec-eyebrow">Análisis para la vida real</div>
-        <h2 class="sec-title">Aprender a <em>restaurar</em> lo que está roto</h2>
-        <p class="sec-desc">Explora reflexiones sencillas para corazones que buscan coherencia. Descubre cómo devolver
-          el orden a tu hogar, la ciencia y la educación.</p>
+    <!-- Motivo básico religioso (Dooyeweerd): creación, caída y redención como un solo motivo
+         que actúa en el corazón supratemporal, no como etapas sucesivas de una historia.
+         Con GSAP la sección se fija y los tres momentos avanzan con el scroll; sin JS (o con
+         "reducir movimiento") se muestran apilados como bloques normales. -->
+    <section class="story" id="historia" aria-labelledby="story-title">
+      <div class="story-stage">
+        <div class="container story-grid">
+          <div class="story-rail">
+            <p class="sec-eyebrow" id="story-title">Motivo básico religioso</p>
+            <p class="story-thesis">No son etapas que se suceden en el tiempo: son un solo motivo que dirige el
+              <em>corazón</em>, raíz supratemporal de toda la existencia.</p>
+            <ol class="story-steps" aria-hidden="true">
+              <li class="is-active" style="--c:var(--gold-hi)">Creación</li>
+              <li style="--c:var(--esf-hermeneutica)">Caída</li>
+              <li style="--c:var(--esf-psico)">Redención</li>
+            </ol>
+          </div>
 
-        <div class="muro-grid">
-          <article class="muro-card reveal" style="position:relative;">
+          <div class="story-panels">
+            <article class="story-panel" style="--c:var(--gold-hi)">
+              <span class="story-n">El Origen</span>
+              <h2 class="story-word">Creación</h2>
+              <p class="story-line">Todo es <em>significado</em>.</p>
+              <p class="story-text">Nada existe por sí mismo. La realidad creada es significado: en todos sus aspectos
+                remite al Origen soberano que la sostiene. En el corazón, centro religioso del ser humano, toda la
+                creación se concentra y se dirige a Dios.</p>
+            </article>
+            <article class="story-panel" style="--c:var(--esf-hermeneutica)">
+              <span class="story-n">La apostasía</span>
+              <h2 class="story-word">Caída</h2>
+              <p class="story-line">El corazón se <em>apartó</em> del Origen.</p>
+              <p class="story-text">La caída ocurre en la raíz religiosa: el corazón busca el sentido en lo creado y
+                absolutiza un aspecto de la realidad. El orden de la creación permanece, pero toda la existencia temporal
+                pierde su dirección; de ahí nacen los ídolos de la educación, la ciencia y la cultura.</p>
+            </article>
+            <article class="story-panel" style="--c:var(--esf-psico)">
+              <span class="story-n">La nueva raíz</span>
+              <h2 class="story-word">Redención</h2>
+              <p class="story-line">En Cristo, el corazón <em>vuelve</em> a su Origen.</p>
+              <p class="story-text">Por Jesucristo, en la comunión del Espíritu Santo, la humanidad recibe una nueva raíz
+                religiosa. Desde un corazón reorientado, toda la vida —el hogar, el aula, la ciencia— recupera su
+                verdadero significado.</p>
+              <a href="#muro" class="btn btn-gold story-cta">Comenzar a leer <i data-lucide="arrow-down"></i></a>
+            </article>
+          </div>
+        </div>
+        <div class="story-progress" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <section class="sec-pad" id="muro">
+      <div class="container">
+        <div class="muro-head">
+          <div class="sec-head reveal">
+            <div class="sec-eyebrow">Análisis para la vida real</div>
+            <h2 class="sec-title">Aprender a <em>restaurar</em> lo que está roto</h2>
+            <p class="sec-desc">Reflexiones para corazones que buscan coherencia: cómo devolver el orden al hogar, la
+              ciencia y la educación.</p>
+          </div>
+        </div>
+
+        <div class="muro-grid" id="muro-grid">
+          <article class="muro-card reveal">
             <div class="muro-img"
-              style="background-image: url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800');">
-              <span class="muro-tag" style="background: var(--esf-teologia)">Devocional</span>
+              style="background-image:url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=75')">
+              <span class="muro-tag" style="--tag:var(--esf-teologia)">Devocional</span>
             </div>
             <div class="muro-content">
-              <h3 class="muro-title">Lo que tus hijos van a profetizar</h3>
+              <div class="muro-meta"><span>Serie · La Profecía del Hogar</span></div>
+              <h3 class="muro-title"><a href="vistas/detalle_devocional.html?id=ht_prophecy_01">Lo que tus hijos van a
+                  profetizar</a></h3>
               <p class="muro-excerpt">¿Cómo el comportamiento del hogar hoy es la verdadera profecía del futuro de tu
                 familia? Una mirada a lo que sembramos en la mesa.</p>
-              <div style="display:flex; gap:0.5rem; position:relative; z-index:2;">
-                <button class="btn btn-gold btn-sm"
-                  onclick="window.location.href='vistas/detalle_devocional.html?id=ht_prophecy_01'; event.stopPropagation();">Leer
-                  Parte 1</button>
-                <a href="vistas/serie_devocional.html" class="btn btn-outline btn-sm"
-                  style="text-decoration:none; display:flex; align-items:center;" onclick="event.stopPropagation();">Ver
-                  Serie Completa</a>
+              <div class="muro-actions">
+                <span class="muro-cta">Leer parte 1 <i data-lucide="arrow-right"></i></span>
+                <a href="vistas/serie_devocional.html?serie=La%20Profec%C3%ADa%20del%20Hogar" class="btn btn-outline btn-sm" style="margin-left:auto">Ver serie
+                  completa</a>
               </div>
             </div>
-            <a href="vistas/detalle_devocional.html?id=ht_prophecy_01"
-              style="position:absolute; inset:0; z-index:1;"></a>
           </article>
 
-          <div id="dynamic-articles" style="display: contents;"></div>
-        </div>
-        
-        <!-- Infinite Scroll Trigger & Loader -->
-        <div id="infinite-scroll-trigger" style="width: 100%; height: 20px; margin-top: 2rem;"></div>
-        <div id="articles-loader" style="display: none; text-align: center; color: var(--gold); padding: 2rem; font-family: 'Merriweather', serif;">
-          <small>Cargando más reflexiones...</small>
+          <div id="dynamic-articles" style="display:contents"></div>
         </div>
 
+        <div id="infinite-scroll-trigger" aria-hidden="true" style="height:1px"></div>
+        <p id="articles-loader" class="muro-status" hidden>Cargando más reflexiones…</p>
       </div>
     </section>
 
     <section class="facetas-section sec-pad" id="facetas">
       <div class="container">
-        <div class="sec-eyebrow">Nuestro Llamado</div>
-        <h2 class="sec-title">Toda la vida le <em>pertenece</em></h2>
-        <p class="sec-desc">No fragmentamos la realidad en "espiritual" y "secular". Formamos el corazón para reconocer
-          el orden del Creador en todas las dimensiones de la vida cotidiana. Estas son algunas de las áreas donde
-          buscamos restaurar la coherencia:</p>
+        <div class="sec-head reveal">
+          <div class="sec-eyebrow">Nuestro llamado</div>
+          <h2 class="sec-title">Toda la vida le <em>pertenece</em></h2>
+          <p class="sec-desc">No fragmentamos la realidad en "espiritual" y "secular". Formamos el corazón para
+            reconocer el orden del Creador en todas las dimensiones de la vida cotidiana.</p>
+        </div>
 
-        <div class="facetas-grid reveal">
-          <div class="esf-card" style="border-top: 3px solid #5B2C8D">
-            <div class="esf-dot" style="background: #5B2C8D"></div>
+        <div class="facetas-grid">
+          <div class="esf-card reveal" style="--c:var(--esf-teologia)">
+            <div class="esf-icon"><i data-lucide="flame"></i></div>
             <h3>Fe y Adoración</h3>
             <p>Nuestra orientación última</p>
           </div>
-          <div class="esf-card" style="border-top: 3px solid #1E6B3C">
-            <div class="esf-dot" style="background: #1E6B3C"></div>
+          <div class="esf-card reveal" style="--c:var(--esf-psicoped)">
+            <div class="esf-icon"><i data-lucide="graduation-cap"></i></div>
             <h3>Aprendizaje</h3>
             <p>Desarrollo integral de la persona</p>
           </div>
-          <div class="esf-card" style="border-top: 3px solid #2980B9">
-            <div class="esf-dot" style="background: #2980B9"></div>
+          <div class="esf-card reveal" style="--c:var(--esf-psico)">
+            <div class="esf-icon"><i data-lucide="home"></i></div>
             <h3>El Hogar</h3>
             <p>El primer núcleo formativo</p>
           </div>
-          <div class="esf-card" style="border-top: 3px solid #C0392B">
-            <div class="esf-dot" style="background: #C0392B"></div>
+          <div class="esf-card reveal" style="--c:var(--esf-hermeneutica)">
+            <div class="esf-icon"><i data-lucide="palette"></i></div>
             <h3>Creatividad</h3>
             <p>La belleza que refleja Su luz</p>
           </div>
-          <div class="esf-card" style="border-top: 3px solid #C8922A">
-            <div class="esf-dot" style="background: #C8922A"></div>
+          <div class="esf-card reveal" style="--c:var(--esf-filosofia)">
+            <div class="esf-icon"><i data-lucide="atom"></i></div>
             <h3>Las Ciencias</h3>
             <p>Asombro ante el orden creado</p>
           </div>
-          <div class="esf-card" style="border-top: 3px solid #16A085">
-            <div class="esf-dot" style="background: #16A085"></div>
+          <div class="esf-card reveal" style="--c:var(--esf-pedagogia)">
+            <div class="esf-icon"><i data-lucide="users"></i></div>
             <h3>Comunidad</h3>
             <p>Servicio y justicia al prójimo</p>
           </div>
@@ -165,16 +246,16 @@
 
     <section class="consejeria-section sec-pad" id="consejeria" aria-labelledby="cons-title">
       <div class="container">
-        <div class="sec-eyebrow">Diagnóstico y Restauración</div>
-        <h2 class="sec-title" id="cons-title">El Orden <em>Correcto</em></h2>
-        <p class="sec-desc">7 fascículos de consejería familiar y personal. No es autoayuda. Es ir a la raíz del diseño
-          original con herramientas para el hogar. El primero es libre.</p>
+        <div class="sec-head reveal">
+          <div class="sec-eyebrow">Diagnóstico y restauración</div>
+          <h2 class="sec-title" id="cons-title">El Orden <em>Correcto</em></h2>
+          <p class="sec-desc">7 fascículos de consejería familiar y personal. No es autoayuda: es ir a la raíz del
+            diseño original con herramientas para el hogar. El primero es libre.</p>
+        </div>
         <div class="fasc-layout">
           <div>
             <div class="fasc-free-label reveal">
-              <span class="chip chip-free"
-                style="padding:.25rem .65rem;border-radius:4px;border:1px solid;color:var(--success);background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25)">✦
-                Fascículo libre</span>
+              <span class="chip chip-free"><i data-lucide="sparkles"></i> Fascículo libre</span>
               Lee el primero completo en la App
             </div>
             <div class="fasc-preview reveal">
@@ -196,8 +277,8 @@
                   que te sientas mejor de inmediato, sino para que sepas <em>dónde empezar a restaurar</em>.</p>
               </div>
               <div class="fasc-actions">
-                <a href="#descargar" class="btn btn-gold app-trigger" data-target="El Orden Correcto">Leer Fascículo 1
-                  completo en la App</a>
+                <a href="#descargar" class="btn btn-gold app-trigger" data-target="El Orden Correcto">Leer el fascículo 1
+                  completo en la App <i data-lucide="arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -207,7 +288,7 @@
                 <span class="catalog-title">Temporada 1 — 7 fascículos</span>
                 <span class="price-tag">$3 <small>USD</small></span>
               </div>
-              <div class="fasc-row is-free app-trigger" data-target="Fascículo 1">
+              <div class="fasc-row is-free app-trigger" data-target="Fascículo 1" role="button" tabindex="0">
                 <span class="fasc-n">01</span>
                 <div class="fasc-info">
                   <p class="fasc-name">El orden que existía antes de que nacieras</p>
@@ -215,50 +296,48 @@
                 </div>
                 <span class="fasc-badge badge-free">Libre</span>
               </div>
-              <div class="fasc-row" data-locked="true"><span class="fasc-n">02</span>
+              <div class="fasc-row"><span class="fasc-n">02</span>
                 <div class="fasc-info">
                   <p class="fasc-name">Cuando ya entró en el problema</p>
                   <p class="fasc-hint">Drogas, rebeldía o alejamiento profundo</p>
-                </div><span class="fasc-badge badge-lock">🔒</span>
+                </div><span class="fasc-badge badge-lock"><i data-lucide="lock"></i></span>
               </div>
-              <div class="fasc-row" data-locked="true"><span class="fasc-n">03</span>
+              <div class="fasc-row"><span class="fasc-n">03</span>
                 <div class="fasc-info">
                   <p class="fasc-name">El carácter no es tu enemigo</p>
                   <p class="fasc-hint">Cómo leer a tu hijo sin reducirlo</p>
-                </div><span class="fasc-badge badge-lock">🔒</span>
+                </div><span class="fasc-badge badge-lock"><i data-lucide="lock"></i></span>
               </div>
-              <div class="fasc-row" data-locked="true"><span class="fasc-n">04</span>
+              <div class="fasc-row"><span class="fasc-n">04</span>
                 <div class="fasc-info">
                   <p class="fasc-name">La fe que se ve y la fe que se vive</p>
                   <p class="fasc-hint">Fe compartimentada vs. corazón anclado</p>
-                </div><span class="fasc-badge badge-lock">🔒</span>
+                </div><span class="fasc-badge badge-lock"><i data-lucide="lock"></i></span>
               </div>
-              <div class="fasc-row" data-locked="true"><span class="fasc-n">05</span>
+              <div class="fasc-row"><span class="fasc-n">05</span>
                 <div class="fasc-info">
                   <p class="fasc-name">La autoridad que protege y la que daña</p>
                   <p class="fasc-hint">Confianza vs. intimidación</p>
-                </div><span class="fasc-badge badge-lock">🔒</span>
+                </div><span class="fasc-badge badge-lock"><i data-lucide="lock"></i></span>
               </div>
-              <div class="fasc-row" data-locked="true"><span class="fasc-n">06</span>
+              <div class="fasc-row"><span class="fasc-n">06</span>
                 <div class="fasc-info">
                   <p class="fasc-name">El hijo que ya se fue</p>
                   <p class="fasc-hint">Qué hacer cuando la distancia ya ocurrió</p>
-                </div><span class="fasc-badge badge-lock">🔒</span>
+                </div><span class="fasc-badge badge-lock"><i data-lucide="lock"></i></span>
               </div>
-              <div class="fasc-row" data-locked="true"><span class="fasc-n">07</span>
+              <div class="fasc-row"><span class="fasc-n">07</span>
                 <div class="fasc-info">
                   <p class="fasc-name">El padre que sigue</p>
                   <p class="fasc-hint">El mapa completo para el próximo lunes</p>
-                </div><span class="fasc-badge badge-lock">🔒</span>
+                </div><span class="fasc-badge badge-lock"><i data-lucide="lock"></i></span>
               </div>
               <div class="catalog-footer">
                 <a href="https://wa.me/529619702540?text=Hola,%20quiero%20adquirir%20El%20Orden%20Correcto%20Temporada%201%20completa%20por%20%243%20USD"
-                  class="btn btn-wa" style="width:100%;justify-content:center" target="_blank"
-                  rel="noopener noreferrer">
-                  Adquirir colección — $3 USD
+                  class="btn btn-wa btn-block" target="_blank" rel="noopener noreferrer">
+                  <i data-lucide="message-circle"></i> Adquirir colección — $3 USD
                 </a>
-                <p style="font-size:.75rem;color:var(--inkLow);text-align:center;margin-top:.6rem">PDF digital · Pago
-                  por WhatsApp · Licencia personal</p>
+                <p class="catalog-note">PDF digital · Pago por WhatsApp · Licencia personal</p>
               </div>
             </div>
           </div>
@@ -266,22 +345,28 @@
       </div>
     </section>
 
-    <section class="sec-pad" id="instituto">
-      <div class="container">
-        <h2 class="sec-title" style="margin-bottom: 2rem;">Más que una Institución:<br/><em>Un Ecosistema de Vida</em></h2>
-        <div class="muro-card reveal" style="padding: 2.5rem; background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;">
-          <p style="text-align: justify !important; line-height: 1.8; color: var(--inkMid); margin-bottom: 1.5rem;">
-            En Reforma 2.1 no creemos que debamos elegir entre plantar iglesias o plantar escuelas. Creemos que la iglesia que no educa está cediendo el corazón de la próxima generación.
-          </p>
-          <p style="text-align: justify !important; line-height: 1.8; color: var(--inkMid); margin-bottom: 1.5rem;">
-            Nuestra visión es radical: plantar escuelas es una forma profunda de plantar iglesias. Cuando establecemos un centro educativo basado en el Modelo Educativo Trascendental, no solo estamos abriendo un aula; estamos expandiendo el Reino de Dios hacia el pensamiento, la ciencia y la cultura.
-          </p>
-          <p style="text-align: justify !important; line-height: 1.8; color: var(--inkMid); margin-bottom: 2rem;">
-            Formamos personas para que, al plantar o fortalecer sus iglesias, lo hagan con una visión integral donde "Toda la vida le pertenece a Cristo". Si eres docente, psicólogo o líder con vocación, este es el lugar para integrar tu profesión al mandato cultural.
-          </p>
-          <div style="display:flex; justify-content:flex-start; margin-top: 1rem;">
-             <a href="https://chat.whatsapp.com/JdB9NVXQk4D9WoDGtylTcP" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Sumarme a la Reforma Visual y Educativa</a>
+    <section class="sec-pad divider-top" id="instituto">
+      <div class="container instituto-grid">
+        <div class="reveal">
+          <div class="sec-eyebrow">Instituto Vida Nueva</div>
+          <h2 class="sec-title">Más que una institución:<br /><em>un ecosistema de vida</em></h2>
+        </div>
+        <div class="glass-card reveal">
+          <p class="lede">En Reforma 2.1 no creemos que debamos elegir entre plantar iglesias o plantar escuelas. Creemos
+            que la iglesia que no educa está cediendo el corazón de la próxima generación.</p>
+          <p>Nuestra visión es radical: plantar escuelas es una forma profunda de plantar iglesias. Cuando establecemos
+            un centro educativo basado en el Modelo Educativo Trascendental, no solo estamos abriendo un aula; estamos
+            expandiendo el Reino de Dios hacia el pensamiento, la ciencia y la cultura.</p>
+          <div class="stat-row">
+            <div class="stat"><b>Iglesia</b><span>Comunidad que forma discípulos</span></div>
+            <div class="stat"><b>Escuela</b><span>Modelo Educativo Trascendental</span></div>
+            <div class="stat"><b>Cultura</b><span>Toda la vida bajo Cristo</span></div>
           </div>
+          <p>Formamos personas para que, al plantar o fortalecer sus iglesias, lo hagan con una visión integral donde
+            "Toda la vida le pertenece a Cristo". Si eres docente, psicólogo o líder con vocación, este es el lugar para
+            integrar tu profesión al mandato cultural.</p>
+          <a href="https://chat.whatsapp.com/JdB9NVXQk4D9WoDGtylTcP" target="_blank" rel="noopener noreferrer"
+            class="btn btn-gold" style="margin-top:1rem"><i data-lucide="users"></i> Sumarme a la comunidad</a>
         </div>
       </div>
     </section>
@@ -290,96 +375,64 @@
       <div class="container">
         <div class="dl-inner">
           <div class="dl-text reveal">
-            <p class="sec-eyebrow">Ecosistema Nativo</p>
+            <p class="sec-eyebrow">Ecosistema nativo</p>
             <h2 class="sec-title" id="dl-title">La profundidad que buscas<br /><em>vive en la App.</em></h2>
-            <p style="font-size:1rem;color:var(--inkMid);line-height:1.8;margin-bottom:2rem">La web es el inicio del
-              camino. Para profundizar en el estudio, tomar cursos guiados y llevar un registro de tu crecimiento,
-              necesitas Reforma 2.1 en tu dispositivo.</p>
+            <p class="dl-lede">La web es el inicio del camino. Para profundizar en el estudio, tomar cursos guiados y
+              llevar un registro de tu crecimiento, necesitas Reforma 2.1 en tu dispositivo.</p>
 
             <div class="dl-features">
-              <div class="dl-feat">
-                <div class="dl-feat-dot"></div>Lector de Libros Integrado
-              </div>
-              <div class="dl-feat">
-                <div class="dl-feat-dot"></div>Reproductor de Audios
-              </div>
-              <div class="dl-feat">
-                <div class="dl-feat-dot"></div>Videoteca de Cursos
-              </div>
-              <div class="dl-feat">
-                <div class="dl-feat-dot"></div>Guías de Restauración
-              </div>
-              <div class="dl-feat">
-                <div class="dl-feat-dot"></div>Comunidad de Diálogo
-              </div>
-              <div class="dl-feat">
-                <div class="dl-feat-dot"></div>Métricas del Corazón
-              </div>
+              <div class="dl-feat"><i data-lucide="book"></i>Lector de libros integrado</div>
+              <div class="dl-feat"><i data-lucide="headphones"></i>Reproductor de audios</div>
+              <div class="dl-feat"><i data-lucide="play-circle"></i>Videoteca de cursos</div>
+              <div class="dl-feat"><i data-lucide="map"></i>Guías de restauración</div>
+              <div class="dl-feat"><i data-lucide="messages-square"></i>Comunidad de diálogo</div>
+              <div class="dl-feat"><i data-lucide="activity"></i>Métricas del corazón</div>
             </div>
 
-            <div class="muro-card reveal" style="padding: 2rem; background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; margin-top: 2.5rem; margin-bottom: 2rem;">
-              <h3 style="color: var(--gold); font-family: var(--serif); font-size: 1.4rem; margin-bottom: 1rem;">Sostenibilidad y Generosidad: Nuestra Economía</h3>
-              <p style="text-align: justify !important; line-height: 1.8; color: var(--inkMid); margin-bottom: 1rem;">Construir una plataforma de vanguardia —servidores, el pago del desarrollo de plataformas y aplicaciones, y la producción editorial— requiere una administración responsable de los recursos. Al adquirir nuestros materiales, te conviertes en un Inversor del Reino, permitiendo que sigamos desarrollando herramientas que contrarresten la quiebra educativa actual.</p>
-              <p style="text-align: justify !important; line-height: 1.8; color: var(--inkMid); margin-bottom: 1.5rem;">Sin embargo, el dinero jamás será un muro para el corazón sincero. Nuestra política es de Honestidad y Subsidio:</p>
-              <ul style="color: var(--inkMid); text-align: justify !important; line-height: 1.8; margin-bottom: 1.5rem; padding-left: 1.2rem;">
-                <li style="margin-bottom: 0.8rem;"><strong style="color: var(--text-light);">Costo Justo:</strong> El precio de nuestros materiales financia la investigación y la infraestructura tecnológica que sostiene este ecosistema.</li>
-                <li style="margin-bottom: 0.8rem;"><strong style="color: var(--text-light);">Puerta Abierta:</strong> Si tienes la determinación de prepararte pero enfrentas limitaciones económicas reales, hablemos. Buscamos personas honestas con las que podamos establecer acuerdos de apoyo, becas o intercambios de servicio para sus comunidades locales.</li>
-                <li><strong style="color: var(--text-light);">Visión Institucional:</strong> Ofrecemos planes especiales para pastores y colegios que deseen transicionar hacia una currícula sin dualismos.</li>
+            <div class="glass-card">
+              <h3>Sostenibilidad y generosidad</h3>
+              <p>Construir una plataforma de vanguardia —servidores, desarrollo de aplicaciones y producción editorial—
+                requiere una administración responsable. Al adquirir nuestros materiales te conviertes en un
+                <strong>inversor del Reino</strong>. Sin embargo, el dinero jamás será un muro para el corazón sincero:
+              </p>
+              <ul class="policy-list">
+                <li><i data-lucide="scale"></i><span><strong>Costo justo.</strong> El precio de nuestros materiales
+                    financia la investigación y la infraestructura que sostiene este ecosistema.</span></li>
+                <li><i data-lucide="door-open"></i><span><strong>Puerta abierta.</strong> Si enfrentas limitaciones
+                    económicas reales, hablemos: becas, acuerdos de apoyo o intercambio de servicio para tu
+                    comunidad.</span></li>
+                <li><i data-lucide="school"></i><span><strong>Visión institucional.</strong> Planes especiales para
+                    pastores y colegios que deseen transicionar hacia una currícula sin dualismos.</span></li>
               </ul>
             </div>
 
-            <div style="display:flex;gap:1rem;flex-wrap:wrap">
-              <a href="#" class="btn btn-gold btn-sm">Explorar Materiales en la App</a>
+            <div class="dl-actions">
+              <a href="https://wa.me/529619702540?text=Hola%2C%20quiero%20acceso%20a%20la%20App%20Reforma%202.1"
+                class="btn btn-gold btn-sm" target="_blank" rel="noopener noreferrer" data-track="whatsapp"
+                data-track-name="Acceso App"><i data-lucide="download"></i> Solicitar acceso a la App</a>
               <a href="https://wa.me/529619702540?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20informaci%C3%B3n%20sobre%20los%20apoyos%20y%20becas%20de%20Reforma%202.1"
-                class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer">Contactar por Apoyos / Becas</a>
+                class="btn btn-outline btn-sm" target="_blank" rel="noopener noreferrer" data-track="beca"
+                data-track-name="Becas Index">Contactar por apoyos / becas</a>
             </div>
           </div>
 
-          <div class="dl-visual reveal">
+          <div class="dl-visual reveal" aria-hidden="true">
             <div class="app-frame">
               <div class="app-topbar">
                 <div class="app-logo-circle">✦</div>
-                <div class="app-brand">Reforma 2.1 <small>Panel Principal</small></div>
+                <div class="app-brand">Reforma 2.1 <small>Panel principal</small></div>
               </div>
               <div class="app-modules">
-                <div class="app-mod">
-                  <div class="app-mod-dot" style="background:var(--esf-teologia)"></div><span>Lector</span><small>Libros
-                    y PDF</small>
-                </div>
-                <div class="app-mod">
-                  <div class="app-mod-dot" style="background:var(--esf-psico)"></div><span>Audios</span><small>Podcast
-                    Nativo</small>
-                </div>
-                <div class="app-mod">
-                  <div class="app-mod-dot" style="background:var(--gold)"></div><span>Escuelas</span><small>Cursos
-                    Activos</small>
-                </div>
-                <div class="app-mod">
-                  <div class="app-mod-dot" style="background:var(--esf-pedagogia)"></div>
-                  <span>Progreso</span><small>Plan de Estudios</small>
-                </div>
-                <div class="app-mod">
-                  <div class="app-mod-dot" style="background:var(--esf-hermeneutica)"></div>
-                  <span>Consejería</span><small>Restauración Integral</small>
-                </div>
-                <div class="app-mod">
-                  <div class="app-mod-dot" style="background:var(--success)"></div><span>Hoy</span><small>Reflexión
-                    Diaria</small>
-                </div>
+                <div class="app-mod" style="--c:var(--esf-teologia)"><div class="app-mod-dot"></div><span>Lector</span><small>Libros y PDF</small></div>
+                <div class="app-mod" style="--c:var(--esf-psico)"><div class="app-mod-dot"></div><span>Audios</span><small>Podcast nativo</small></div>
+                <div class="app-mod" style="--c:var(--gold)"><div class="app-mod-dot"></div><span>Escuelas</span><small>Cursos activos</small></div>
+                <div class="app-mod" style="--c:var(--esf-pedagogia)"><div class="app-mod-dot"></div><span>Progreso</span><small>Plan de estudios</small></div>
+                <div class="app-mod" style="--c:var(--esf-hermeneutica)"><div class="app-mod-dot"></div><span>Consejería</span><small>Restauración integral</small></div>
+                <div class="app-mod" style="--c:var(--success)"><div class="app-mod-dot"></div><span>Hoy</span><small>Reflexión diaria</small></div>
               </div>
-              <div
-                style="margin-top:1rem;padding:.75rem;background:rgba(200, 146, 42,.06);border:1px solid rgba(200, 146, 42,.15);border-radius:10px;display:flex;align-items:center;justify-content:space-between">
-                <div>
-                  <p
-                    style="font-size:.7rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem">
-                    Estado del Corazón</p>
-                  <p style="font-family:var(--serif);font-size:1.1rem;color:var(--ink);font-weight:700;line-height:1">
-                    Enfoque Claro</p>
-                </div>
-                <div style="text-align:right">
-                  <p style="font-size:.7rem;color:var(--inkLow);margin-bottom:.2rem">Última Reflexión</p>
-                  <p style="font-size:.9rem;color:var(--ink);font-weight:600">Corazón receptivo</p>
-                </div>
+              <div class="app-status">
+                <div><p class="k">Estado del corazón</p><p class="v">Enfoque claro</p></div>
+                <div class="r"><p class="k">Última reflexión</p><p class="v">Corazón receptivo</p></div>
               </div>
             </div>
           </div>
@@ -391,65 +444,41 @@
   <footer>
     <div class="footer-inner">
       <div class="footer-brand">
-        <a href="#"><span>✦</span> Reforma 2.1</a>
+        <a href="#inicio"><span>✦</span> Reforma 2.1</a>
         <p>Editorial Futura Editions · Centro de Estudio Reformado<br />Tuxtla Gutiérrez, Chiapas, México</p>
       </div>
-      <nav class="footer-nav">
+      <nav class="footer-nav" aria-label="Plataforma">
         <h4>Plataforma</h4>
         <ul>
-          <li><a href="#muro">Últimos Análisis</a></li>
-          <li><a href="#facetas">Áreas de Restauración</a></li>
-          <li><a href="#descargar">Descargar App</a></li>
+          <li><a href="#muro">Últimos análisis</a></li>
+          <li><a href="#facetas">Áreas de restauración</a></li>
+          <li><a href="#consejeria">Fascículos</a></li>
+          <li><a href="#descargar">App Reforma 2.1</a></li>
         </ul>
       </nav>
-      <nav class="footer-nav">
-        <h4>Contacto y Visión</h4>
+      <nav class="footer-nav" aria-label="Contacto">
+        <h4>Contacto y visión</h4>
         <ul>
-          <li><a href="#">Principios de Formación</a></li>
-          <li><a href="#">Nuestra Visión</a></li>
-          <li><a href="https://wa.me/529619702540" target="_blank" rel="noopener">WhatsApp Ventas</a></li>
+          <li><a href="#instituto">Nuestra visión</a></li>
+          <li><a href="https://chat.whatsapp.com/JdB9NVXQk4D9WoDGtylTcP" target="_blank" rel="noopener noreferrer">Comunidad</a></li>
+          <li><a href="https://wa.me/529619702540" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
         </ul>
       </nav>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 Editorial Futura Editions · Todos los derechos reservados</p>
+      <p>© <span id="year">2026</span> Editorial Futura Editions · Todos los derechos reservados</p>
       <p><em>«Todo pensamiento cautivo a la obediencia de Cristo»</em></p>
     </div>
   </footer>
 
-  <div class="modal-overlay" id="articleModal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal()">✕</button>
-      <div class="modal-header">
-        <div class="modal-meta">
-          <span id="modal-sphere" style="color:var(--gold);font-weight:bold;">Materia</span>
-          <span id="modal-time">Tiempo</span>
-        </div>
-        <h2 class="modal-title" id="modal-title">Título</h2>
-        <p class="modal-subtitle" id="modal-series">Serie</p>
-      </div>
-      <div class="modal-body">
-        <div class="modal-verse-box" id="modal-topbox">
-          <p id="modal-verse">"Frase destacada o versículo..."</p>
-          <cite id="modal-reference">— Referencia</cite>
-        </div>
-        <div id="modal-text">
-        </div>
-        <div class="modal-exercise" id="modal-bottombox">
-          <strong>Ejercicio Práctico</strong>
-          <p id="modal-exercise" style="margin:0;font-size:.95rem;">Ejercicio...</p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-gold" onclick="closeModal()">Cerrar Lectura</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="js/db/devocionales.js"></script>
   <script src="js/db/articulos.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
-
+  <script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
   <script src="js/app.js"></script>
 
 </body>

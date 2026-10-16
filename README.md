@@ -18,6 +18,24 @@ Para evitar la redundancia de crear múltiples archivos HTML estáticos para cad
 *   **Plantillas en `/vistas/`**: Archivos como `detalle_devocional.html` y `template_serie.html` servirán como esqueletos.
 *   **Enrutamiento por Parámetros**: A través de JavaScript, interceptaremos parámetros en la URL (ej. `?id=articulo_fisica`). La lógica buscará este ID en nuestras bases de datos locales (`js/db/`) e inyectará el título, texto y ejercicios dinámicamente en la plantilla. Esto consolida el concepto de "Cero Monolitos".
 
+## Sistema de Diseño (tema oscuro unificado)
+Todas las páginas cargan `css/styles.css`, que es la única fuente de verdad visual:
+*   **Tokens en `:root`**: colores (`--bg`, `--surface`, `--gold`, `--gold-hi`, colores de esferas), tipografía y radios. Cambiar un token cambia todo el sitio.
+*   **Tipografía**: Fraunces (títulos), Source Serif 4 (lectura larga) e Inter (interfaz).
+*   **Componentes reutilizables**: `.btn-*`, `.chip`, `.glass-card`, `.muro-card`, `.lesson`, `.verse-card`, `.exercise-card`, `.resource-card`, `.toast`. Evitar `style=""` en línea; si algo se repite, se convierte en clase.
+*   **`js/app.js`**: lógica del index, con estos efectos (cada uno se desactiva solo si falta la librería, si no hay mouse o si el usuario pide "reducir movimiento"):
+    *   **Fondo de luz**: shader WebGL propio (sin librería) a media resolución; solo se dibuja mientras la portada está visible.
+    *   **Motivo básico religioso** (creación, caída y redención, en sentido dooyeweerdiano: un solo motivo en el corazón supratemporal, no etapas sucesivas): sección fijada con GSAP ScrollTrigger + SplitText.
+    *   **Scroll suave**: Lenis, sincronizado con ScrollTrigger.
+    *   **Constelación interactiva**: canvas 2D; las estrellas se conectan y se apartan alrededor del cursor.
+    *   **Tarjetas 3D**: vanilla-tilt en tarjetas de artículos y áreas.
+    *   Iconos Lucide y carga de artículos con respaldo local.
+*   **`js/ui.js`**: utilidades compartidas de `/vistas/` (iconos, barra de progreso, avisos, progreso del lector en `localStorage`, agrupación de series).
+
+## Publicar contenido
+*   **Artículos**: desde el CMS del dashboard o creando un `.md` en `/content`. Usar **Markdown limpio** (títulos `##`, citas `>`, listas, tablas): la vista aplica sola el estilo editorial. Evitar HTML con estilos en línea.
+*   **Devocionales**: en `js/db/devocionales.js`. El campo `serie` con formato `"Nombre (2/3)"` agrupa y ordena automáticamente; la página es `vistas/serie_devocional.html?serie=Nombre`.
+
 ## UX/UI Premium
 Nuestra interfaz se apoya en patrones modernos para ofrecer una experiencia de inmersión:
 *   **Efecto Reveal (IntersectionObserver)**: Los elementos aparecen fluidamente mientras el usuario hace scroll, creando una lectura relajada y progresiva.

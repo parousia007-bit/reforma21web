@@ -4,371 +4,286 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artículo | Reforma 2.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #0a0e17;
-            --text-gray: #8892a8;
-            --text-light: #e8ebf4;
-            --accent: #d4a843;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            font-family: 'Source Sans 3', sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        .article-container {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .header-image {
-            width: 100%;
-            height: 300px;
-            min-height: 200px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            display: none; /* Oculto hasta que cargue para evitar el cuadro roto */
-            background: rgba(30, 41, 59, 0.4); /* placeholder mientras carga */
-        }
-
-        h1 {
-            font-family: 'Merriweather', serif;
-            font-size: 2.5rem;
-            line-height: 1.2;
-            margin-bottom: 10px;
-            color: var(--accent);
-        }
-
-        .meta-info {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #252d40;
-            padding-bottom: 15px;
-        }
-
-        #article-content {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            text-align: justify;
-        }
-        #article-content p {
-            text-align: justify !important;
-            line-height: 1.8 !important;
-            margin-bottom: 1.2em;
-        }
-        #article-content h1, #article-content h2, #article-content h3,
-        #article-content h4, #article-content h5, #article-content h6 {
-            text-align: left;
-            line-height: 1.3;
-        }
-
-        #article-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
-            .header-image { height: 200px; }
-            #article-content { font-size: 1.1rem; }
-            .article-container { padding: 15px; }
-        }
-
-        .btn-back {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-        }
-    </style>
+    <meta name="description" content="Análisis desde una visión reformacional · Reforma 2.1">
+    <meta name="theme-color" content="#0D1020">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Reforma 2.1">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230D1020'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23E2B04F'%3E✦%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+    <div class="ambient" aria-hidden="true"></div>
+    <div class="read-progress" aria-hidden="true"><span id="read-progress"></span></div>
 
-    <div class="article-container">
-        <a href="../index.html" class="btn-back">← Volver al inicio</a>
-        <img id="header-img" class="header-image" src="" alt="Cabecera del artículo">
-        <h1 id="article-title">Cargando...</h1>
-        <div class="meta-info">
-            <span id="article-author"></span> | <span id="article-date"></span>
+    <nav class="subnav" aria-label="Navegación del artículo">
+        <div class="nav-inner">
+            <a href="../index.html#muro" class="subnav-back"><i data-lucide="arrow-left"></i> Volver a los artículos</a>
+            <a href="../index.html" class="nav-logo"><span class="mark">✦</span> Reforma <span>2.1</span></a>
         </div>
-        <div id="article-content">
+    </nav>
+
+    <main class="article-shell">
+        <header class="article-header">
+            <div class="article-tags" id="article-tags"></div>
+            <h1 class="article-title" id="article-title">Cargando…</h1>
+            <p class="article-lead" id="article-lead" hidden></p>
+            <div class="article-meta">
+                <span id="article-author"></span>
+                <span id="article-date"></span>
+                <span id="article-time"></span>
             </div>
-    </div>
+        </header>
+
+        <figure class="article-cover" id="article-cover" hidden>
+            <img id="header-img" alt="">
+        </figure>
+
+        <div class="article-body">
+            <div id="article-content">
+                <div class="article-loading">
+                    <div class="sk-line"></div><div class="sk-line"></div><div class="sk-line" style="width:70%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-end" id="article-end" hidden>
+            <a href="../index.html#muro" class="btn btn-outline btn-sm"><i data-lucide="library"></i> Más artículos</a>
+            <div class="share-row">
+                <a class="share-btn" id="share-wa" target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp"><i data-lucide="message-circle"></i></a>
+                <button class="share-btn" id="share-copy" type="button" aria-label="Copiar enlace"><i data-lucide="link"></i></button>
+                <button class="share-btn" id="share-native" type="button" aria-label="Compartir" hidden><i data-lucide="share-2"></i></button>
+            </div>
+        </div>
+    </main>
 
     <script src="../js/db/db_articulos.js?v=1.2"></script>
     <script src="../js/db/articulos.js?v=1.2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
+    <script src="../js/ui.js"></script>
     <script>
+        const renderIcons = Reforma.icons;
+        const clean = (s) => DOMPurify.sanitize(String(s ?? ''), { ALLOWED_TAGS: [] });
+        const safeColor = (v) => /^#[0-9a-f]{3,8}$/i.test(String(v || '').trim()) ? String(v).trim() : 'var(--gold)';
+
         // Decodifica entidades HTML escapadas (ej: &lt;p&gt; → <p>)
         function decodeHTMLEntities(text) {
-            var textArea = document.createElement('textarea');
+            const textArea = document.createElement('textarea');
             textArea.innerHTML = text;
             return textArea.value;
         }
 
+        // Los artículos antiguos traen títulos con font-family/color en línea.
+        // Los neutralizamos para que manden los estilos editoriales del sitio.
+        function normalizeLegacyStyles(root) {
+            root.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(h => h.removeAttribute('style'));
+            root.querySelectorAll('[style]').forEach(el => {
+                el.style.removeProperty('font-family');
+                el.style.removeProperty('text-align');
+                if (!el.getAttribute('style').trim()) el.removeAttribute('style');
+            });
+        }
+
+        function embedUrlFor(rawVideoUrl) {
+            const yt = rawVideoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+            if (yt) return `https://www.youtube-nocookie.com/embed/${yt[1]}`;
+            if (/facebook\.com\/.*\/videos\/\d+/.test(rawVideoUrl)) {
+                return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(rawVideoUrl)}&width=640`;
+            }
+            return null; // No incrustamos dominios desconocidos
+        }
+
+        function setupShare(title) {
+            const url = window.location.href;
+            document.getElementById('share-wa').href = 'https://wa.me/?text=' + encodeURIComponent(title + ' — ' + url);
+            const copyBtn = document.getElementById('share-copy');
+            copyBtn.addEventListener('click', async () => {
+                try { await navigator.clipboard.writeText(url); Reforma.toast('Enlace copiado', 'link'); } catch (_) {}
+            });
+            if (navigator.share) {
+                const nativeBtn = document.getElementById('share-native');
+                nativeBtn.hidden = false;
+                nativeBtn.addEventListener('click', () => navigator.share({ title, url }).catch(() => {}));
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
+            renderIcons();
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
             const contentEl = document.getElementById('article-content');
-            
-            if (!id) {
-                contentEl.innerHTML = `<h2 style="color: #ff6b6b;">Error</h2><p>ID de artículo no proporcionado.</p>`;
-                return;
-            }
+
+            const showError = (msg) => {
+                document.getElementById('article-title').textContent = 'Artículo no disponible';
+                contentEl.innerHTML = `<div class="article-error"><h2>No encontramos este artículo</h2><p>${msg}</p><a class="btn btn-gold" href="../index.html#muro">Ver todos los artículos</a></div>`;
+            };
+
+            if (!id) return showError('El enlace no incluye el identificador del artículo.');
 
             let article = null;
-            let usedFallback = false;
-
             try {
-                // 1. Fetch from the new API
                 const response = await fetch('/api/articles/' + encodeURIComponent(id));
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 article = await response.json();
             } catch (error) {
-                console.warn('Fallo al obtener artículo de la API. Intentando fallback estático...', error);
-                
-                // 2. Fallback to old JS variable if API fails
-                if (typeof articulosDB !== 'undefined' && articulosDB[id]) {
-                    article = articulosDB[id];
-                } else if (typeof contenidosDB !== 'undefined' && contenidosDB[id]) {
-                    article = contenidosDB[id];
-                }
-                usedFallback = true;
+                console.warn('API no disponible, usando base local.', error);
+                if (typeof articulosDB !== 'undefined' && articulosDB[id]) article = articulosDB[id];
+                else if (typeof contenidosDB !== 'undefined' && contenidosDB[id]) article = contenidosDB[id];
             }
 
-            if (article) {
-                // Update DOM with sanitized data
-                document.title = (DOMPurify.sanitize(article.titulo) || "Artículo") + " | Reforma 2.1";
-                
-                let imgSrc = article.imagen_cabecera;
-                if (imgSrc && !imgSrc.startsWith('http') && !imgSrc.startsWith('../')) {
-                    imgSrc = '../' + imgSrc;
-                }
-                
+            if (!article) return showError(`Puede que se haya movido o que el enlace esté incompleto (<code>${clean(id)}</code>).`);
+
+            // ── CABECERA ────────────────────────────────────────────────
+            const titulo = clean(article.titulo || 'Artículo');
+            document.title = titulo + ' | Reforma 2.1';
+            document.getElementById('article-title').textContent = decodeHTMLEntities(titulo);
+
+            const tags = Array.isArray(article.etiquetas) ? article.etiquetas : (article.categoria ? [article.categoria] : []);
+            const accent = safeColor(article.color_tema);
+            document.getElementById('article-tags').innerHTML = tags.filter(Boolean).map((t, i) =>
+                `<span class="chip${i === 0 ? ' chip-gold' : ''}"${i === 0 ? ` style="color:${accent};border-color:color-mix(in srgb, ${accent} 40%, transparent);background:color-mix(in srgb, ${accent} 10%, transparent)"` : ''}>${clean(t)}</span>`
+            ).join('');
+
+            const lead = article.extracto || article.lead;
+            if (lead) {
+                const leadEl = document.getElementById('article-lead');
+                leadEl.textContent = decodeHTMLEntities(clean(lead));
+                leadEl.hidden = false;
+                document.querySelector('meta[name="description"]').setAttribute('content', leadEl.textContent);
+            }
+
+            document.getElementById('article-author').innerHTML = `<i data-lucide="pen-line"></i> ${clean(article.autor || 'Equipo Reforma 2.1')}`;
+            if (article.fecha) document.getElementById('article-date').innerHTML = `<i data-lucide="calendar"></i> ${clean(article.fecha)}`;
+
+            let imgSrc = (article.imagen_cabecera || '').trim();
+            if (imgSrc && !/^https?:\/\//.test(imgSrc) && !imgSrc.startsWith('../')) imgSrc = '../' + imgSrc;
+            if (imgSrc) {
+                const cover = document.getElementById('article-cover');
                 const imgEl = document.getElementById('header-img');
-                if (imgSrc) {
-                    imgEl.src = DOMPurify.sanitize(imgSrc);
-                    imgEl.style.display = 'block';
-                    // Pequeña animación de entrada suave para la cabecera
-                    imgEl.style.opacity = '0';
-                    imgEl.style.transition = 'opacity 0.8s ease-in-out';
-                    setTimeout(() => imgEl.style.opacity = '1', 50);
-                }
-                
-                const titleEl = document.getElementById('article-title');
-                titleEl.innerHTML = DOMPurify.sanitize(article.titulo || '');
-                titleEl.style.color = DOMPurify.sanitize(article.color_tema || 'var(--accent)');
-                
-                document.getElementById('article-author').innerText = "Por: " + DOMPurify.sanitize(article.autor || "Equipo Reforma 2.1");
-                document.getElementById('article-date').innerText = DOMPurify.sanitize(article.fecha || "");
-                
-                // Animación suave de carga del contenido
-                contentEl.style.opacity = '0';
-                contentEl.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => {
-                    const purifyConfig = {
-                        ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img', 'figure', 'figcaption'],
-                        ALLOWED_ATTR: ['class', 'style', 'href', 'src', 'alt', 'target']
-                    };
-                    // Pipeline: Decodificar Entidades → Sanitizar → Inyectar
-                    let rawContent = article.htmlContent || article.contenido || '';
-
-                    // ── DIAGNÓSTICO (F12 → Consola) ──────────────────────────────
-                    console.group('[Reforma 2.1] Renderizado del Artículo');
-                    console.log('📄 ID:', id);
-                    console.log('🔗 pdf_url:', article.pdf_url || '(vacío)');
-                    console.log('🎥 video_url:', article.video_url || '(vacío)');
-                    console.log('📝 Primeros 200 chars del contenido recibido:', rawContent.substring(0, 200));
-                    console.groupEnd();
-
-                    // ── STRIP DEFENSIVO DE FRONTMATTER ───────────────────────────
-                    // Si el backend envía el frontmatter pegado al HTML (error de config),
-                    // lo eliminamos aquí para que no aparezcan los -- y campos YAML en pantalla.
-                    if (rawContent.trimStart().startsWith('---')) {
-                        const fmEnd = rawContent.indexOf('\n---', 3);
-                        if (fmEnd !== -1) rawContent = rawContent.substring(fmEnd + 4).trimStart();
-                    }
-
-                    const decodedHTML = decodeHTMLEntities(rawContent);
-                    contentEl.innerHTML = DOMPurify.sanitize(decodedHTML, purifyConfig);
-                    
-                    // Autocorrección de Tablas (Estándar Editorial)
-                    const tables = contentEl.querySelectorAll('table');
-                    tables.forEach(table => {
-                        table.classList.add('pro-table');
-                        const wrapper = document.createElement('div');
-                        wrapper.className = 'pro-table-wrapper';
-                        table.parentNode.insertBefore(wrapper, table);
-                        wrapper.appendChild(table);
-                    });
-
-                    // ── VIDEO INCRUSTADO ─────────────────────────────────────────
-                    // videoWrapper declarado aquí (scope externo) para evitar ReferenceError
-                    let videoWrapper = null;
-                    const rawVideoUrl = (article.video_url || '').trim().replace(/^['"]|['"]$/g, '');
-
-                    if (rawVideoUrl) {
-                        try {
-                            let embedUrl = rawVideoUrl;
-                            // YouTube: watch?v= o youtu.be/
-                            const ytMatch = rawVideoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-                            if (ytMatch) embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}`;
-                            // Facebook video
-                            const fbMatch = rawVideoUrl.match(/facebook\.com\/.*\/videos\/(\d+)/);
-                            if (fbMatch) embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(rawVideoUrl)}&width=640`;
-
-                            videoWrapper = document.createElement('div');
-                            videoWrapper.style.cssText = 'position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin:2.5rem 0;background:rgba(10,14,23,0.6);border:1px solid rgba(255,255,255,0.08);';
-                            videoWrapper.innerHTML = `<iframe src="${embedUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px;" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" loading="lazy"></iframe>`;
-                            contentEl.parentNode.insertBefore(videoWrapper, contentEl.nextSibling);
-                        } catch (videoErr) {
-                            console.warn('[Video] Error al incrustar video:', videoErr.message);
-                            videoWrapper = null; // reset para que el PDF no dependa de él
-                        }
-                    }
-
-                    // ── BOTÓN DE DESCARGA ─────────────────────────────────────────
-                    // Bloque completamente independiente: funciona aunque no haya video.
-                    const pdfUrl  = (article.pdf_url  || '').trim().replace(/^['"]|['"]$/g, '');
-                    const pdfText = (article.pdf_text || 'Descargar PDF').trim().replace(/^['"]|['"]$/g, '');
-
-                    if (pdfUrl) {
-                        try {
-                            const dlBlock = document.createElement('div');
-                            dlBlock.style.cssText = 'margin:2.5rem 0;padding:1.5rem 2rem;background:rgba(212,168,67,0.07);border:1px solid rgba(212,168,67,0.25);border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;';
-
-                            // ── Binding seguro via data-* + addEventListener ──────────────
-                            // El onclick inline con template literal rompía cuando pdfUrl o
-                            // pdfText contenían comillas simples. Aquí los valores se leen
-                            // siempre desde los atributos data-* (inmunes a caracteres especiales).
-                            const infoDiv = document.createElement('div');
-                            infoDiv.innerHTML = `
-                              <p style="margin:0 0 .25rem 0;font-size:.8rem;font-weight:700;color:rgba(212,168,67,.7);text-transform:uppercase;letter-spacing:.1em;">Recurso Descargable</p>
-                              <p style="margin:0;color:#e8ebf4;font-weight:600;">${DOMPurify.sanitize(pdfText)}</p>`;
-
-                            const dlAnchor = document.createElement('a');
-                            dlAnchor.href              = DOMPurify.sanitize(pdfUrl);
-                            dlAnchor.target            = '_blank';
-                            dlAnchor.rel               = 'noopener noreferrer';
-                            dlAnchor.dataset.articleId = id;       // binding seguro
-                            dlAnchor.dataset.pdfUrl    = pdfUrl;   // binding seguro
-                            dlAnchor.dataset.pdfText   = pdfText;  // binding seguro
-                            dlAnchor.style.cssText     = 'display:inline-flex;align-items:center;gap:.5rem;background:#D4A843;color:#0a0e17;font-weight:700;padding:.7rem 1.5rem;border-radius:8px;text-decoration:none;transition:opacity .2s;';
-                            dlAnchor.textContent       = '📥 ' + DOMPurify.sanitize(pdfText);
-                            dlAnchor.addEventListener('mouseover', () => dlAnchor.style.opacity = '.8');
-                            dlAnchor.addEventListener('mouseout',  () => dlAnchor.style.opacity = '1');
-                            dlAnchor.addEventListener('click', () => {
-                                // Lee siempre desde data-*, nunca desde el template literal
-                                window.trackDownload(
-                                    dlAnchor.dataset.articleId,
-                                    dlAnchor.dataset.pdfUrl,
-                                    dlAnchor.dataset.pdfText
-                                );
-                            });
-
-                            dlBlock.appendChild(infoDiv);
-                            dlBlock.appendChild(dlAnchor);
-
-                            // Insertar después del video si existe, si no, después del contenido
-                            const anchorEl = videoWrapper || contentEl;
-                            anchorEl.parentNode.insertBefore(dlBlock, anchorEl.nextSibling);
-                        } catch (pdfErr) {
-                            console.warn('[PDF] Error al renderizar botón de descarga:', pdfErr.message);
-                        }
-                    }
-
-                    contentEl.style.opacity = '1';
-
-                    // --- INICIO DE TELEMETRÍA FRONTEND ---
-                    // 1. Centinela para detectar el final real del artículo
-                    const sentinel = document.createElement('div');
-                    sentinel.style.height = '1px';
-                    sentinel.style.marginTop = '20px';
-                    contentEl.appendChild(sentinel);
-
-                    let timeSpent = 0;
-                    let lastTime = Date.now();
-                    let maxScrollDepth = 0;
-
-                    // 2. Tracker de Scroll (Porcentaje + Observer)
-                    const updateScroll = () => {
-                        const h = document.documentElement.scrollHeight - window.innerHeight;
-                        if (h > 0) {
-                            const pct = Math.round((window.scrollY / h) * 100);
-                            if (pct > maxScrollDepth) maxScrollDepth = Math.min(pct, 100);
-                        }
-                    };
-                    window.addEventListener('scroll', updateScroll, { passive: true });
-
-                    if ('IntersectionObserver' in window) {
-                        const io = new IntersectionObserver(entries => {
-                            if (entries[0].isIntersecting) {
-                                maxScrollDepth = 100;
-                                io.disconnect(); // No necesitamos observarlo más si ya llegó a 100
-                            }
-                        });
-                        io.observe(sentinel);
-                    }
-
-                    // 3. Tracker de Tiempo y Transmisión de Datos (Visibility API)
-                    document.addEventListener('visibilitychange', () => {
-                        if (document.visibilityState === 'hidden') {
-                            // Sumar los segundos reales en foco
-                            timeSpent += Math.round((Date.now() - lastTime) / 1000);
-                            
-                            // Actualizar scroll por si la ventana se cerró de golpe sin disparar evento scroll final
-                            updateScroll();
-
-                            // Enviar payload de forma asíncrona sin bloquear la navegación
-                            const payload = {
-                                articleId: id,
-                                timeSpent: timeSpent,
-                                scrollDepth: maxScrollDepth
-                            };
-
-                            fetch('/api/metrics', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(payload),
-                                keepalive: true
-                            }).catch(err => console.warn('Telemetry transmit error:', err));
-                            
-                            // Resetear timeSpent a 0 para que si el usuario regresa a la pestaña y la vuelve a cerrar, 
-                            // solo se envíe el tiempo incremental nuevo (MongoDB usa $inc)
-                            timeSpent = 0; 
-                        } else if (document.visibilityState === 'visible') {
-                            // Reiniciar el reloj cuando recobra el foco
-                            lastTime = Date.now();
-                        }
-                    });
-                    // --- FIN DE TELEMETRÍA ---
-                }, 100);
-
-            } else {
-                contentEl.style.opacity = '0';
-                setTimeout(() => {
-                    contentEl.innerHTML = `
-                        <h2 style="color: #ff6b6b;">Error Crítico</h2>
-                        <p>No se pudo cargar la información del ID: <b>${DOMPurify.sanitize(id)}</b>.</p>
-                        <p style="font-size: 0.9rem; color: #8892a8;">(La API está inactiva y no se encontró en la base de datos estática de respaldo)</p>
-                    `;
-                    contentEl.style.opacity = '1';
-                }, 100);
+                if (article.layout === 'hero') cover.classList.add('layout-hero');
+                imgEl.addEventListener('load', () => imgEl.classList.add('loaded'));
+                imgEl.addEventListener('error', () => { cover.hidden = true; });
+                imgEl.src = DOMPurify.sanitize(imgSrc);
+                cover.hidden = false;
             }
+
+            // ── CUERPO ──────────────────────────────────────────────────
+            const purifyConfig = {
+                ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img', 'figure', 'figcaption', 'code', 'pre', 'sup', 'sub'],
+                ALLOWED_ATTR: ['class', 'style', 'href', 'src', 'alt', 'target', 'rel']
+            };
+            let rawContent = article.htmlContent || article.contenido || '';
+
+            // Strip defensivo de frontmatter por si el backend lo envía pegado al HTML
+            if (rawContent.trimStart().startsWith('---')) {
+                const fmEnd = rawContent.indexOf('\n---', 3);
+                if (fmEnd !== -1) rawContent = rawContent.substring(fmEnd + 4).trimStart();
+            }
+
+            contentEl.innerHTML = DOMPurify.sanitize(decodeHTMLEntities(rawContent), purifyConfig);
+            normalizeLegacyStyles(contentEl);
+
+            contentEl.querySelectorAll('a[href^="http"]').forEach(a => { a.target = '_blank'; a.rel = 'noopener noreferrer'; });
+            contentEl.querySelectorAll('img').forEach(img => { img.loading = 'lazy'; img.decoding = 'async'; });
+            contentEl.querySelectorAll('table').forEach(table => {
+                table.classList.add('pro-table');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'pro-table-wrapper';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+
+            // Tiempo de lectura estimado (~220 palabras/min)
+            const words = contentEl.textContent.trim().split(/\s+/).length;
+            document.getElementById('article-time').innerHTML = `<i data-lucide="clock"></i> ${Math.max(1, Math.round(words / 220))} min de lectura`;
+
+            // ── VIDEO ───────────────────────────────────────────────────
+            const rawVideoUrl = (article.video_url || '').trim().replace(/^['"]|['"]$/g, '');
+            const embedUrl = rawVideoUrl && embedUrlFor(rawVideoUrl);
+            if (embedUrl) {
+                const videoWrapper = document.createElement('div');
+                videoWrapper.className = 'article-video';
+                const iframe = document.createElement('iframe');
+                iframe.src = embedUrl;
+                iframe.title = 'Video del artículo';
+                iframe.loading = 'lazy';
+                iframe.allowFullscreen = true;
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                videoWrapper.appendChild(iframe);
+                contentEl.appendChild(videoWrapper);
+            }
+
+            // ── RECURSO DESCARGABLE ─────────────────────────────────────
+            const pdfUrl = (article.pdf_url || '').trim().replace(/^['"]|['"]$/g, '');
+            const pdfText = (article.pdf_text || 'Descargar PDF').trim().replace(/^['"]|['"]$/g, '');
+            if (/^https?:\/\//.test(pdfUrl)) {
+                const dlBlock = document.createElement('div');
+                dlBlock.className = 'resource-card';
+                dlBlock.innerHTML = `
+                    <div class="info">
+                        <span class="ico"><i data-lucide="file-text"></i></span>
+                        <div><p class="k">Recurso descargable</p><p class="v">${clean(pdfText)}</p></div>
+                    </div>`;
+                const dlAnchor = document.createElement('a');
+                dlAnchor.className = 'btn btn-gold';
+                dlAnchor.href = pdfUrl;
+                dlAnchor.target = '_blank';
+                dlAnchor.rel = 'noopener noreferrer';
+                dlAnchor.innerHTML = '<i data-lucide="download"></i> ';
+                dlAnchor.append(pdfText);
+                dlAnchor.addEventListener('click', () => window.trackDownload(id, pdfUrl, pdfText));
+                dlBlock.appendChild(dlAnchor);
+                contentEl.appendChild(dlBlock);
+            }
+
+            document.getElementById('article-end').hidden = false;
+            setupShare(decodeHTMLEntities(titulo));
+            renderIcons();
+
+            // --- TELEMETRÍA DE LECTURA ---
+            const sentinel = document.createElement('div');
+            sentinel.style.height = '1px';
+            contentEl.appendChild(sentinel);
+
+            let timeSpent = 0;
+            let lastTime = Date.now();
+            let maxScrollDepth = 0;
+
+            const updateScroll = () => {
+                const h = document.documentElement.scrollHeight - window.innerHeight;
+                if (h > 0) {
+                    const pct = Math.round((window.scrollY / h) * 100);
+                    if (pct > maxScrollDepth) maxScrollDepth = Math.min(pct, 100);
+                }
+            };
+            window.addEventListener('scroll', updateScroll, { passive: true });
+
+            if ('IntersectionObserver' in window) {
+                const io = new IntersectionObserver(entries => {
+                    if (entries[0].isIntersecting) { maxScrollDepth = 100; io.disconnect(); }
+                });
+                io.observe(sentinel);
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'hidden') {
+                    timeSpent += Math.round((Date.now() - lastTime) / 1000);
+                    updateScroll();
+                    fetch('/api/metrics', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ articleId: id, timeSpent, scrollDepth: maxScrollDepth }),
+                        keepalive: true
+                    }).catch(err => console.warn('Telemetry transmit error:', err));
+                    // Solo se envía el tiempo incremental si el lector vuelve y sale de nuevo
+                    timeSpent = 0;
+                } else if (document.visibilityState === 'visible') {
+                    lastTime = Date.now();
+                }
+            });
         });
     </script>
 
@@ -376,17 +291,15 @@
     <script>
       (async function trackVisit() {
         try {
-          // Obtener article_id de la URL
           const articleId = new URLSearchParams(window.location.search).get('id') || null;
 
-          // Detectar tipo de dispositivo del lado cliente
           const ua = navigator.userAgent;
           let deviceType = 'desktop';
           if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
             deviceType = /iPad/i.test(ua) ? 'tablet' : 'mobile';
           }
 
-          // Obtener ubicación vía ipapi.co (petición ligera, ~200ms)
+          // Ubicación vía ipapi.co (puede fallar por AdBlock, CORS o rate-limit)
           let location = null;
           try {
             const geoRes = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
@@ -402,20 +315,9 @@
               };
             }
           } catch (geoErr) {
-            // ── AUDITORÍA GEO ────────────────────────────────────────────────
-            // Si este warn aparece en la consola del cliente, la causa más probable es:
-            //   1. CORS bloqueado por el navegador (política restrictiva del ISP o VPN)
-            //   2. AdBlocker / uBlock Origin interceptando peticiones a ipapi.co
-            //   3. La IP es de un datacenter y ipapi.co la rechaza (rate-limit)
-            // Inspecciona: F12 → Red → busca "ipapi.co" para ver el código de estado real.
-            console.warn(
-              '[Visit] ⚠️ ipapi.co falló — la geolocalización de esta visita no se registrará.\n' +
-              '  Causa probable: CORS, AdBlocker, o rate-limit de ipapi.co.\n' +
-              '  Detalle del error:', geoErr.message
-            );
+            console.warn('[Visit] ipapi.co falló; esta visita se registra sin ubicación.', geoErr.message);
           }
 
-          // Enviar al backend — fire-and-forget (no bloqueamos la UI)
           await fetch('/api/metrics/visit', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -425,40 +327,28 @@
               device_type: deviceType,
               referrer:    document.referrer || null,
             }),
-            keepalive: true,  // permite que la petición continúe aunque el usuario navegue
+            keepalive: true,
           });
-
         } catch (err) {
-          // Nunca interrumpimos la experiencia del lector por un error de analytics
           console.warn('[Visit] Error en visit tracking:', err.message);
         }
       })();
 
-      // Registrar descarga de PDF
       window.trackDownload = function(articleId, pdfUrl, pdfText) {
         fetch('/api/metrics/download', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            article_id: articleId,
-            pdf_url: pdfUrl,
-            pdf_text: pdfText
-          }),
+          body: JSON.stringify({ article_id: articleId, pdf_url: pdfUrl, pdf_text: pdfText }),
           keepalive: true
         }).catch(err => console.warn('[Download] Error tracking:', err));
       };
 
-      // Registrar eventos personalizados (WhatsApp, Becas, etc)
       window.trackInteraction = function(type, buttonName) {
         const articleId = new URLSearchParams(window.location.search).get('id') || null;
         fetch('/api/metrics/event', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            article_id: articleId,
-            event_type: type,
-            button_name: buttonName
-          }),
+          body: JSON.stringify({ article_id: articleId, event_type: type, button_name: buttonName }),
           keepalive: true
         }).catch(err => console.warn(`[Interaction - ${type}] Error tracking:`, err));
       };

@@ -3,101 +3,141 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Reflexión Diaria · Reforma 2.1</title>
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<title>Reflexión diaria · Reforma 2.1</title>
+<meta name="description" content="Reflexión diaria desde una visión reformacional · Reforma 2.1">
+<meta name="theme-color" content="#0D1020">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230D1020'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23E2B04F'%3E✦%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../css/styles.css">
-<style>
-  body { background: #E8EBF4; }
-  .detail-header {
-    background: linear-gradient(135deg, #1A2E5A, #2563EB);
-    padding: 6rem 1.5rem 3rem; color: white;
-  }
-  .tag-esfera {
-    background: rgba(200, 146, 42, 0.25); border: 1px solid rgba(200, 146, 42, 0.5);
-    color: #D4A843; font-size: 0.65rem; font-weight: bold; letter-spacing: 1.5px;
-    padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 1rem; text-transform: uppercase;
-  }
-  .detail-title { font-family: var(--serif); font-size: 2rem; line-height: 1.2; }
-  
-  .content-wrapper { max-width: 800px; margin: -2rem auto 4rem; padding: 0 1.5rem; position: relative; z-index: 10; }
-  
-  /* _VersiculoCard */
-  .verse-card {
-    background: #FDF9F1; border: 1px solid rgba(200, 146, 42, 0.4);
-    border-radius: 16px; padding: 2rem; text-align: center; margin-bottom: 1.5rem;
-  }
-  .verse-card p { font-size: 1.1rem; font-style: italic; color: #1A2E5A; line-height: 1.6; }
-  .verse-card cite { display: block; margin-top: 1rem; color: #D4A843; font-weight: bold; font-size: 0.85rem; font-style: normal;}
-  
-  /* _ContentCard */
-  .reflexion-card {
-    background: white; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem;
-    box-shadow: 0 4px 20px rgba(45, 95, 166, 0.07);
-  }
-  .reflexion-card h3 { font-size: 1.1rem; color: #1A2E5A; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
-  .reflexion-card .prose p { font-size: 1rem; color: #4A5568; margin-bottom: 1.2rem; line-height: 1.8; }
-  
-  /* _ExpandableSection (Ejercicio) */
-  .ejercicio-card {
-    background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(91, 44, 141, 0.25);
-    box-shadow: 0 2px 10px rgba(45, 95, 166, 0.05); margin-bottom: 2rem;
-  }
-  .ejercicio-card h4 { color: #5B2C8D; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;}
-  .ejercicio-card p { font-size: 0.95rem; color: #4A5568; line-height: 1.7; }
-  
-  .btn-completar {
-    display: block; width: 100%; background: #2563EB; color: white; text-align: center;
-    padding: 1rem; border-radius: 12px; font-weight: bold; text-decoration: none; transition: 0.2s;
-  }
-  .btn-completar:hover { background: #1A2E5A; transform: translateY(-2px); }
-  .nav-back { color: white; text-decoration: none; position: absolute; top: 1.5rem; left: 1.5rem; font-weight: 600; }
-</style>
 </head>
 <body>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="read-progress" aria-hidden="true"><span id="read-progress"></span></div>
 
-<div class="detail-header">
-  <a href="serie_devocional.html" class="nav-back">← Volver a la Serie</a>
-  <div class="container" style="max-width: 800px; padding:0;">
-    <div class="tag-esfera" id="render-esfera">Cargando...</div>
-    <h1 class="detail-title" id="render-title">Cargando Título...</h1>
-  </div>
-</div>
+  <nav class="subnav" aria-label="Navegación del devocional">
+    <div class="nav-inner">
+      <a href="serie_devocional.html" class="subnav-back" id="back-link"><i data-lucide="arrow-left"></i> Volver a la serie</a>
+      <a href="../index.html" class="nav-logo"><span class="mark">✦</span> Reforma <span>2.1</span></a>
+    </div>
+  </nav>
 
-<div class="content-wrapper">
-  <div class="verse-card">
-    <div style="font-size:3rem; color:var(--gold); line-height:0.5; margin-bottom:1rem;">"</div>
-    <p id="render-verse">Cargando versículo...</p>
-    <cite id="render-ref">Cargando referencia...</cite>
-  </div>
+  <main class="devo-shell" id="devo">
+    <header class="devo-head">
+      <span class="chip chip-gold" id="render-esfera">Devocional</span>
+      <h1 id="render-title">Cargando…</h1>
+      <div class="meta">
+        <span id="render-serie"></span>
+        <span id="render-time"></span>
+      </div>
+    </header>
 
-  <div class="reflexion-card">
-    <h3>Reflexión del Autor</h3>
-    <div class="prose" id="render-content"></div>
-  </div>
+    <blockquote class="verse-card">
+      <p id="render-verse"></p>
+      <cite id="render-ref"></cite>
+    </blockquote>
 
-  <div class="ejercicio-card">
-    <h4><span>🤔</span> Para Tu Reflexión</h4>
-    <p id="render-exercise">Cargando ejercicio...</p>
-  </div>
+    <article class="devo-text" id="render-content"></article>
 
-  <a href="../index.html" class="btn-completar" onclick="alert('+20 puntos ganados — ¡Reflexión completada!')">✓ Completar reflexión (+20 pts)</a>
-</div>
+    <div class="devo-author">
+      <span class="av" id="render-initial">✦</span>
+      <div><b id="render-author">Reforma 2.1</b><small>Autor de la reflexión</small></div>
+    </div>
 
-<script src="../js/db/devocionales.js"></script>
-<script>
-  // Obtener ID de la URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get('id') || 'ht_prophecy_01'; // Default si no hay ID
-  const data = dbDevocionales[id];
+    <section class="exercise-card" aria-labelledby="ex-title">
+      <span class="k" id="ex-title"><i data-lucide="pencil-line"></i> Para tu reflexión</span>
+      <p id="render-exercise"></p>
+      <textarea class="exercise-note" id="exercise-note" aria-label="Tus notas" placeholder="Escribe aquí tu respuesta o una frase que quieras recordar…"></textarea>
+      <p class="note-hint"><i data-lucide="lock" style="width:.9em;height:.9em;vertical-align:-1px"></i> Tus notas se guardan solo en este dispositivo.</p>
+    </section>
 
-  if(data) {
-    document.getElementById('render-esfera').innerText = data.esfera;
-    document.getElementById('render-title').innerText = data.titulo;
-    document.getElementById('render-verse').innerText = data.lead;
-    document.getElementById('render-ref').innerText = data.autor.split('—')[0].trim();
-    document.getElementById('render-content').innerHTML = data.texto;
-    document.getElementById('render-exercise').innerText = data.ejercicio.replace('EJERCICIO PRÁCTICO: ', '');
-  }
-</script>
+    <button type="button" class="btn btn-gold btn-complete" id="btn-complete"><i data-lucide="check"></i> Marcar reflexión como completada</button>
+
+    <nav class="pager" id="pager" aria-label="Otras partes de la serie"></nav>
+  </main>
+
+  <script src="../js/db/devocionales.js"></script>
+  <script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js"></script>
+  <script src="../js/ui.js"></script>
+  <script>
+    (function () {
+      const id = new URLSearchParams(window.location.search).get('id') || Object.keys(dbDevocionales)[0];
+      const data = dbDevocionales[id];
+      const $ = (sel) => document.getElementById(sel);
+
+      if (!data) {
+        $('devo').innerHTML = `<div class="article-error"><h2>No encontramos esta reflexión</h2><p>Puede que el enlace esté incompleto.</p><a class="btn btn-gold" href="serie_devocional.html">Ver la serie completa</a></div>`;
+        return;
+      }
+
+      const serie = Reforma.parseSerie(data.serie);
+      const [reference, author] = String(data.autor || '').split('—').map(s => s.trim());
+      const backHref = 'serie_devocional.html?serie=' + encodeURIComponent(serie.name);
+
+      document.title = `${data.titulo} · Reforma 2.1`;
+      $('back-link').href = backHref;
+      $('render-esfera').textContent = data.esfera || data.categoria || 'Devocional';
+      $('render-title').textContent = data.titulo;
+      $('render-serie').innerHTML = `<i data-lucide="layers"></i> `;
+      $('render-serie').append(serie.part ? `${serie.name} · Parte ${serie.part} de ${serie.total}` : serie.name);
+      if (data.tiempo) { $('render-time').innerHTML = `<i data-lucide="clock"></i> `; $('render-time').append(`${data.tiempo} de lectura`); }
+      $('render-verse').textContent = String(data.lead || '').replace(/^[“"]|[”"]$/g, '');
+      $('render-ref').textContent = reference || '';
+      $('render-content').innerHTML = data.texto; // contenido local de confianza (js/db)
+      $('render-author').textContent = author || 'Equipo Reforma 2.1';
+      $('render-initial').textContent = (author || 'R').trim().charAt(0);
+      $('render-exercise').textContent = String(data.ejercicio || '').replace(/^EJERCICIO PRÁCTICO:\s*/i, '');
+
+      // Notas personales (se guardan mientras escribe)
+      const note = $('exercise-note');
+      note.value = Reforma.store.getNote(id);
+      let saveTimer;
+      note.addEventListener('input', () => {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => Reforma.store.setNote(id, note.value), 400);
+      });
+
+      // Completar / desmarcar
+      const btn = $('btn-complete');
+      const paint = () => {
+        const done = Reforma.store.isDone(id);
+        btn.classList.toggle('is-done', done);
+        btn.innerHTML = done ? '<i data-lucide="check-circle-2"></i> Reflexión completada' : '<i data-lucide="check"></i> Marcar reflexión como completada';
+        Reforma.icons();
+      };
+      btn.addEventListener('click', () => {
+        if (Reforma.store.isDone(id)) {
+          Reforma.store.unmark(id);
+        } else {
+          Reforma.store.markDone(id);
+          Reforma.toast('¡Reflexión completada! Tu avance quedó guardado.');
+        }
+        paint();
+      });
+      paint();
+
+      // Anterior / siguiente dentro de la serie
+      const list = Reforma.groupSeries(dbDevocionales)[serie.name] || [];
+      const i = list.findIndex(item => item.id === id);
+      const prev = list[i - 1], next = list[i + 1];
+      const link = (item, cls, label, icon) => {
+        const a = document.createElement('a');
+        a.className = cls;
+        a.href = 'detalle_devocional.html?id=' + encodeURIComponent(item.id);
+        a.innerHTML = cls === 'next'
+          ? `<small>${label} <i data-lucide="${icon}"></i></small><b></b>`
+          : `<small><i data-lucide="${icon}"></i> ${label}</small><b></b>`;
+        a.querySelector('b').textContent = item.titulo;
+        return a;
+      };
+      const pager = $('pager');
+      if (prev) pager.appendChild(link(prev, 'prev', 'Anterior', 'arrow-left'));
+      if (next) pager.appendChild(link(next, 'next', 'Siguiente', 'arrow-right'));
+      if (!prev && !next) pager.hidden = true;
+
+      Reforma.icons();
+    })();
+  </script>
 </body>
 </html>

@@ -209,6 +209,19 @@ app.get('/api/articles', async (req, res) => {
   }
 });
 
+marked.use({ breaks: true, gfm: true, headerIds: false, mangle: false });
+
+// Muchos artículos traen HTML con sangría (ej. "      <p>…"). En Markdown, 4+ espacios
+// al inicio de línea crean un bloque de código, lo que rompía la maquetación.
+// Quitamos esa sangría en líneas que empiezan con una etiqueta HTML (fuera de bloques ```).
+function dedentHtmlLines(markdown) {
+  let inFence = false;
+  return markdown.split('\n').map(line => {
+    if (/^\s*(```|~~~)/.test(line)) { inFence = !inFence; return line; }
+    return !inFence && /^\s+<\/?[a-zA-Z]/.test(line) ? line.trimStart() : line;
+  }).join('\n');
+}
+
 // GET /api/articles/:id - Get a specific article
 app.get('/api/articles/:id', async (req, res) => {
   try {
@@ -230,8 +243,7 @@ app.get('/api/articles/:id', async (req, res) => {
 
     const fileContent = await fs.readFile(filePath, 'utf-8');
     const { data, content } = matter(fileContent);
-    marked.use({ breaks: true, gfm: true, headerIds: false, mangle: false });
-    const htmlContent = marked.parse(content);
+    const htmlContent = marked.parse(dedentHtmlLines(content));
 
     res.json({
       id: safeFilename.replace('.md', ''),
@@ -468,6 +480,8 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
     downloads:         [],
     recentActivity:    [],
     conversions:       { whatsapp: 0, beca: 0 },
+    securityLogs:      [],
+    blockedBots24h:    0,
     errors:            [],   // log de fallos parciales (visible solo en respuesta)
   };
 
@@ -639,6 +653,31 @@ app.get('/api/dashboard', requireAuth, async (req, res) => {
   } catch (e) {
     console.error('[Dashboard] ❌ actividad reciente:', e.message);
     payload.errors.push({ section: 'recentActivity', error: e.message });
+  }
+
+  // ── LOGS DE SEGURIDAD ────────────────────────────────────────────────
+  try {
+    const db = mongoose.connection.db;
+    if (!db) throw new Error('mongoose.connection.db no disponible aún');
+
+    const securityLogs = await db.collection('security_logs')
+      .find({})
+      .sort({ timestamp: -1 })
+      .limit(10)
+      .maxTimeMS(5000)
+      .toArray();
+
+    const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const blockedBots24h = await db.collection('security_logs').countDocuments({
+      type: { $in: ['honeypot_trap_triggered', 'honeypot_blocked', 'rate_limit_exceeded'] },
+      timestamp: { $gte: last24h }
+    }, { maxTimeMS: 5000 });
+
+    payload.securityLogs = securityLogs;
+    payload.blockedBots24h = blockedBots24h;
+  } catch (e) {
+    console.error('[Dashboard] ❌ security logs:', e.message);
+    payload.errors.push({ section: 'securityLogs', error: e.message });
   }
 
   // Cabeceras anti-caché: fuerza a Vercel/CDN a NO cachear esta respuesta,
